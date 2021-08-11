@@ -1,3 +1,5 @@
+//Simulation.java - Main Class
+
 public class Simulation {
 
     private static Gui gui;
