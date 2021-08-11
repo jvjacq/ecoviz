@@ -1,21 +1,28 @@
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+import java.awt.GridLayout;
+
 import java.awt.BorderLayout;
 
 public class Gui {
 
-    private int width;
-    private int height;
+    public Gui() {
 
-    public Gui(int frameX, int frameY) {
-        width = frameX;
-        height = frameY;
+        JFrame frame = new JFrame("EcoViz");
+        JPanel panel = new JPanel();
+        // JMenuBar mb = new JMenuBar();
+        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
+        panel.setLayout(new GridLayout(0, 1));
+
+        frame.add(panel, BorderLayout.CENTER);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+
     }
 
-    public void setupGUI() {
-        JFrame frame = new JFrame("EcoViz");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(new BorderLayout());
-        JMenuBar mb = new JMenuBar();
+    public static void main(String[] args) {
+        new Gui();
     }
 }
