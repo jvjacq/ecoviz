@@ -2,11 +2,25 @@ public class PlantType {
     private String commonName;
     private String latinName;
     private int id;
+    private float minHeight;
+    private float maxHeight;
+    private float avgRadius;
+    private int numPlants;
+    private double[][] canopy;
 
-    public PlantType(String cName, String lName, int identity) {
-        commonName = cName;
-        latinName = lName;
+
+    public PlantType(int identity, float minH, float maxH, float rad, int num) {
+        
         id = identity;
+        minHeight = minH;
+        maxHeight = maxH;
+        avgRadius = rad;
+        numPlants = num;
+    }
+
+    //Mutator Methods:
+    public void setData(double[][] newCanopy){
+        canopy = newCanopy; //Assigns canopy data
     }
 
     // Accessor Methods:

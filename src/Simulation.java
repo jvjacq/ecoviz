@@ -10,8 +10,8 @@ public class Simulation {
     public static void main(String[] args) throws FileNotFoundException {
         gui = new Gui();
         System.out.println("GUI is showing...");
-        terrain = new Terrain();
-        terrain.readElevation();
+        terrain = new Terrain(); //Use terrain to access data
+        terrain.readElevation();    
 
     }
 }

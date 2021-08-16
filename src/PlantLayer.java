@@ -14,8 +14,8 @@ public class PlantLayer {
 
     // Accessor Methods:
     public PlantType getPlant() {
-        PlantType temp = new PlantType("", "", 0);
-        return temp;
+        
+        return null;
     }
 
     // Mutator Methods:
