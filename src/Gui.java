@@ -1,6 +1,16 @@
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 import java.awt.GridLayout;
 
 import java.awt.BorderLayout;
@@ -9,18 +19,102 @@ public class Gui {
 
     public Gui() {
 
+//======================================================================
+//      Frame:
+//======================================================================
+
         JFrame frame = new JFrame("EcoViz");
-        JPanel panel = new JPanel();
-        // JMenuBar mb = new JMenuBar();
+        frame.setVisible(false);
 
-        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
-        panel.setLayout(new GridLayout(0, 1));
-
-        frame.add(panel, BorderLayout.CENTER);
+        frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Pack and Show
-        frame.pack();
+
+
+//======================================================================   
+//      North Panel:
+//======================================================================
+        JPanel pnlNorth = new JPanel();
+
+        JLabel lblSearch = new JLabel("Search: ");
+        JTextField search = new JTextField(20);
+        JLabel lblFilter = new JLabel("Filter: ");
+        JComboBox filter = new JComboBox<>();
+
+
+        //Add Components
+        pnlNorth.add(lblSearch);
+        pnlNorth.add(search);
+        pnlNorth.add(lblFilter);
+        pnlNorth.add(filter);
+
+
+//======================================================================
+//      West Panel: 
+//======================================================================
+
+        JPanel pnlWest = new JPanel();
+
+            
+//======================================================================
+//      East Panel: 
+//======================================================================
+
+        JPanel pnlEast = new JPanel();
+
+            JTextArea plantDescription = new JTextArea();
+            pnlEast.add(plantDescription);
+        
+            //Add Components
+            pnlEast.add(plantDescription);
+
+//======================================================================
+//      South Panel:
+//======================================================================
+
+        JPanel pnlSouth = new JPanel();
+            JLabel lblZoom = new JLabel("ZOOM: ");
+                JButton btnZoomIn = new JButton("+");
+                JButton btnZoomOut = new JButton("-");
+
+            JButton btnFire = new JButton("Simulate Fire");
+            
+            //Add Components
+            pnlSouth.add(lblZoom);
+            pnlSouth.add(btnZoomIn);
+            pnlSouth.add(btnZoomOut);
+            pnlSouth.add(btnFire);
+
+//====================================================================== 
+//      MenuBar:
+//======================================================================
+
+            JMenuBar mb = new JMenuBar();
+
+            JMenu m1 = new JMenu("File");
+                JMenuItem i1 = new JMenuItem("Load Files");
+                JMenuItem i2 = new JMenuItem("Export as PNG");
+                JMenuItem i3 = new JMenuItem("Exit");
+                    m1.add(i1);
+                    m1.add(i2);
+                    m1.add(i3);
+        
+            JMenu m2 = new JMenu("Help");
+            mb.add(m1);
+            mb.add(m2);
+
+//====================================================================== 
+//      Adding all to the Frame (ECOVIZ):
+//======================================================================
+        frame.setJMenuBar(mb);
+        frame.getContentPane().add(BorderLayout.SOUTH, pnlSouth);
+        frame.getContentPane().add(BorderLayout.NORTH, pnlNorth);
+        frame.getContentPane().add(BorderLayout.WEST, pnlWest);
+        frame.getContentPane().add(BorderLayout.EAST, pnlEast);
+
+        
+        // Show
+        //frame.pack();
         frame.setVisible(true);
 
     }
