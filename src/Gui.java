@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -27,13 +28,27 @@ public class Gui {
 
 
 
+//======================================================================
+//      SplashScreen:
+//======================================================================
+JFrame splash = new JFrame("EcoViz - Initialising");
+
+        splash.setSize(400,400);
+        splash.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        JLabel loading = new JLabel();
+            ImageIcon path = new ImageIcon("src/resources/ECOVIZ.gif");
+            loading.setIcon(path);
+        
+        //splash.getContentPane().add(loading, BorderLayout.CENTER);
+        splash.add(loading);
+
+
 
 //======================================================================
 //      Frame:
 //======================================================================
-
         JFrame frame = new JFrame("EcoViz");
-        frame.setVisible(false);
 
         frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,7 +94,6 @@ public class Gui {
 //======================================================================
 //      East Panel: 
 //======================================================================
-
         JPanel pnlEast = new JPanel();
             pnlEast.setPreferredSize(new Dimension(land.getDimX()-50,land.getDimY()));
             pnlEast.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -94,7 +108,6 @@ public class Gui {
 //======================================================================
 //      South Panel:
 //======================================================================
-
         JPanel pnlSouth = new JPanel();
             JLabel lblZoom = new JLabel("ZOOM: ");
                 JButton btnZoomIn = new JButton("+");
@@ -111,7 +124,6 @@ public class Gui {
 //====================================================================== 
 //      MenuBar:
 //======================================================================
-
             JMenuBar mb = new JMenuBar();
 
             JMenu m1 = new JMenu("File");
@@ -139,6 +151,7 @@ public class Gui {
         // Show
         //frame.pack();
         frame.setVisible(true);
+        splash.setVisible(true);
 
     }
 }

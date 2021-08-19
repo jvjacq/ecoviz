@@ -1,6 +1,7 @@
 
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class imgPanel extends JPanel {
@@ -22,7 +23,7 @@ public class imgPanel extends JPanel {
 
 		//Draw landscape in greyscale:
 		if (land.getImg() != null) {
-
+			
 			g.drawImage(land.getImg(), 0, 0, null);
 		
 		}
