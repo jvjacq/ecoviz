@@ -48,8 +48,13 @@ public class Gui {
         JLabel lblSearch = new JLabel("Search: ");
         JTextField search = new JTextField(20);
         JLabel lblFilter = new JLabel("Filter: ");
-        JComboBox filter = new JComboBox<>();
+        JComboBox filter = new JComboBox();
+            filter.addItem("basic filter 1");
+            filter.addItem("basic filter 2");
+            filter.addItem("basic filter 3");
+            filter.addItem("Custom...");
 
+        
 
         //Add Components
         pnlNorth.add(lblSearch);
