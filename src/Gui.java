@@ -14,10 +14,19 @@ import javax.swing.JTextField;
 import java.awt.GridLayout;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 public class Gui {
 
-    public Gui() {
+//======================================================================
+//      Constructor:
+//======================================================================
+    public Gui(int fX, int fY, Terrain land) {
+        
+
+
+
+
 
 //======================================================================
 //      Frame:
@@ -50,10 +59,16 @@ public class Gui {
 
 
 //======================================================================
-//      West Panel: 
+//      West Panel (MAIN PANEL) : 
 //======================================================================
+        imgPanel mainPanel = new imgPanel(land);
+            mainPanel.setPreferredSize(new Dimension(land.getDimX(),land.getDimY()));
+            mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+            mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+
 
         JPanel pnlWest = new JPanel();
+            pnlWest.add(mainPanel);
 
             
 //======================================================================
@@ -61,6 +76,9 @@ public class Gui {
 //======================================================================
 
         JPanel pnlEast = new JPanel();
+            pnlEast.setPreferredSize(new Dimension(land.getDimX()-50,land.getDimY()));
+            pnlEast.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+            pnlEast.setBorder(BorderFactory.createRaisedBevelBorder());
 
             JTextArea plantDescription = new JTextArea();
             pnlEast.add(plantDescription);
