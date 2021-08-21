@@ -1,8 +1,8 @@
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -11,27 +11,28 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import java.awt.GridLayout;
-
+import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
+//import java.io.File;
+import java.io.File;
 
-public class Gui {
+public class Gui extends JPanel implements ActionListener{
 
-//======================================================================
-//      Constructor:
-//======================================================================
+    private JButton load;
+    private JFileChooser fChooser;
     public Gui(int fX, int fY, Terrain land) {
         
-
-
-
-
 //======================================================================
-//      SplashScreen:
+//      Load in Files Frame:
 //======================================================================
-JFrame splash = new JFrame("EcoViz - Initialising");
+JFrame splash = new JFrame("Initialising");
+
+//File Chooser:
+        fChooser = new JFileChooser();
+        fChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
 
         splash.setSize(400,400);
         splash.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,10 +41,15 @@ JFrame splash = new JFrame("EcoViz - Initialising");
             ImageIcon path = new ImageIcon("src/resources/ECOVIZ.gif");
             loading.setIcon(path);
         
+        //Add button for loading in files:
+        load = new JButton();
+            load.setText("Load Files");
+            load.addActionListener(this);
+
+
         //splash.getContentPane().add(loading, BorderLayout.CENTER);
         splash.add(loading);
-
-
+        splash.getContentPane().add(BorderLayout.SOUTH, load);
 
 //======================================================================
 //      Frame:
@@ -52,8 +58,6 @@ JFrame splash = new JFrame("EcoViz - Initialising");
 
         frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
 
 //======================================================================   
 //      North Panel:
@@ -150,8 +154,17 @@ JFrame splash = new JFrame("EcoViz - Initialising");
         
         // Show
         //frame.pack();
-        frame.setVisible(true);
+        //frame.setVisible(true);
         splash.setVisible(true);
 
+    }
+    public void actionPerformed( ActionEvent e ){
+        if (e.getSource() == load){
+            int returnVal = fChooser.showOpenDialog(Gui.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION){
+                File directory = fChooser.getSelectedFile();
+                System.out.println("Opening the file");
+            }else{System.out.println("Cancelled by the user");}
+        }
     }
 }
