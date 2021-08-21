@@ -22,12 +22,14 @@ public class Gui extends JPanel implements ActionListener{
 
     private JButton load;
     private JFileChooser fChooser;
+    private JFrame frame;
+    private JFrame splash;
     public Gui(int fX, int fY, Terrain land) {
         
 //======================================================================
 //      Load in Files Frame:
 //======================================================================
-JFrame splash = new JFrame("Initialising");
+splash = new JFrame("Initialising");
 
 //File Chooser:
         fChooser = new JFileChooser();
@@ -54,7 +56,7 @@ JFrame splash = new JFrame("Initialising");
 //======================================================================
 //      Frame:
 //======================================================================
-        JFrame frame = new JFrame("EcoViz");
+        frame = new JFrame("EcoViz");
 
         frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -163,6 +165,10 @@ JFrame splash = new JFrame("Initialising");
             int returnVal = fChooser.showOpenDialog(Gui.this);
             if (returnVal == JFileChooser.APPROVE_OPTION){
                 File directory = fChooser.getSelectedFile();
+
+                //Add a check, to see if files are valid*********
+                splash.setVisible(false);
+                frame.setVisible(true);
                 System.out.println("Opening the file");
             }else{System.out.println("Cancelled by the user");}
         }
