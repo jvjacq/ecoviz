@@ -16,7 +16,7 @@ public class Wind {
         speed = 0.0;
     }
 
-    // Mutator Methods:
+    // Mutator methods:
     public void setDirection(double newD) {
         direction = newD;
     }
