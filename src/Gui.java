@@ -13,8 +13,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import java.awt.color.*;
+
 //import java.io.File;
 import java.io.File;
 
@@ -23,21 +26,21 @@ public class Gui extends JPanel implements ActionListener{
     private JButton load;
     private JFileChooser fChooser;
     private JFrame frame;
-    private JFrame splash;
+    private JFrame loadIn;
     public Gui(int fX, int fY, Terrain land) {
         
 //======================================================================
 //      Load in Files Frame:
 //======================================================================
-splash = new JFrame("Initialising");
+loadIn = new JFrame("Initialising");
 
 //File Chooser:
         fChooser = new JFileChooser();
         fChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 
-        splash.setSize(400,400);
-        splash.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loadIn.setSize(400,400);
+        loadIn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         JLabel loading = new JLabel();
             ImageIcon path = new ImageIcon("src/resources/ECOVIZ.gif");
@@ -50,14 +53,14 @@ splash = new JFrame("Initialising");
 
 
         //splash.getContentPane().add(loading, BorderLayout.CENTER);
-        splash.add(loading);
-        splash.getContentPane().add(BorderLayout.SOUTH, load);
+        loadIn.add(loading);
+        loadIn.getContentPane().add(BorderLayout.SOUTH, load);
 
 //======================================================================
 //      Frame:
 //======================================================================
         frame = new JFrame("EcoViz");
-
+        //frame.getContentPane().setBackground(Color.BLACK);
         frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -71,7 +74,7 @@ splash = new JFrame("Initialising");
         JLabel lblFilter = new JLabel("Filter: ");
         JComboBox filter = new JComboBox();
             filter.addItem("basic filter 1");
-            filter.addItem("basic filter 2");
+            filter.addItem("basic filter+ 2");
             filter.addItem("basic filter 3");
             filter.addItem("Custom...");
 
@@ -87,7 +90,7 @@ splash = new JFrame("Initialising");
 //======================================================================
 //      West Panel (MAIN PANEL) : 
 //======================================================================
-        imgPanel mainPanel = new imgPanel(land);
+        imgPanel mainPanel = new imgPanel(land.getImg());
             mainPanel.setPreferredSize(new Dimension(land.getDimX(),land.getDimY()));
             mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -157,7 +160,7 @@ splash = new JFrame("Initialising");
         // Show
         //frame.pack();
         //frame.setVisible(true);
-        splash.setVisible(true);
+        loadIn.setVisible(true);
 
     }
     public void actionPerformed( ActionEvent e ){
@@ -167,7 +170,7 @@ splash = new JFrame("Initialising");
                 File directory = fChooser.getSelectedFile();
 
                 //Add a check, to see if files are valid*********
-                splash.setVisible(false);
+                loadIn.setVisible(false);
                 frame.setVisible(true);
                 System.out.println("Opening the file");
             }else{System.out.println("Cancelled by the user");}
