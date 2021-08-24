@@ -40,6 +40,7 @@ public class imgPanel extends JPanel implements MouseWheelListener{
 			graphics2d.transform(affine);
 			zoom = false;
 		}
+		
 		g.drawImage(img, 0, 0, null);
 
 		}

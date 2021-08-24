@@ -29,7 +29,7 @@ public class PlantLayer {
     }
 
     // Accessor methods:
-    public PlantType getPlant(int dimx, int dimy) {
+    public Species getPlant(int dimx, int dimy) {
        // return idLocations[dimx][dimy];
        return null;
     }

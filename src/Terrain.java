@@ -14,8 +14,8 @@ public class Terrain {
     private double latitude = 0.0;
     private double[][] canopy;
     private double[][] undergrowth;
-    private ArrayList<PlantType> underPlants = new ArrayList<PlantType>();
-    private ArrayList<PlantType> canopyPlants = new ArrayList<PlantType>();
+    private ArrayList<Species> underPlants = new ArrayList<Species>();
+    private ArrayList<Species> canopyPlants = new ArrayList<Species>();
     private BufferedImage img;
 
     public Terrain(){
@@ -33,7 +33,7 @@ public class Terrain {
     }
 
 //========================================================================
-//      Read in the height values
+//      Read in the elevation values
 //========================================================================
     public void readElevation() throws FileNotFoundException{
         String fileName = "src/data/S2000-2000-512.elv";
@@ -102,7 +102,7 @@ public class Terrain {
             float maxHeight = Float.parseFloat(scanner.next());
             float avgRatio = Float.parseFloat(scanner.next());
             int numPlants = Integer.parseInt(scanner.next()); 
-            PlantType species = new PlantType(id, minHeight, maxHeight, avgRatio, numPlants);  //Create PlantType object
+            Species species = new Species(id, minHeight, maxHeight, avgRatio, numPlants);  //Create PlantType object
             canopy = new double[numPlants][4];
             for (int y = 0; y < numPlants;y++){
                 for (int x = 0; x<5; x++){
@@ -134,7 +134,7 @@ public class Terrain {
             float maxHeight = Float.parseFloat(scanner.next());
             float avgRatio = Float.parseFloat(scanner.next());
             int numPlants = Integer.parseInt(scanner.next()); 
-            PlantType species = new PlantType(id, minHeight, maxHeight, avgRatio, numPlants);  //Create PlantType object
+            Species species = new Species(id, minHeight, maxHeight, avgRatio, numPlants);  //Create PlantType object
             undergrowth = new double[numPlants][4];
             for (int y = 0; y < numPlants;y++){
                 for (int x = 0; x<5; x++){

@@ -1,4 +1,4 @@
-public class PlantType {
+public class Species {
     private String commonName;
     private String latinName;
     private int id;
@@ -9,7 +9,7 @@ public class PlantType {
     private double[][] canopy;
 
 
-    public PlantType(int identity, float minH, float maxH, float rad, int num) {
+    public Species(int identity, float minH, float maxH, float rad, int num) {
         
         id = identity;
         minHeight = minH;
