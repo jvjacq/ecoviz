@@ -30,14 +30,16 @@ public class PlantLayer {
 
     // Accessor methods:
     public PlantType getPlant(int dimx, int dimy) {
-        return idLocations[dimx][dimy];
+       // return idLocations[dimx][dimy];
+       return null;
     }
 
     public void getLayer() {
-      return idLocations;
+      //return idLocations;
+      
     }
 
-    public getBurnt(){
+    public int[][] getBurnt(){
       return burnt;
     }
 

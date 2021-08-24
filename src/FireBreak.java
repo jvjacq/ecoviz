@@ -18,11 +18,11 @@ public class FireBreak {
   }
 
   //Accessor methods
-  public getID(){
+  public int getID(){
     return id;
   }
 
-  public getPrevLayer(){
+  public int[][] getPrevLayer(){
     return prevLayer;
   }
 
