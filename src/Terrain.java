@@ -36,7 +36,7 @@ public class Terrain {
 //      Read in the height values
 //========================================================================
     public void readElevation() throws FileNotFoundException{
-        String fileName = "src/data/S6000-6000-256.elv";
+        String fileName = "src/data/S2000-2000-512.elv";
         File file = new File(fileName);
         Scanner scanner = new Scanner(file);
 
@@ -89,7 +89,7 @@ public class Terrain {
 //      Read in Canopy
 //========================================================================
     public void readCanopy() throws FileNotFoundException{
-        String fileName = "S6000-6000-256_canopy.pdb";
+        String fileName = "S2000-2000-512_canopy.pdb";
         File file = new File(fileName);
         Scanner scanner = new Scanner(file);
 
@@ -121,7 +121,7 @@ public class Terrain {
 //      Read in Undergrowth
 //========================================================================
     public void readUndergrowth() throws FileNotFoundException{
-        String fileName = "S6000-6000-256_undergrowth.pdb";
+        String fileName = "S2000-2000-512_undergrowth.pdb";
         File file = new File(fileName);
         Scanner scanner = new Scanner(file);
 
@@ -151,6 +151,6 @@ public class Terrain {
 //      Read in Species
 //========================================================================
     public void readSpecies(){
-        String file = "S6000-6000-256.spc.txt";
+        String file = "S2000-2000-512.spc.txt";
     }
 }

@@ -104,7 +104,7 @@ loadIn = new JFrame("Initialising");
 //      East Panel: 
 //======================================================================
         JPanel pnlEast = new JPanel();
-            pnlEast.setPreferredSize(new Dimension(land.getDimX()-50,land.getDimY()));
+            pnlEast.setPreferredSize(new Dimension(200,land.getDimY()));
             pnlEast.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             pnlEast.setBorder(BorderFactory.createRaisedBevelBorder());
 
@@ -158,7 +158,7 @@ loadIn = new JFrame("Initialising");
 
         
         // Show
-        //frame.pack();
+        frame.pack();
         //frame.setVisible(true);
         loadIn.setVisible(true);
 
