@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.color.*;
 
@@ -75,7 +76,7 @@ loadIn = new JFrame("Initialising");
 //      North Panel:
 //======================================================================
         JPanel pnlNorth = new JPanel();
-
+        pnlNorth.setBackground(Color.GRAY);
         JLabel lblSearch = new JLabel("Search: ");
         JTextField search = new JTextField(20);
         JLabel lblFilter = new JLabel("Filter: ");
@@ -115,26 +116,28 @@ loadIn = new JFrame("Initialising");
             pnlEast.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             pnlEast.setBorder(BorderFactory.createRaisedBevelBorder());
 
-            JTextArea plantDescription = new JTextArea();
+            JLabel heading = new JLabel("Plant Description");
+            Font f = heading.getFont();
+            heading.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+            JTextArea plantDescription = new JTextArea("Common Name:\nLatin Name:\nHeight:\nCanopy Radius:");
             pnlEast.add(plantDescription);
-        
+            pnlEast.setBackground(Color.lightGray);
+
             //Add Components
+            pnlEast.add(heading);
             pnlEast.add(plantDescription);
 
 //======================================================================
 //      South Panel:
 //======================================================================
         JPanel pnlSouth = new JPanel();
-            JLabel lblZoom = new JLabel("ZOOM: ");
-                JButton btnZoomIn = new JButton("+");
-                JButton btnZoomOut = new JButton("-");
-
+            JLabel lblZoom = new JLabel("Scroll to Zoom                       ");
+            lblZoom.setForeground(Color.white);
             JButton btnFire = new JButton("Simulate Fire");
-            
+            pnlSouth.setBackground(Color.DARK_GRAY);
+
             //Add Components
             pnlSouth.add(lblZoom);
-            pnlSouth.add(btnZoomIn);
-            pnlSouth.add(btnZoomOut);
             pnlSouth.add(btnFire);
 
 //====================================================================== 
@@ -143,9 +146,12 @@ loadIn = new JFrame("Initialising");
             JMenuBar mb = new JMenuBar();
 
             JMenu m1 = new JMenu("File");
-                JMenuItem i1 = new JMenuItem("Load Files");
+                i1 = new JMenuItem("Load Files");
+                i1.addActionListener(this);
                 JMenuItem i2 = new JMenuItem("Export as PNG");
-                JMenuItem i3 = new JMenuItem("Exit");
+                i3 = new JMenuItem("Exit");
+                i3.addActionListener(this);
+
                     m1.add(i1);
                     m1.add(i2);
                     m1.add(i3);
@@ -171,7 +177,7 @@ loadIn = new JFrame("Initialising");
 
     }
     public void actionPerformed( ActionEvent e ){
-        if (e.getSource() == load){
+        if ((e.getSource() == load) | e.getSource() == i1){
             int returnVal = fChooser.showOpenDialog(Gui.this);
             if (returnVal == JFileChooser.APPROVE_OPTION){
                 File directory = fChooser.getSelectedFile();
@@ -182,5 +188,8 @@ loadIn = new JFrame("Initialising");
                 System.out.println("Opening the file");
             }else{System.out.println("Cancelled by the user");}
         }
+
+        if (e.getSource() == i3){System.exit(0);}
+
     }
 }
