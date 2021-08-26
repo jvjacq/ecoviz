@@ -66,4 +66,8 @@ public class Species {
 
         return out;
     }
+
+    public Plant[] getPlants(){
+        return list;
+    }
 }
