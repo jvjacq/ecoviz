@@ -6,22 +6,30 @@ public class Species {
     private float maxHeight;
     private float avgRadius;
     private int numPlants;
-    private double[][] canopy;
+    private Plant[] list;
 
 
-    public Species(int identity, float minH, float maxH, float rad, int num) {
+    public Species(int id, String cname, String lname) {
         
-        id = identity;
+        this.id = id;
+        commonName = cname;
+        latinName = lname;
+        minHeight = 0.0f;
+        maxHeight = 0.0f;
+        avgRadius = 0.0f;
+        numPlants = 0;
+        
+    }
+
+    public void create(float minH, float maxH, float rad, int numP){
         minHeight = minH;
         maxHeight = maxH;
         avgRadius = rad;
-        numPlants = num;
+        numPlants = numP;
     }
 
+    
     //Mutator Methods:
-    public void setData(double[][] newCanopy){
-        canopy = newCanopy; //Assigns canopy data
-    }
 
     // Accessor Methods:
     public int getID() {
