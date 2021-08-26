@@ -75,7 +75,7 @@ public class Terrain {
             for (int x = 0; x < dimX; x++){
                 double h = elv[y][x];
                 if (h>maxh){maxh = h;}
-                if (h<minh){minh = h;}
+                if (h<minh){minh = h;}  //Can be cut out and done in read loop - optimization
             }
         }
 
