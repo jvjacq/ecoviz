@@ -173,8 +173,8 @@ loadIn = new JFrame("Initialising");
         
         // Show
         frame.pack();
-        frame.setVisible(true);
-        //loadIn.setVisible(true);
+        //frame.setVisible(true);
+        loadIn.setVisible(true);
 
     }
     public void actionPerformed( ActionEvent e ){

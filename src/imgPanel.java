@@ -124,12 +124,10 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 
 		if (e.getWheelRotation() < 0) {	// Zoom in
 			zoomMultiplier *=1.1;	//Adjust for smoothness
-			System.out.println("Zooming in");
 			repaint();
 		}
 		if (e.getWheelRotation() > 0) {	// Zoom out
 			zoomMultiplier /=1.1;	//Adjust for smoothness
-			System.out.println("Zooming out");
 
 			repaint();
 		}
