@@ -85,7 +85,10 @@ public class PlantLayer {
     //      Read in Species
     //========================================================================
     public static void readSpecies() throws FileNotFoundException{
+      //File file = new File("src/data/S6000-6000-256.spc.txt");
       File file = new File("src/data/S2000-2000-512.spc.txt");
+      //File file = new File("src/data/S4500-4500-1024.spc.txt");
+
       Scanner filein = new Scanner(file);
       int totalSpecies = -1;
       while(filein.hasNextLine()){

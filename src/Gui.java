@@ -35,6 +35,7 @@ public class Gui extends JPanel implements ActionListener{
     private JFileChooser fChooser;
     private JFrame frame;
     private JFrame loadIn;
+    private JMenuItem i1,i3;
     public Gui(int fX, int fY, Terrain land, PlantLayer c, PlantLayer u) {
         
 //======================================================================
