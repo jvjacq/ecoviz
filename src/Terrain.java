@@ -3,13 +3,12 @@
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
 * Version 1.2
 * Created: +++++++++++ Owen insert date here +++++++
-* Last edited: 25/08/2021
+* Last edited: 26/08/2021
 * Status: In progress
 */
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.awt.image.BufferedImage;
 import java.awt.Color;

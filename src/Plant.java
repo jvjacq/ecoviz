@@ -1,9 +1,9 @@
 /*
 * File: Plant.java
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 1.0
+* Version 1.1
 * Created: 25/08/2021
-* Last edited: 25/08/2021
+* Last edited: 26/08/2021
 * Status: In progress
 */
 public class Plant {
