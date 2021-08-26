@@ -18,6 +18,7 @@ public class FireSimulation {
         colour = newColour;
     }
 
+/*
     public void floodFill(int xcoord, int ycoord, int previous, int locations[][])
     {
       if( xcoord < 0 || xcoord > terrainWidth || ycoord < 0 || ycoord > terrainHeight )
@@ -40,4 +41,6 @@ public class FireSimulation {
         }
       }
     }
+*/
+
 }
