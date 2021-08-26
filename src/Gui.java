@@ -34,7 +34,7 @@ public class Gui extends JPanel implements ActionListener{
     private JFileChooser fChooser;
     private JFrame frame;
     private JFrame loadIn;
-    public Gui(int fX, int fY, Terrain land) {
+    public Gui(int fX, int fY, Terrain land, PlantLayer c, PlantLayer u) {
         
 //======================================================================
 //      Load in Files Frame:
@@ -97,7 +97,7 @@ loadIn = new JFrame("Initialising");
 //======================================================================
 //      West Panel (MAIN PANEL) : 
 //======================================================================
-        imgPanel mainPanel = new imgPanel(land.getImg());
+        imgPanel mainPanel = new imgPanel(land.getImg(), c.getImg(), u.getImg());
             mainPanel.setPreferredSize(new Dimension(land.getDimX(),land.getDimY()));
             mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
