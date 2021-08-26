@@ -1,6 +1,14 @@
+/*
+* File: Terrain.java
+* Author(s): BRNJAM019, FRNOWE001, VJRJAC003
+* Version 1.2
+* Created: +++++++++++ Owen insert date here +++++++
+* Last edited: 26/08/2021
+* Status: In progress
+*/
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
@@ -12,10 +20,6 @@ public class Terrain {
     private int dimX,dimY;
     private double gridSpacing = 0.0;
     private double latitude = 0.0;
-    private double[][] canopy;
-    private double[][] undergrowth;
-    private ArrayList<Species> underPlants = new ArrayList<Species>();
-    private ArrayList<Species> canopyPlants = new ArrayList<Species>();
     private BufferedImage img;
 
     public Terrain(){
@@ -85,72 +89,4 @@ public class Terrain {
         }
     }
 
-//========================================================================
-//      Read in Canopy
-//========================================================================
-    public void readCanopy() throws FileNotFoundException{
-        String fileName = "S2000-2000-512_canopy.pdb";
-        File file = new File(fileName);
-        Scanner scanner = new Scanner(file);
-
-        int numSpecies = Integer.parseInt(scanner.next()); 
-        
-        for (int i=0;i<numSpecies;i++){
-            //Plant Details:
-            int id =  Integer.parseInt(scanner.next()); 
-            float minHeight = Float.parseFloat(scanner.next());
-            float maxHeight = Float.parseFloat(scanner.next());
-            float avgRatio = Float.parseFloat(scanner.next());
-            int numPlants = Integer.parseInt(scanner.next()); 
-            Species species = new Species(id, minHeight, maxHeight, avgRatio, numPlants);  //Create PlantType object
-            canopy = new double[numPlants][4];
-            for (int y = 0; y < numPlants;y++){
-                for (int x = 0; x<5; x++){
-                    canopy[y][x] = Float.parseFloat(scanner.next());    //Store 5 data val for each plant in the type.
-                }
-            }
-            species.setData(canopy);    //Set data
-            canopyPlants.add(species);
-            
-
-        }
-        scanner.close();
-    }
-
-//========================================================================
-//      Read in Undergrowth
-//========================================================================
-    public void readUndergrowth() throws FileNotFoundException{
-        String fileName = "S2000-2000-512_undergrowth.pdb";
-        File file = new File(fileName);
-        Scanner scanner = new Scanner(file);
-
-        int numSpecies = Integer.parseInt(scanner.next()); 
-        
-        for (int i=0;i<numSpecies;i++){
-            //Plant Details:
-            int id =  Integer.parseInt(scanner.next()); 
-            float minHeight = Float.parseFloat(scanner.next());
-            float maxHeight = Float.parseFloat(scanner.next());
-            float avgRatio = Float.parseFloat(scanner.next());
-            int numPlants = Integer.parseInt(scanner.next()); 
-            Species species = new Species(id, minHeight, maxHeight, avgRatio, numPlants);  //Create PlantType object
-            undergrowth = new double[numPlants][4];
-            for (int y = 0; y < numPlants;y++){
-                for (int x = 0; x<5; x++){
-                    canopy[y][x] = Float.parseFloat(scanner.next());    //Store 5 data val for each plant in the type.
-                }
-            }
-            species.setData(undergrowth);    //Set data
-            underPlants.add(species);
-        }
-        scanner.close();
-    }
-
-//========================================================================
-//      Read in Species
-//========================================================================
-    public void readSpecies(){
-        String file = "S2000-2000-512.spc.txt";
-    }
 }
