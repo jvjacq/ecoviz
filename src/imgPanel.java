@@ -1,3 +1,9 @@
+/*
+* File: imgPanel.java
+* Author(s): BRNJAM019, FRNOWE001, VJRJAC003
+* Status: In progress
+*/
+//References:
 //Zoom functionality : credit to @Thanasis - StackOverflow for the algorithm
 
 import javax.swing.JPanel;

@@ -1,3 +1,10 @@
+/*
+* Previously: PlantLayer.java
+* File: Gui.java
+* Author(s): BRNJAM019, FRNOWE001, VJRJAC003
+* Status: In progress
+*/
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;

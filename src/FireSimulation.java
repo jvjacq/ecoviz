@@ -1,3 +1,10 @@
+/*
+* File: FireSimulation.java
+* Author(s): BRNJAM019, FRNOWE001, VJRJAC003
+* Last edited: 26/08/2021
+* Status: In progress
+*/
+
 public class FireSimulation {
 
     private double speedMultiplier;
