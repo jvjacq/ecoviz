@@ -9,13 +9,15 @@
 public class Plant {
     
     private int speciesID;
-    private int id;
+    private int id,posx,posy;
     private double height;
     private double canopy;
     private boolean burnt;
 
-    public Plant(int speciesID, int plantID, float height, float canopy){
+    public Plant(int speciesID, int plantID, int x, int y, float height, float canopy){
         this.speciesID = speciesID;
+        posx = x;
+        posy = y;
         id = plantID;
         this.height = height;
         this.canopy = canopy;
@@ -29,6 +31,14 @@ public class Plant {
 
     public int getID(){
         return id;
+    }
+
+    public int getX(){
+        return posx;
+    }
+
+    public int getY(){
+        return posy;
     }
 
     public double getHeight(){

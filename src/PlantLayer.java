@@ -1,7 +1,7 @@
 /*
 * File: PlantLayer.java
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 1.2
+* Version 1.3
 * Created: +++++++++++ Owen insert date here +++++++
 * Last edited: 26/08/2021
 * Status: In progress
@@ -10,6 +10,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Random;
+import java.awt.image.BufferedImage;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.lang.Math;
 public class PlantLayer {
 
@@ -20,6 +25,9 @@ public class PlantLayer {
     //new
     private static Species[] specieslist;
     private int numSpecies; //per layer
+
+    private BufferedImage img;
+    // Constructors:
 
     public PlantLayer() {
         idLocations = null;
@@ -33,6 +41,8 @@ public class PlantLayer {
       readLayer(filename);
   }
 
+  // Methods:
+
   //========================================================================
   //      Read in Plant layer
   //========================================================================
@@ -45,7 +55,7 @@ public class PlantLayer {
     for (int i=0;i<numSpecies;++i){
         //Species average Details:
         int speciesID =  filein.nextInt();
-        //System.out.println(speciesID); 
+         
         float minHeight = Float.parseFloat(filein.next());
         float maxHeight = Float.parseFloat(filein.next());
         float avgRatio = Float.parseFloat(filein.next());
@@ -60,13 +70,12 @@ public class PlantLayer {
           zpos = Math.round(Float.parseFloat(filein.next()));  //Intentionally unused
           height = Float.parseFloat(filein.next());
           canopy = Float.parseFloat(filein.next());
-          species.addPlant(new Plant(speciesID,y,height,canopy));  //Store 5 data val for each plant in the type.
-          //
-          PlantLayer.specieslist[speciesID] = species;
-          //
+          species.addPlant(new Plant(speciesID,y,xpos,ypos,height,canopy));  //Store 5 data val for each plant in the type.
+          
           idLocations[xpos][ypos][0] = speciesID;
-          idLocations[xpos][ypos][1] = speciesID;
+          idLocations[xpos][ypos][1] = y;
         }
+        specieslist[speciesID] = species;
     }
     System.out.println("One .pdb file read in successfully");
     filein.close();
@@ -76,13 +85,15 @@ public class PlantLayer {
     //      Read in Species
     //========================================================================
     public static void readSpecies() throws FileNotFoundException{
+      //File file = new File("src/data/S6000-6000-256.spc.txt");
       File file = new File("src/data/S2000-2000-512.spc.txt");
+      //File file = new File("src/data/S4500-4500-1024.spc.txt");
+
       Scanner filein = new Scanner(file);
       int totalSpecies = -1;
       while(filein.hasNextLine()){
         ++totalSpecies;
-        System.out.println(totalSpecies);
-        System.out.println(filein.nextLine());
+        filein.nextLine();
       }
       if(totalSpecies >= 0){ PlantLayer.specieslist = new Species[totalSpecies+1]; }
       filein.close();
@@ -99,7 +110,30 @@ public class PlantLayer {
       System.out.println("Species file processed.");
     }
 
-    // Methods:
+    //========================================================================
+    //      Create the colourful circles
+    //========================================================================
+    public void deriveImg(){
+      int dimx = Simulation.frameX;
+      int dimy = Simulation.frameY;
+
+      img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
+      Graphics2D imgGraphics = img.createGraphics();
+
+      imgGraphics.setComposite(AlphaComposite.Clear);
+      imgGraphics.fillRect(0, 0, dimx, dimy);
+
+      imgGraphics.setComposite(AlphaComposite.Src);
+      for (Species s: specieslist){
+        Random r = new Random();
+        imgGraphics.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat()));
+        for(Plant p: s.getPlants()){
+          imgGraphics.fillOval(p.getX(),p.getY(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
+        }
+      }
+      
+    }
+
     public void removePlant(int dimx, int dimy) {
       idLocations[dimx][dimy][0] = 0;
       idLocations[dimx][dimy][1] = -1;  //Burnt would be double -1?
@@ -123,6 +157,10 @@ public class PlantLayer {
 
     public int[][] getBurnt(){
       return burnt;
+    }
+
+    public BufferedImage getImg(){
+      return img;
     }
 
 }

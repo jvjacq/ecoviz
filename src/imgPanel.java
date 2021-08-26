@@ -31,6 +31,8 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 	private Graphics graphics;
 
 	private BufferedImage img;
+	private BufferedImage cimg;
+	private BufferedImage uimg;
 
 	private	double zoomMultiplier = 1;
 	private double prevZoomMultiplier = 1;
@@ -41,8 +43,10 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 	private int xDiff,yDiff;
 	private Point startPoint;
 
-	public imgPanel(BufferedImage img){
+	public imgPanel(BufferedImage img, BufferedImage layer1, BufferedImage layer0){
 		this.img=img;
+		cimg = layer1;
+		uimg = layer0;
 		addMouseWheelListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -88,6 +92,8 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 		}
 		
 		graphics2d.drawImage(img, 0, 0, null);
+		graphics2d.drawImage(uimg, 0, 0, null);
+		graphics2d.drawImage(cimg, 0, 0, null);
 
 		}
 	}

@@ -40,7 +40,10 @@ public class Terrain {
 //      Read in the elevation values
 //========================================================================
     public void readElevation() throws FileNotFoundException{
+        //String fileName = "src/data/S6000-6000-256.elv";
         String fileName = "src/data/S2000-2000-512.elv";
+        //String fileName = "src/data/S4500-4500-1024.elv";
+
         File file = new File(fileName);
         Scanner scanner = new Scanner(file);
 
