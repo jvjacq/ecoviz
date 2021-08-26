@@ -1,3 +1,11 @@
+/*
+* File: Plant.java
+* Author(s): BRNJAM019, FRNOWE001, VJRJAC003
+* Version 1.0
+* Created: 25/08/2021
+* Last edited: 25/08/2021
+* Status: In progress
+*/
 public class Plant {
     
     private int speciesID;
@@ -6,11 +14,11 @@ public class Plant {
     private double canopy;
     private boolean burnt;
 
-    public Plant(int speciesID){
+    public Plant(int speciesID, int plantID, float height, float canopy){
         this.speciesID = speciesID;
-        id = 0;
-        height = 0;
-        canopy = 0;
+        id = plantID;
+        this.height = height;
+        this.canopy = canopy;
         burnt = false;
     }
 
@@ -31,6 +39,7 @@ public class Plant {
         return canopy;
     }
 
+    //Mutator methdos
     public void toggleburn(){
         burnt = !burnt;
     }
