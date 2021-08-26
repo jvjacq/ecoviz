@@ -30,7 +30,8 @@ public class Simulation {
         int frameX=terrain.getDimX();   //Consider making theses static?
         int frameY=terrain.getDimY();
         SwingUtilities.invokeLater(() -> new Gui(frameX,frameY,terrain)); //in case we use threads
-
+        //Species objects
+        PlantLayer.readSpecies();
         //plantlayer objects
         PlantLayer canopy = new PlantLayer("src/data/S2000-2000-512_canopy.pdb", frameX, frameY);
         PlantLayer undergrowth = new PlantLayer("src/data/S2000-2000-512_canopy.pdb", frameX, frameY);
