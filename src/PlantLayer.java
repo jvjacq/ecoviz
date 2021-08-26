@@ -18,7 +18,7 @@ public class PlantLayer {
     private int[][][] idLocations;
     private int[][] burnt;
     //new
-    //private static Species[] specieslist;
+    private static Species[] specieslist;
     private int numSpecies; //per layer
 
     public PlantLayer() {
@@ -61,19 +61,42 @@ public class PlantLayer {
           height = Float.parseFloat(filein.next());
           canopy = Float.parseFloat(filein.next());
           species.addPlant(new Plant(speciesID,y,height,canopy));  //Store 5 data val for each plant in the type.
+          //
+          PlantLayer.specieslist[speciesID] = species;
+          //
           idLocations[xpos][ypos][0] = speciesID;
           idLocations[xpos][ypos][1] = speciesID;
         }
     }
-    System.out.println("File read in successfully");
+    System.out.println("One .pdb file read in successfully");
     filein.close();
   }
 
     //========================================================================
     //      Read in Species
     //========================================================================
-    public void readSpecies(){
-      String file = "S2000-2000-512.spc.txt";
+    public static void readSpecies() throws FileNotFoundException{
+      File file = new File("src/data/S2000-2000-512.spc.txt");
+      Scanner filein = new Scanner(file);
+      int totalSpecies = -1;
+      while(filein.hasNextLine()){
+        ++totalSpecies;
+        System.out.println(totalSpecies);
+        System.out.println(filein.nextLine());
+      }
+      if(totalSpecies >= 0){ PlantLayer.specieslist = new Species[totalSpecies+1]; }
+      filein.close();
+
+      filein = new Scanner(file);
+      String[] names = new String[2];
+      for(int l = 0; l < totalSpecies; ++l){
+        names = filein.nextLine().split("\" \"");
+        //
+        //missing
+        //
+      } //Should be counting down - does not read them into Species objects yet
+      filein.close();
+      System.out.println("Species file processed.");
     }
 
     // Methods:
