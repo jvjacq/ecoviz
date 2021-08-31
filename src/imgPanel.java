@@ -38,7 +38,7 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 	private double prevZoomMultiplier = 1;
 	private boolean zoom;
 
-	private boolean zoomer,dragger,released;
+	private boolean dragger,released;
 	private double xOffset,yOffset = 0;
 	private int xDiff,yDiff;
 	private Point startPoint;
