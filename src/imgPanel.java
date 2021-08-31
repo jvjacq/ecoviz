@@ -8,6 +8,8 @@
 
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
+import java.awt.Image;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -34,6 +36,8 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 	private BufferedImage cimg;
 	private BufferedImage uimg;
 
+	private BufferedImage miniMap;
+
 	private	double zoomMultiplier = 1;
 	private double prevZoomMultiplier = 1;
 	private boolean zoom;
@@ -47,6 +51,13 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 		this.img=img;
 		cimg = layer1;
 		uimg = layer0;
+
+		miniMap = img;
+
+		//resize minimap
+		miniature();
+
+
 		addMouseWheelListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -90,11 +101,12 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 			}
 
 		}
-		
+		//Main map:
 		graphics2d.drawImage(img, 0, 0, null);
 		graphics2d.drawImage(uimg, 0, 0, null);
 		graphics2d.drawImage(cimg, 0, 0, null);
-
+		//Mini Map Overlay:
+		graphics2d.drawImage(miniMap, 0,0,null);
 		}
 	}
 
@@ -168,7 +180,19 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 		
 	}
 
-	
+
+	//Thanks Ocracoke for the algorithm here:
+	public void miniature(){
+		Image temp = miniMap.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+		BufferedImage out = new BufferedImage(100,100,BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g = out.createGraphics();
+		g.drawImage(temp,0,0,null);
+		g.dispose();
+
+		miniMap=out;
+
+	}
 
 	
 

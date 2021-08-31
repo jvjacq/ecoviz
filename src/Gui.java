@@ -99,12 +99,14 @@ loadIn = new JFrame("Initialising");
 //======================================================================
 //      West Panel (MAIN PANEL) : 
 //======================================================================
+        //Main map:
         imgPanel mainPanel = new imgPanel(land.getImg(), c.getImg(), u.getImg());
             mainPanel.setPreferredSize(new Dimension(land.getDimX(),land.getDimY()));
             mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-
-
+        
+        //Mini map:
+       
         JPanel pnlWest = new JPanel();
             pnlWest.add(mainPanel);
 
@@ -127,7 +129,6 @@ loadIn = new JFrame("Initialising");
             //Add Components
             pnlEast.add(heading);
             pnlEast.add(plantDescription);
-
 //======================================================================
 //      South Panel:
 //======================================================================
