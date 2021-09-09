@@ -28,18 +28,16 @@ import java.awt.geom.AffineTransform;
 
 public class miniMap extends JPanel{
 
-	private BufferedImage img;
-	private BufferedImage cimg;
-	private BufferedImage uimg;
+	private BufferedImage eImg;
+	private BufferedImage cImg;
+	private BufferedImage uImg;
 
-	private BufferedImage miniMap;
 
 	public miniMap(BufferedImage img, BufferedImage layer1, BufferedImage layer0){
-		this.img=img;
-		cimg = layer1;
-		uimg = layer0;
+		cImg = layer1;
+		uImg = layer0;
 
-		miniMap = img;
+		eImg = img;
 
 		//resize minimap
 		miniature();
@@ -49,28 +47,47 @@ public class miniMap extends JPanel{
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D graphics2d = (Graphics2D) g;
-		if (img != null) {
+		if (eImg != null) {
 
-		
-		
-		graphics2d.drawImage(miniMap, 0,0,null);
-		graphics2d.drawImage(uimg, 0,0,null);
-		graphics2d.drawImage(cimg, 0,0,null);
+		graphics2d.drawImage(eImg, 0,0,null);
+		graphics2d.drawImage(uImg, 0,0,null);
+		graphics2d.drawImage(cImg, 0,0,null);
 
 
 		}
 	}
 
-	//Thanks Ocracoke for the algorithm here:
+	//Thanks @Ocracoke for the algorithm here:
 	public void miniature(){
-		Image temp = miniMap.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-		BufferedImage out = new BufferedImage(200,200,BufferedImage.TYPE_INT_ARGB);
 
-		Graphics2D g = out.createGraphics();
-		g.drawImage(temp,0,0,null);
+		//Elevation
+		Image tempElv = eImg.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		BufferedImage outElv = new BufferedImage(200,200,BufferedImage.TYPE_INT_ARGB);
+
+		//Canopy
+		Image tempCanopy = cImg.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		BufferedImage outCanopy = new BufferedImage(200,200,BufferedImage.TYPE_INT_ARGB);
+
+		//Undergrowth
+		Image tempUnder = uImg.getScaledInstance(200,200,Image.SCALE_SMOOTH);
+		BufferedImage outUnder = new BufferedImage(200,200,BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g = outElv.createGraphics();
+		Graphics2D g2 = outCanopy.createGraphics();
+		Graphics2D g3 =	outUnder.createGraphics();
+
+		g.drawImage(tempElv,0,0,null);
+		g2.drawImage(tempCanopy,0,0,null);
+		g3.drawImage(tempUnder,0,0,null);
+
+
 		g.dispose();
+		g2.dispose();
+		g3.dispose();
 
-		miniMap=out;
+		eImg=outElv;
+		uImg=outUnder;
+		cImg=outCanopy;
 
 	}
 
