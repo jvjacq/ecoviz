@@ -80,7 +80,7 @@ loadIn = new JFrame("Initialising");
 //      North Panel:
 //======================================================================
         JPanel pnlNorth = new JPanel();
-        pnlNorth.setBackground(Color.GRAY);
+        pnlNorth.setBackground(new Color(16,120,173));
         JLabel lblSearch = new JLabel("Search: ");
         JTextField search = new JTextField(20);
         JLabel lblFilter = new JLabel("Filter: ");
@@ -124,8 +124,8 @@ loadIn = new JFrame("Initialising");
             JLabel heading = new JLabel("Plant Description");
             Font f = heading.getFont();
             heading.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JTextArea plantDescription = new JTextArea("Common Name:\nLatin Name:\nHeight:\nCanopy Radius:");
-            pnlEast.setBackground(Color.lightGray);
+            JTextArea plantDescription = new JTextArea("  Common Name:\n  Latin Name:\n  Height:\n  Canopy Radius:");
+            plantDescription.setOpaque(false);
 
             //Add Components
             pnlEast.add(heading,BorderLayout.NORTH);
@@ -151,8 +151,11 @@ loadIn = new JFrame("Initialising");
             miniMap mini = new miniMap(land.getImg(), c.getImg(), u.getImg());
             mini.setPreferredSize(new Dimension(200,200));
             mini.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-            mini.setBorder(BorderFactory.createRaisedBevelBorder());
+            mini.setOpaque(false);
+
+            pnlEast.setBackground(new Color(85,193,219));
             pnlEast.add(mini,BorderLayout.SOUTH);
+
 //======================================================================
 //      South Panel:
 //======================================================================
@@ -160,7 +163,7 @@ loadIn = new JFrame("Initialising");
             JLabel lblZoom = new JLabel("Scroll to Zoom                       ");
             lblZoom.setForeground(Color.white);
             JButton btnFire = new JButton("Simulate Fire");
-            pnlSouth.setBackground(Color.DARK_GRAY);
+            pnlSouth.setBackground(new Color(8,78,137));
 
             //Add Components
             pnlSouth.add(lblZoom);

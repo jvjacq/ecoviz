@@ -9,22 +9,10 @@
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
 import java.awt.Image;
-
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.awt.Point;
-import java.awt.MouseInfo;
+import java.awt.geom.Ellipse2D;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseListener;
-
-
-
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
 
 public class miniMap extends JPanel{
 
@@ -52,8 +40,6 @@ public class miniMap extends JPanel{
 		graphics2d.drawImage(eImg, 0,0,null);
 		graphics2d.drawImage(uImg, 0,0,null);
 		graphics2d.drawImage(cImg, 0,0,null);
-
-
 		}
 	}
 
@@ -76,10 +62,12 @@ public class miniMap extends JPanel{
 		Graphics2D g2 = outCanopy.createGraphics();
 		Graphics2D g3 =	outUnder.createGraphics();
 
+		g.setClip(new Ellipse2D.Float(20,20,160,160));
 		g.drawImage(tempElv,0,0,null);
+		g2.setClip(new Ellipse2D.Float(20,20,160,160));
 		g2.drawImage(tempCanopy,0,0,null);
+		g3.setClip(new Ellipse2D.Float(20,20,160,160));
 		g3.drawImage(tempUnder,0,0,null);
-
 
 		g.dispose();
 		g2.dispose();
@@ -90,8 +78,5 @@ public class miniMap extends JPanel{
 		cImg=outCanopy;
 
 	}
-
-	
-
 
 }
