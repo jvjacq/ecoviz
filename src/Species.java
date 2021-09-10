@@ -10,6 +10,8 @@
 */
 
 public class Species {
+
+    private static String[][] SPECIES;
     private String commonName;
     private String latinName;
     private int speciesid;
@@ -19,9 +21,14 @@ public class Species {
     private int numPlants;
     private Plant[] plantList;
 
-    public Species(String common, String latin){
-        this.commonName = common;
-        this.latinName = latin;
+    public Species(int id, float minH, float maxH, float avg, int num){
+        this.speciesid = id;
+        this.minHeight = minH;
+        this.maxHeight = maxH;
+        this.avgRatio = avg;
+        this.numPlants = num;
+        this.commonName = Species.SPECIES[id][0];
+        this.latinName = Species.SPECIES[id][1];
     }
 
     //Mutator Methods:
@@ -58,6 +65,10 @@ public class Species {
         this.plantList = list;
     }
 
+    public static void setSpeciesList(String[][] list){
+        Species.SPECIES = list;
+    }
+
     // Accessor Methods:
 
     public String getCommon(){
@@ -90,6 +101,10 @@ public class Species {
 
     public Plant[] getPlants(){
         return this.plantList;
+    }
+
+    public static String[][] getSPECIES(){
+        return Species.SPECIES;
     }
 
     @Override
