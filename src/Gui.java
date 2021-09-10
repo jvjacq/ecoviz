@@ -6,8 +6,11 @@
 */
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -77,7 +80,7 @@ loadIn = new JFrame("Initialising");
 //      North Panel:
 //======================================================================
         JPanel pnlNorth = new JPanel();
-        pnlNorth.setBackground(Color.GRAY);
+        pnlNorth.setBackground(new Color(16,120,173));
         JLabel lblSearch = new JLabel("Search: ");
         JTextField search = new JTextField(20);
         JLabel lblFilter = new JLabel("Filter: ");
@@ -99,12 +102,12 @@ loadIn = new JFrame("Initialising");
 //======================================================================
 //      West Panel (MAIN PANEL) : 
 //======================================================================
+        //Main map:
         imgPanel mainPanel = new imgPanel(land.getImg(), c.getImg(), u.getImg());
             mainPanel.setPreferredSize(new Dimension(land.getDimX(),land.getDimY()));
             mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-
-
+               
         JPanel pnlWest = new JPanel();
             pnlWest.add(mainPanel);
 
@@ -116,17 +119,42 @@ loadIn = new JFrame("Initialising");
             pnlEast.setPreferredSize(new Dimension(200,land.getDimY()));
             pnlEast.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             pnlEast.setBorder(BorderFactory.createRaisedBevelBorder());
+            pnlEast.setLayout(new BoxLayout(pnlEast,BoxLayout.PAGE_AXIS));
 
             JLabel heading = new JLabel("Plant Description");
             Font f = heading.getFont();
             heading.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JTextArea plantDescription = new JTextArea("Common Name:\nLatin Name:\nHeight:\nCanopy Radius:");
-            pnlEast.add(plantDescription);
-            pnlEast.setBackground(Color.lightGray);
+            JTextArea plantDescription = new JTextArea("  Common Name:\n  Latin Name:\n  Height:\n  Canopy Radius:");
+            plantDescription.setOpaque(false);
 
             //Add Components
-            pnlEast.add(heading);
-            pnlEast.add(plantDescription);
+            pnlEast.add(heading,BorderLayout.NORTH);
+            pnlEast.add(Box.createRigidArea(new Dimension(0,5)));
+            pnlEast.add(plantDescription,BorderLayout.NORTH);
+            pnlEast.add(Box.createRigidArea(new Dimension(0,5)));
+
+            //Configurations
+            JLabel config = new JLabel("Configurations:");
+            config.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+
+                JCheckBox ChkUnderGrowth = new JCheckBox("Show Undergrowth",true);
+                ChkUnderGrowth.setBounds(100,100,50,50);
+                pnlEast.add(Box.createRigidArea(new Dimension(0,5)));
+                JCheckBox ChkOverGrowth = new JCheckBox("Show Overgrowth",true);
+                ChkOverGrowth.setBounds(100,100,50,50);
+                
+
+            pnlEast.add(ChkUnderGrowth,BorderLayout.CENTER);
+            pnlEast.add(ChkOverGrowth,BorderLayout.CENTER);
+
+            //DRAW MINIMAP
+            miniMap mini = new miniMap(land.getImg(), c.getImg(), u.getImg());
+            mini.setPreferredSize(new Dimension(200,200));
+            mini.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+            mini.setOpaque(false);
+
+            pnlEast.setBackground(new Color(85,193,219));
+            pnlEast.add(mini,BorderLayout.SOUTH);
 
 //======================================================================
 //      South Panel:
@@ -135,7 +163,7 @@ loadIn = new JFrame("Initialising");
             JLabel lblZoom = new JLabel("Scroll to Zoom                       ");
             lblZoom.setForeground(Color.white);
             JButton btnFire = new JButton("Simulate Fire");
-            pnlSouth.setBackground(Color.DARK_GRAY);
+            pnlSouth.setBackground(new Color(8,78,137));
 
             //Add Components
             pnlSouth.add(lblZoom);
@@ -173,8 +201,8 @@ loadIn = new JFrame("Initialising");
         
         // Show
         frame.pack();
-        //frame.setVisible(true);
-        loadIn.setVisible(true);
+        frame.setVisible(true);
+        //loadIn.setVisible(true);
 
     }
     public void actionPerformed( ActionEvent e ){

@@ -8,7 +8,7 @@
 
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
-import java.awt.Color;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.Point;
@@ -26,10 +26,6 @@ import java.awt.geom.AffineTransform;
 
 public class imgPanel extends JPanel implements MouseWheelListener, MouseListener, MouseMotionListener{
 
-	private Terrain land;
-	private Graphics2D graph;
-	private Graphics graphics;
-
 	private BufferedImage img;
 	private BufferedImage cimg;
 	private BufferedImage uimg;
@@ -38,7 +34,7 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 	private double prevZoomMultiplier = 1;
 	private boolean zoom;
 
-	private boolean zoomer,dragger,released;
+	private boolean dragger,released;
 	private double xOffset,yOffset = 0;
 	private int xDiff,yDiff;
 	private Point startPoint;
@@ -47,6 +43,7 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 		this.img=img;
 		cimg = layer1;
 		uimg = layer0;
+
 		addMouseWheelListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -90,7 +87,6 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 			}
 
 		}
-		
 		graphics2d.drawImage(img, 0, 0, null);
 		graphics2d.drawImage(uimg, 0, 0, null);
 		graphics2d.drawImage(cimg, 0, 0, null);
@@ -167,10 +163,5 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 		// TODO Auto-generated method stub
 		
 	}
-
-	
-
-	
-
 
 }
