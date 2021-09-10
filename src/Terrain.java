@@ -1,82 +1,81 @@
 /*
 * File: Terrain.java
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 1.2
+* Version 2.0
 * Created: +++++++++++ Owen insert date here +++++++
-* Last edited: 26/08/2021
+* Last edited: 09/09/2021
 * Status: In progress
 */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 
-
-//Create 2D Greyscale enviro
 public class Terrain {
-    private double[][] elv;
-    private int dimX,dimY;
+    private double[][] elevations;
+    private static int dimX;
+    private static int dimY;
     private double gridSpacing = 0.0;
     private double latitude = 0.0;
-    private BufferedImage img;
+    //private BufferedImage img;
 
     public Terrain(){
-
+        //Do something
     }
-//Accessor Methods:
-    public int getDimX(){
-        return dimX;
-    }
-    public int getDimY(){
-        return dimY;
-    }
-    public BufferedImage getImg(){
-        return img;
+    
+    //Accessor Methods:
+    public static int getDimX(){
+        return Terrain.dimX;
     }
 
-//========================================================================
-//      Read in the elevation values
-//========================================================================
-    public void readElevation() throws FileNotFoundException{
-        //String fileName = "src/data/S6000-6000-256.elv";
-        String fileName = "src/data/S2000-2000-512.elv";
-        //String fileName = "src/data/S4500-4500-1024.elv";
+    public static int getDimY(){
+        return Terrain.dimY;
+    }
 
-        File file = new File(fileName);
-        Scanner scanner = new Scanner(file);
+    public double[][] getElevations(){
+        return this.elevations;
+    }
 
-        dimX = Integer.parseInt(scanner.next());
-        dimY = Integer.parseInt(scanner.next());
-        gridSpacing = Float.parseFloat(scanner.next());
-        latitude = Float.parseFloat(scanner.next());
+    public double getGridSpacing(){
+        return this.gridSpacing;
+    }
 
-        elv = new double[dimY][dimX];
+    public double getLattitude(){
+        return this.latitude;
+    }
+    
+    //Mutator methods
+    public void setElevations(double[][] elevations){
+        this.elevations = elevations;
+    }
 
-        while (scanner.hasNext()){
-            for (int y=0; y<dimY;y++){
-                for (int x=0; x<dimX;x++){
-                    elv[y][x] = Double.parseDouble(scanner.next());
-                }
-            }
-        }
-        System.out.println("Elevation File has been read...");
-        scanner.close();
+    public void setGridSpacing(float spacing){
+        this.gridSpacing = spacing;
+    }
+
+    public void setLatitude(float lat){
+        this.latitude = lat;
+    }
+
+    public static void setDimX(int X){
+        Terrain.dimX = X;
+    }
+
+    public static void setDimY(int Y){       
+        Terrain.dimY = Y;
     }
 
 //========================================================================
 //      Create the greyscale top-down view
 //========================================================================
     public void deriveImg(){
-        img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+        BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
         double maxh = -10000.0f;
         double minh = 10000.0f;
 
         //determine the range of heights
         for (int y = 0; y <dimY;y++){
             for (int x = 0; x < dimX; x++){
-                double h = elv[y][x];
+                double h = elevations[y][x];
                 if (h>maxh){maxh = h;}
                 if (h<minh){minh = h;}  //Can be cut out and done in read loop - optimization
             }
@@ -85,7 +84,7 @@ public class Terrain {
         //find normalized height value
         for (int y = 0; y <dimY;y++){
             for (int x = 0; x < dimX; x++){
-                float val = (float) ((elv[y][x]-minh)/(maxh-minh));
+                float val = (float) ((elevations[y][x]-minh)/(maxh-minh));
                 Color col = new Color(val, val, val, 1.0f);
                 img.setRGB(x, y, col.getRGB());
             }
