@@ -28,6 +28,8 @@ public class FileController {
         int dimY = Integer.parseInt(scanner.next());
         Terrain.setDimX(dimX);
         Terrain.setDimY(dimY);
+        //System.out.println(dimX);
+        //System.out.println(dimY);
         float gridSpacing = Float.parseFloat(scanner.next());
         float latitude = Float.parseFloat(scanner.next());
 
@@ -59,19 +61,17 @@ public class FileController {
         int numSpecies = filein.nextInt();//Integer.parseInt(filein.next()); 
         layer.setNumSpecies(numSpecies);
 
-        Species[] list = PlantLayer.getSpeciesList();
+        Species[] list = new Species[numSpecies];
         //set location array based on dimensions
 
         for (int i=0;i<numSpecies;++i){
             //Species average Details:
             int speciesID =  filein.nextInt();            
-            list[speciesID].setSpeciesID(speciesID);
-            list[speciesID].setMinHeight( Float.parseFloat( filein.next() ));
-            list[speciesID].setMaxHeight( Float.parseFloat(filein.next() ));
-            list[speciesID].setRatio( Float.parseFloat(filein.next() ));
+            float minHeight = Float.parseFloat( filein.next() );
+            float maxHeight = Float.parseFloat(filein.next() );
+            float avgRatio = Float.parseFloat(filein.next() );
             int numPlants = filein.nextInt();
-            list[speciesID].setNumPlants(numPlants);
-
+            Species species = new Species(speciesID, minHeight, maxHeight, avgRatio, numPlants);
             Plant[] plantlist = new Plant[numPlants];
 
             for (int id = 0; id < numPlants;++id){
@@ -87,9 +87,13 @@ public class FileController {
                 
                 layer.setPlantAtLocation(xpos, ypos, speciesID, id);
             }
-            list[speciesID].setPlantList(plantlist);
+            species.setPlantList(plantlist);
+            list[i] = species;
         }
-
+        layer.setSpeciesList(list);
+        //
+        //System.out.println(layer.getSpeciesList());
+        //
         System.out.println("Plant database file read in successfully");
         filein.close();
     }
@@ -110,10 +114,9 @@ public class FileController {
             filein.nextLine();
         }
         //System.out.println(totalSpecies);
-        PlantLayer.setSpeciesList(new Species[totalSpecies]);
         filein.close();
 
-        Species[] specieslist = PlantLayer.getSpeciesList();
+        String[][] specieslist = new String[totalSpecies][2];
 
         filein = new Scanner(file);
         for(int l = 0; l < totalSpecies; ++l){
@@ -121,10 +124,13 @@ public class FileController {
             //System.out.println(filein.nextLine());
             String[] names = filein.nextLine().split(" ");
             //System.out.println(names);
-            specieslist[id] = new Species(names[0], names[1]);
+            specieslist[id][0] = names[0];
+            specieslist[id][1] = names[1];
         }
         filein.close();
+
+        Species.setSpeciesList(specieslist);
         System.out.println("Species file processed.");
-        System.out.println(PlantLayer.getSpeciesList());
+        //System.out.println(Species.getSPECIES());
     }
 }
