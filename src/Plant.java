@@ -1,57 +1,73 @@
 /*
 * File: Plant.java
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 1.1
+* Version 2.0
 * Created: 25/08/2021
-* Last edited: 26/08/2021
+* Last edited: 09/09/2021
 * Status: In progress
+* MVC - Model
 */
+
+
 public class Plant {
     
-    private int speciesID;
-    private int id,posx,posy;
+    private int speciesid;
+    private int plantid;
+    private int posx;
+    private int posy;
     private double height;
-    private double canopy;
-    private boolean burnt;
+    private double canopyRadius;
+    private boolean filter;
 
-    public Plant(int speciesID, int plantID, int x, int y, float height, float canopy){
-        this.speciesID = speciesID;
-        posx = x;
-        posy = y;
-        id = plantID;
+    public Plant(int sid, int pid, int x, int y, float height, float rad){
+        this.speciesid = sid;
+        this.plantid = pid;
+        this.posx = x;
+        this.posy = y;
         this.height = height;
-        this.canopy = canopy;
-        burnt = false;
+        this.canopyRadius = rad;
+        this.filter = false;
     }
 
     //Accessor methods
     public int getSpeciesID(){
-        return speciesID;
+        return this.speciesid;
     }
 
     public int getID(){
-        return id;
+        return this.plantid;
     }
 
     public int getX(){
-        return posx;
+        return this.posx;
     }
 
     public int getY(){
-        return posy;
+        return this.posy;
     }
 
     public double getHeight(){
-        return height;
+        return this.height;
     }
 
     public double getCanopy(){
-        return canopy;
+        return this.canopyRadius;
+    }
+
+    public boolean getFilter(){
+        return this.filter;
     }
 
     //Mutator methdos
-    public void toggleburn(){
-        burnt = !burnt;
+    public void toggleFilter(){
+        this.filter = !(this.filter);
     }
 
+    public void setPosX(int X){
+        this.posx = X;
+    }
+
+    public void setPosY(int Y){
+        this.posy = Y;
+    }
 }

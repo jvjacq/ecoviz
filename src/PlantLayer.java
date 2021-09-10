@@ -16,108 +16,64 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.lang.Math;
-public class PlantLayer {
+
+public class PlantLayer{
 
     //ID 0 = no PlantType
     //ID -1 = burnt?
     private int[][][] idLocations;
-    private int[][] burnt;
-    //new
-    private static Species[] specieslist;
+    //private int[][] burnt;
+    private Species[] specieslist;
     private int numSpecies; //per layer
 
-    private BufferedImage img;
+    //private BufferedImage img;
     // Constructors:
-
-    public PlantLayer() {
-        idLocations = null;
-        burnt = null;
+    
+    public PlantLayer(){
+      idLocations = new int[Terrain.getDimX()][Terrain.getDimY()][2];
     }
 
-    public PlantLayer(String filename, int width, int height) throws FileNotFoundException{
-      idLocations = new int[width][height][2]; //May need to be swapped, but for squares doesnt matter
-      //Not implemented yet
-      burnt = null;
-      readLayer(filename);
-  }
-
-  // Methods:
-
-  //========================================================================
-  //      Read in Plant layer
-  //========================================================================
-  public void readLayer(String filename) throws FileNotFoundException{
-    File file = new File(filename);
-    Scanner filein = new Scanner(file);
-
-    numSpecies = filein.nextInt();//Integer.parseInt(filein.next()); 
-
-    for (int i=0;i<numSpecies;++i){
-        //Species average Details:
-        int speciesID =  filein.nextInt();
-         
-        float minHeight = Float.parseFloat(filein.next());
-        float maxHeight = Float.parseFloat(filein.next());
-        float avgRatio = Float.parseFloat(filein.next());
-        int numPlants = filein.nextInt();
-        Species species = new Species(speciesID,minHeight, maxHeight, avgRatio, numPlants);
-        //specieslist[id].create(minHeight, maxHeight, avgRatio, numPlants);  //Add values to already existing species objects
-        for (int y = 0; y < numPlants;++y){
-          float height, canopy;
-          int xpos, ypos, zpos; 
-          xpos = Math.round(Float.parseFloat(filein.next()));
-          ypos = Math.round(Float.parseFloat(filein.next()));
-          zpos = Math.round(Float.parseFloat(filein.next()));  //Intentionally unused
-          height = Float.parseFloat(filein.next());
-          canopy = Float.parseFloat(filein.next());
-          species.addPlant(new Plant(speciesID,y,xpos,ypos,height,canopy));  //Store 5 data val for each plant in the type.
-          
-          idLocations[xpos][ypos][0] = speciesID;
-          idLocations[xpos][ypos][1] = y;
-        }
-        specieslist[speciesID] = species;
+    //Mutator Methods:
+    public void setNumSpecies(int num){
+        this.numSpecies = num;
     }
-    System.out.println("One .pdb file read in successfully");
-    filein.close();
-  }
 
-    //========================================================================
-    //      Read in Species
-    //========================================================================
-    public static void readSpecies() throws FileNotFoundException{
-      //File file = new File("src/data/S6000-6000-256.spc.txt");
-      File file = new File("src/data/S2000-2000-512.spc.txt");
-      //File file = new File("src/data/S4500-4500-1024.spc.txt");
-
-      Scanner filein = new Scanner(file);
-      int totalSpecies = -1;
-      while(filein.hasNextLine()){
-        ++totalSpecies;
-        filein.nextLine();
-      }
-      if(totalSpecies >= 0){ PlantLayer.specieslist = new Species[totalSpecies+1]; }
-      filein.close();
-
-      filein = new Scanner(file);
-      String[] names = new String[2];
-      for(int l = 0; l < totalSpecies; ++l){
-        names = filein.nextLine().split("\" \"");
-        //
-        //missing
-        //
-      } //Should be counting down - does not read them into Species objects yet
-      filein.close();
-      System.out.println("Species file processed.");
+    public void setPlantAtLocation(int x, int y, int speciesid, int plantid){
+        this.idLocations[y][x][0] = speciesid;
+        this.idLocations[y][x][1] = plantid;
     }
+
+    public void setSpeciesList(Species[] list){
+      this.specieslist = list;
+    }
+
+    // Accessor Methods
+    public int[][][] getLocations(){
+        return this.idLocations;
+    }
+
+    public int getNumSpecies(){
+      return this.numSpecies;
+    }
+
+    public int[] getPlantAtLocation(int x, int y){
+      return this.idLocations[y][x];
+    }
+    
+    public Species[] getSpeciesList(){
+      return this.specieslist;
+    }
+
+    // Methods:
 
     //========================================================================
     //      Create the colourful circles
     //========================================================================
-    public void deriveImg(){
-      int dimx = Simulation.frameX;
-      int dimy = Simulation.frameY;
+    public BufferedImage deriveImg(){
+      int dimx = Terrain.getDimX();
+      int dimy = Terrain.getDimY();
 
-      img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
+      BufferedImage img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
       Graphics2D imgGraphics = img.createGraphics();
 
       imgGraphics.setComposite(AlphaComposite.Clear);
@@ -131,7 +87,7 @@ public class PlantLayer {
           imgGraphics.fillOval(p.getX(),p.getY(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
         }
       }
-      
+      return img;      
     }
 
     public void removePlant(int dimx, int dimy) {
@@ -155,12 +111,12 @@ public class PlantLayer {
       
     }
 
-    public int[][] getBurnt(){
+    /*public int[][] getBurnt(){
       return burnt;
     }
 
     public BufferedImage getImg(){
       return img;
-    }
+    }*/
 
 }
