@@ -6,8 +6,11 @@
 */
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -170,11 +173,11 @@ public class Gui extends JPanel implements ActionListener{
             frame.getContentPane().add(BorderLayout.WEST, pnlWest);
             frame.getContentPane().add(BorderLayout.EAST, pnlEast);
 
-            
-            // Show
-            frame.pack();
-            //frame.setVisible(true);
-            loadIn.setVisible(true);
+        
+        // Show
+        frame.pack();
+        frame.setVisible(true);
+        //loadIn.setVisible(true);
 
     }
 
