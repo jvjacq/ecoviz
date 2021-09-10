@@ -62,11 +62,8 @@ public class miniMap extends JPanel{
 		Graphics2D g2 = outCanopy.createGraphics();
 		Graphics2D g3 =	outUnder.createGraphics();
 
-		g.setClip(new Ellipse2D.Float(20,20,160,160));
 		g.drawImage(tempElv,0,0,null);
-		g2.setClip(new Ellipse2D.Float(20,20,160,160));
 		g2.drawImage(tempCanopy,0,0,null);
-		g3.setClip(new Ellipse2D.Float(20,20,160,160));
 		g3.drawImage(tempUnder,0,0,null);
 
 		g.dispose();
