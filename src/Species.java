@@ -1,73 +1,102 @@
 /*
-* Previously: PlantLayer.java
+* Previously: PlantType.java
 * File: Species.java
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 1.3
+* Version 2.0
 * Created: ++++++++Owen insert date++++++++
-* Last edited: 26/08/2021
+* Last edited: 09/09/2021
 * Status: In progress
+* MVC - Model
 */
 
 public class Species {
     private String commonName;
     private String latinName;
-    private int id;
+    private int speciesid;
     private float minHeight;
     private float maxHeight;
-    private float avgRadius;
+    private float avgRatio;
     private int numPlants;
-    private Plant[] list;
+    private Plant[] plantList;
 
-    public Species(int id, float minH, float maxH, float rad, int numP) {
-        
-        this.id = id;
-        minHeight = minH;
-        maxHeight = maxH;
-        avgRadius = rad;
-        numPlants = numP;
-        list = new Plant[numP];
-        
-    } 
-    /*public Species(int id, String cname, String lname) {
-        
-        this.id = id;
-        commonName = cname;
-        latinName = lname;
-        minHeight = 0.0f;
-        maxHeight = 0.0f;
-        avgRadius = 0.0f;
-        numPlants = 0;
-        
-    } 
-    //New idea im working on
+    public Species(String common, String latin){
+        this.commonName = common;
+        this.latinName = latin;
+    }
 
-    public void create(float minH, float maxH, float rad, int numP){
-        minHeight = minH;
-        maxHeight = maxH;
-        avgRadius = rad;
-        numPlants = numP;
-    }*/
-
-    
     //Mutator Methods:
-    public void addPlant(Plant plant){
-        list[plant.getID()] = plant;
+
+    public void setCommon(String name){
+        this.commonName = name;
+    }
+
+    public void setLatin(String name){
+        this.latinName = name;
+    }
+
+    public void setSpeciesID(int id){
+        this.speciesid = id;
+    }
+
+    public void setMinHeight(float minH){
+        this.minHeight = minH;
+    }
+
+    public void setMaxHeight(float maxH){
+        this.maxHeight = maxH;
+    }
+
+    public void setRatio(float avg){
+        this.avgRatio = avg;
+    }
+
+    public void setNumPlants(int num){
+        this.numPlants = num;
+    }
+
+    public void setPlantList(Plant[] list){
+        this.plantList = list;
     }
 
     // Accessor Methods:
-    public int getID() {
-        return id;
+
+    public String getCommon(){
+        return this.commonName;
     }
 
-    public String getDesc() {
-        String out = "Common Name: " + commonName + "/n";
-        out += "Common Name: " + commonName + "/n";
-        out += "Latin Name: " + latinName + "/n";
+    public String getLatin(){
+        return this.latinName;
+    }
 
-        return out;
+    public int getSpeciesID() {
+        return this.speciesid;
+    }
+
+    public float getMinHeight() {
+        return this.minHeight;
+    }
+
+    public float getMaxHeight() {
+        return this.maxHeight;
+    }
+
+    public float getAvgRatio() {
+        return this.avgRatio;
+    }
+
+    public int getNumPlants() {
+        return this.numPlants;
     }
 
     public Plant[] getPlants(){
-        return list;
+        return this.plantList;
+    }
+
+    @Override
+    public String toString() {
+        String output = "Common Name: " + getCommon() + "/n";
+        output += "Latin Name: " + getLatin() + "/n";
+
+        return output;
     }
 }
