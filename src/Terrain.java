@@ -67,7 +67,7 @@ public class Terrain {
 //========================================================================
 //      Create the greyscale top-down view
 //========================================================================
-    public void deriveImg(){
+    public BufferedImage deriveImg(){
         BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
         double maxh = -10000.0f;
         double minh = 10000.0f;
@@ -89,6 +89,7 @@ public class Terrain {
                 img.setRGB(x, y, col.getRGB());
             }
         }
+        return img;
     }
 
 }

@@ -23,7 +23,7 @@ public class PlantLayer{
     //ID -1 = burnt?
     private int[][][] idLocations;
     //private int[][] burnt;
-    private static Species[] specieslist;
+    private Species[] specieslist;
     private int numSpecies; //per layer
 
     //private BufferedImage img;
@@ -43,8 +43,8 @@ public class PlantLayer{
         this.idLocations[y][x][1] = plantid;
     }
 
-    public static void setSpeciesList(Species[] list){
-      PlantLayer.specieslist = list;
+    public void setSpeciesList(Species[] list){
+      this.specieslist = list;
     }
 
     // Accessor Methods
@@ -60,8 +60,8 @@ public class PlantLayer{
       return this.idLocations[y][x];
     }
     
-    public static Species[] getSpeciesList(){
-      return PlantLayer.specieslist;
+    public Species[] getSpeciesList(){
+      return this.specieslist;
     }
 
     // Methods:
@@ -69,7 +69,7 @@ public class PlantLayer{
     //========================================================================
     //      Create the colourful circles
     //========================================================================
-    public void deriveImg(){
+    public BufferedImage deriveImg(){
       int dimx = Terrain.getDimX();
       int dimy = Terrain.getDimY();
 
@@ -87,7 +87,7 @@ public class PlantLayer{
           imgGraphics.fillOval(p.getX(),p.getY(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
         }
       }
-      
+      return img;      
     }
 
     public void removePlant(int dimx, int dimy) {
