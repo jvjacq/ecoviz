@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.awt.AlphaComposite;
 import java.awt.Point;
 import java.awt.MouseInfo;
+import java.awt.Color;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
