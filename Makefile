@@ -9,4 +9,4 @@ all:
 clean:
 	rm ${BINDIR}/*.class
 run:
-	java -cp ./bin Simulation
+	java -cp ./bin SimController
