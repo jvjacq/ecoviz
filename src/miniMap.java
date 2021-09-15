@@ -11,8 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.awt.geom.Ellipse2D;
-
 
 public class miniMap extends JPanel{
 
@@ -24,9 +22,8 @@ public class miniMap extends JPanel{
 	public miniMap(BufferedImage img, BufferedImage layer1, BufferedImage layer0){
 		cImg = layer1;
 		uImg = layer0;
-
 		eImg = img;
-
+		
 		//resize minimap
 		miniature();
 	}
