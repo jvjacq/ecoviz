@@ -6,12 +6,14 @@
 //References:
 //Zoom functionality : credit to @Thanasis - StackOverflow for the algorithm
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
 
 import java.awt.Graphics;
 import java.util.Random;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.awt.AlphaComposite;
 import java.awt.Point;
 import java.awt.MouseInfo;
@@ -28,10 +30,6 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 
 public class imgPanel extends JPanel implements MouseWheelListener, MouseListener, MouseMotionListener{
-
-	//private Terrain land;
-	private Graphics2D graph;
-	private Graphics graphics;
 
 	private int dimY, dimX;
 	private BufferedImage img;
@@ -160,6 +158,17 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 		}
 	}
 
+	public void exportImage(String nm){
+		BufferedImage img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = img.createGraphics();
+		paintAll(g);
+		try{
+			ImageIO.write(img,"png", new File("exports/"+nm+".png"));
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		Point cursor = e.getLocationOnScreen();
@@ -199,9 +208,6 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 
 			repaint();
 		}
-
-
-
 	}
 
 	
