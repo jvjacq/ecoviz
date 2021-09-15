@@ -141,7 +141,7 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
 
     //Direction Image:
     //ImageIcon pointer = new ImageIcon("src/resources/Direction.png");
-    pointerLbl = new JLabel("0 Degrees");
+    pointerLbl = new JLabel("Wind Direction: 0 Degrees");
 
     //Add Components
 
@@ -249,6 +249,6 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
     @Override
     public void stateChanged(ChangeEvent e) {
         // TODO Auto-generated method stub
-        pointerLbl.setText(Integer.toString(wDirSlider.getValue())+" Degrees");
+        pointerLbl.setText("Wind Direction: "+Integer.toString(wDirSlider.getValue())+" Degrees");
     }
 }

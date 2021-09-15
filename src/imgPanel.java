@@ -115,7 +115,9 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 		}
 		return img;      
 	  }
-
+//========================================================================
+    //      Overide Paint Component of the Panel:
+    //========================================================================
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -153,6 +155,7 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 			}
 
 		}
+		
 		graphics2d.drawImage(img, 0, 0, null);
 		graphics2d.drawImage(uimg, 0, 0, null);
 		graphics2d.drawImage(cimg, 0, 0, null);
