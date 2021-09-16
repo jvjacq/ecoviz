@@ -25,7 +25,6 @@ public class PlantLayer{
     //private int[][] burnt;
     private Species[] specieslist;
     private int numSpecies; //per layer
-
     //private BufferedImage img;
     // Constructors:
     
@@ -110,7 +109,6 @@ public class PlantLayer{
       //return idLocations;
       
     }
-
     /*public int[][] getBurnt(){
       return burnt;
     }
