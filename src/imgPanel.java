@@ -37,13 +37,16 @@ public class imgPanel extends JPanel{
 	private Point startPoint;
 
 	private imgController imgcontroller;
+	private boolean showCanopy;
+	private boolean showUnderGrowth;
 
 	public imgPanel(){
 		imgcontroller = new imgController(this);
 		addMouseWheelListener(imgcontroller);
 		addMouseListener(imgcontroller);
 		addMouseMotionListener(imgcontroller);
-
+		showCanopy=true;
+		showUnderGrowth=true;
 	}
 
 	public int getStartX(){
@@ -200,8 +203,8 @@ public class imgPanel extends JPanel{
 		}
 		
 		graphics2d.drawImage(terrain, 0, 0, null);
-		graphics2d.drawImage(undergrowth, 0, 0, null);
-		graphics2d.drawImage(canopy, 0, 0, null);
+		if (showUnderGrowth){graphics2d.drawImage(undergrowth, 0, 0, null);}
+		if (showCanopy){graphics2d.drawImage(canopy, 0, 0, null);}
 
 		}
 	}
@@ -217,71 +220,13 @@ public class imgPanel extends JPanel{
 		}
 	}
 
-	/*@Override
-	public void mouseDragged(MouseEvent e) {
-		Point cursor = e.getLocationOnScreen();
-		xDiff = cursor.x - startPoint.x;
-		yDiff = cursor.y - startPoint.y;
-
-		dragger = true;
+	public void setShowCanopy(boolean b){
+		showCanopy=b;
 		repaint();
-
-		
 	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		released= true;
+	public void setSHowUnderGrowth(boolean b){
+		showUnderGrowth=b;
 		repaint();
-		
 	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		released = false;
-		startPoint= MouseInfo.getPointerInfo().getLocation();
-		
-	}
-
-	@Override
-	public void mouseWheelMoved (MouseWheelEvent e){
-		zoom = true;
-
-		if (e.getWheelRotation() < 0) {	// Zoom in
-			zoomMultiplier *=1.1;	//Adjust for smoothness
-			repaint();
-		}
-		if (e.getWheelRotation() > 0) {	// Zoom out
-			zoomMultiplier /=1.1;	//Adjust for smoothness
-
-			repaint();
-		}
-	}
-
-	
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}*/
 
 }
