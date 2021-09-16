@@ -31,10 +31,6 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-
-import java.awt.color.*;
-
-//import java.io.File;
 import java.io.File;
 
 public class Gui extends JPanel implements ActionListener,ChangeListener{
@@ -47,7 +43,17 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
     private JLabel pointerLbl;
     private JSlider wDirSlider;
     private imgPanel mainPanel;
+    private JButton btnFilter;
 
+    //East Panel:
+    private JPanel pnlEast = new JPanel();
+    private JLabel heading;
+    private JTextArea plantDescription;
+    private JLabel config;
+    private miniMap mini;
+    //Filter Section:
+    JButton btnApply = new JButton("Apply");
+    JPanel fSelection = new JPanel();
     
     public Gui(Terrain terrain, PlantLayer canopy, PlantLayer undergrowth) {
         
@@ -93,20 +99,15 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
             pnlNorth.setBackground(new Color(16,120,173));
             JLabel lblSearch = new JLabel("Search: ");
             JTextField search = new JTextField(20);
-            JLabel lblFilter = new JLabel("Filter: ");
-            JComboBox<String> filter = new JComboBox<String>();
-                filter.addItem("basic filter 1");
-                filter.addItem("basic filter+ 2");
-                filter.addItem("basic filter 3");
-                filter.addItem("Custom...");
+            btnFilter = new JButton("Filter");
+            btnFilter.addActionListener(this);
 
             
 
             //Add Components
             pnlNorth.add(lblSearch);
             pnlNorth.add(search);
-            pnlNorth.add(lblFilter);
-            pnlNorth.add(filter);
+            pnlNorth.add(btnFilter);
 
 
     //======================================================================
@@ -128,16 +129,15 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
     //======================================================================
     //      East Panel: 
     //======================================================================
-    JPanel pnlEast = new JPanel();
     pnlEast.setPreferredSize(new Dimension(200,Terrain.getDimY()));
     pnlEast.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
     pnlEast.setBorder(BorderFactory.createRaisedBevelBorder());
     pnlEast.setLayout(new BoxLayout(pnlEast,BoxLayout.PAGE_AXIS));
 
-    JLabel heading = new JLabel("Plant Description");
+    heading = new JLabel("Plant Description");
     Font f = heading.getFont();
     heading.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-    JTextArea plantDescription = new JTextArea("  Common Name:\n  Latin Name:\n  Height:\n  Canopy Radius:");
+    plantDescription = new JTextArea("  Common Name:\n  Latin Name:\n  Height:\n  Canopy Radius:");
     plantDescription.setOpaque(false);
     
     //SLIDER FOR WIND DIRECTION:
@@ -156,26 +156,48 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
     pnlEast.add(Box.createRigidArea(new Dimension(0,5)));
 
     //Configurations
-    JLabel config = new JLabel("Configurations:");
+    config = new JLabel("Configurations:");
     config.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
 
+        
+        
+        //Filter gui setup:
+        btnApply.setVisible(false);
+        btnApply.addActionListener(this);
+        fSelection.setVisible(false);
+        fSelection.setLayout(new BoxLayout(fSelection,BoxLayout.PAGE_AXIS));
+
+        fSelection.setPreferredSize(new Dimension(200,235));
+
+        fSelection.setBackground(new Color(85,193,219));
+
+
+        fSelection.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        
         JCheckBox ChkUnderGrowth = new JCheckBox("Show Undergrowth",true);
         ChkUnderGrowth.setBounds(100,100,50,50);
-        pnlEast.add(Box.createRigidArea(new Dimension(0,5)));
-        JCheckBox ChkOverGrowth = new JCheckBox("Show Overgrowth",true);
+        fSelection.add(Box.createRigidArea(new Dimension(0,10)));
+        JCheckBox ChkOverGrowth = new JCheckBox("Show Canopy",true);
         ChkOverGrowth.setBounds(100,100,50,50);
-        
+        fSelection.add(Box.createRigidArea(new Dimension(0,10)));
 
-    pnlEast.add(ChkUnderGrowth,BorderLayout.CENTER);
-    pnlEast.add(ChkOverGrowth,BorderLayout.CENTER);
+        fSelection.add(ChkUnderGrowth,BorderLayout.CENTER);
+        fSelection.add(ChkOverGrowth,BorderLayout.CENTER);
+        
+        pnlEast.add(fSelection,BorderLayout.CENTER);
+        pnlEast.add(btnApply,BorderLayout.CENTER);
+
+        //////////
+    
     pnlEast.add(Box.createRigidArea(new Dimension(0,10)));
     pnlEast.add(pointerLbl);
     pnlEast.add(Box.createRigidArea(new Dimension(0,10)));
 
     pnlEast.add(wDirSlider);
     pnlEast.add(Box.createRigidArea(new Dimension(0,10)));
+
     //DRAW MINIMAP
-    miniMap mini = new miniMap(mainPanel.getTerrain(), mainPanel.getCanopy(), mainPanel.getUndergrowth());
+    mini = new miniMap(mainPanel.getTerrain(), mainPanel.getCanopy(), mainPanel.getUndergrowth());
     mini.setPreferredSize(new Dimension(200,200));
     mini.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
     mini.setOpaque(false);
@@ -260,6 +282,38 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
             JFrame popup = new JFrame();
             String nm = JOptionPane.showInputDialog(popup, "Save As:");
             mainPanel.exportImage(nm);
+        }
+
+        if (e.getSource() == btnFilter){
+
+            //Hide:
+            plantDescription.setVisible(false);
+            config.setVisible(false);
+            wDirSlider.setVisible(false);
+            pointerLbl.setVisible(false);
+            btnFilter.setEnabled(false);
+
+
+            //Show:
+            heading.setText("   Select Your Filter:");
+            btnApply.setVisible(true);
+            fSelection.setVisible(true);
+
+        }
+
+        if (e.getSource() == btnApply){
+            //Show:
+            heading.setText("Plant Description:");
+            plantDescription.setVisible(true);
+            config.setVisible(true);
+            wDirSlider.setVisible(true);
+            pointerLbl.setVisible(true);
+            mini.setVisible(true);
+            btnFilter.setEnabled(true);
+
+            //Hide:
+            btnApply.setVisible(false);
+            fSelection.setVisible(false);
         }
 
     }
