@@ -5,12 +5,15 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.Point;
 import java.awt.MouseInfo;
+import java.awt.Color;
 
 public class imgController implements MouseWheelListener, MouseListener, MouseMotionListener{
     private imgPanel image;
+    private Gui gui;
 
-    public imgController(imgPanel img){
-        image = img;
+    public imgController(imgPanel img, Gui gui){
+        this.image = img;
+        this.gui = gui;
     }
 
     @Override
@@ -31,7 +34,18 @@ public class imgController implements MouseWheelListener, MouseListener, MouseMo
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        //
+        Point click = e.getPoint();
+        int col = image.getCanopy().getRGB(click.x, click.y);
+        int[] speciesColours = Species.getCOLOURS();
+        String[][] specieslist = Species.getSPECIES();
+        for(int idx = 0; idx < speciesColours.length; ++idx){
+            if(speciesColours[idx] == col){
+                gui.setSpeciesDetails("Common name:\n" + specieslist[idx][0] + "\nLatin name:\n" + specieslist[idx][1]);
+                break;
+            }
+        }
+
+        
         
     }
 
