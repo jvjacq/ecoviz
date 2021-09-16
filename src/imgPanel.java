@@ -18,23 +18,14 @@ import java.awt.AlphaComposite;
 import java.awt.Point;
 import java.awt.MouseInfo;
 import java.awt.Color;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseListener;
-
-
-
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 
-public class imgPanel extends JPanel implements MouseWheelListener, MouseListener, MouseMotionListener{
+public class imgPanel extends JPanel{
 
 	private int dimY, dimX;
-	private BufferedImage img;
-	private BufferedImage cimg;
-	private BufferedImage uimg;
+	private BufferedImage terrain;
+	private BufferedImage canopy;
+	private BufferedImage undergrowth;
 
 	private	double zoomMultiplier = 1;
 	private double prevZoomMultiplier = 1;
@@ -45,24 +36,74 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 	private int xDiff,yDiff;
 	private Point startPoint;
 
+	private imgController imgcontroller;
+
 	public imgPanel(){
-		//Do nothing
-	}
-	public imgPanel(BufferedImage img, BufferedImage layer1, BufferedImage layer0){
-		this.img=img;
-		cimg = layer1;
-		uimg = layer0;
-
-		addMouseWheelListener(this);
-		addMouseListener(this);
-		addMouseMotionListener(this);
+		imgcontroller = new imgController(this);
+		addMouseWheelListener(imgcontroller);
+		addMouseListener(imgcontroller);
+		addMouseMotionListener(imgcontroller);
 
 	}
+
+	public int getStartX(){
+		return this.startPoint.x;
+	}
+
+	public int getStartY(){
+		return this.startPoint.y;
+	}
+
+	public double getZoomMult(){
+		return this.zoomMultiplier;
+	}
+
+	public BufferedImage getTerrain(){
+		return this.terrain;
+	}
+
+	public BufferedImage getCanopy(){
+		return this.canopy;
+	}
+
+	public BufferedImage getUndergrowth(){
+		return this.undergrowth;
+	}
+
+	public void setStartPoint(Point p){
+		this.startPoint = p;
+	}
+
+	public void setXDiff(int x){
+		this.xDiff = x;
+	}
+
+	public void setYDiff(int y){
+		this.yDiff = y;
+	}
+
+	public void setDragger(boolean b){
+		this.dragger = b;
+	}
+
+	public void setReleased(boolean b){
+		this.released = b;
+	}
+
+	public void setZoom(boolean b){
+		this.zoom = b;
+	}
+
+	public void setZoomMult(double multiplier){
+		this.zoomMultiplier = multiplier;
+	}
+
+
 
 	//========================================================================
 	//      Create the greyscale top-down view
 	//========================================================================
-	public BufferedImage deriveImg(Terrain terrain){
+	public void deriveImg(Terrain terrain){
 		dimX = Terrain.getDimX();
 		dimY = Terrain.getDimY();
 		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
@@ -86,13 +127,13 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 				img.setRGB(x, y, col.getRGB());
 			}
 		}
-		return img;
+		this.terrain = img;
 	}
 
 	//========================================================================
     //      Create the colourful circles
     //========================================================================
-    public BufferedImage deriveImg(PlantLayer layer){
+    public void deriveImg(PlantLayer layer, boolean canopy){
 		int dimx = Terrain.getDimX();
 		int dimy = Terrain.getDimY();
   
@@ -111,7 +152,11 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 			imgGraphics.fillOval(p.getX(),p.getY(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
 		  }
 		}
-		return img;      
+		if(canopy){
+			this.canopy = img;	
+		} else {
+			this.undergrowth = img;
+		}      
 	  }
 //========================================================================
     //      Overide Paint Component of the Panel:
@@ -120,7 +165,7 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D graphics2d = (Graphics2D) g;
-		if (img != null) {
+		if (terrain != null) {
 
 		if (zoom) {
 			AffineTransform affine = new AffineTransform();
@@ -154,9 +199,9 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 
 		}
 		
-		graphics2d.drawImage(img, 0, 0, null);
-		graphics2d.drawImage(uimg, 0, 0, null);
-		graphics2d.drawImage(cimg, 0, 0, null);
+		graphics2d.drawImage(terrain, 0, 0, null);
+		graphics2d.drawImage(undergrowth, 0, 0, null);
+		graphics2d.drawImage(canopy, 0, 0, null);
 
 		}
 	}
@@ -172,7 +217,7 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 		}
 	}
 
-	@Override
+	/*@Override
 	public void mouseDragged(MouseEvent e) {
 		Point cursor = e.getLocationOnScreen();
 		xDiff = cursor.x - startPoint.x;
@@ -237,6 +282,6 @@ public class imgPanel extends JPanel implements MouseWheelListener, MouseListene
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 
 }
