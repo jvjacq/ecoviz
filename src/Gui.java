@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -31,14 +32,13 @@ import java.awt.color.*;
 
 //import java.io.File;
 import java.io.File;
-
 public class Gui extends JPanel implements ActionListener{
-
+    private imgPanel mainPanel;
     private JButton load;
     private JFileChooser fChooser;
     private JFrame frame;
     private JFrame loadIn;
-    private JMenuItem i1,i3;
+    private JMenuItem i1,i2,i3;
     public Gui(Terrain land, PlantLayer c, PlantLayer u) {
         
     //======================================================================
@@ -102,7 +102,7 @@ public class Gui extends JPanel implements ActionListener{
     //======================================================================
     //      West Panel (MAIN PANEL) : 
     //======================================================================
-            imgPanel mainPanel = new imgPanel(land.deriveImg(), c.deriveImg(), u.deriveImg());
+            mainPanel = new imgPanel(land.deriveImg(), c.deriveImg(), u.deriveImg());
                 mainPanel.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
                 mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
                 mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -176,11 +176,13 @@ public class Gui extends JPanel implements ActionListener{
                 JMenuBar mb = new JMenuBar();
 
                 JMenu m1 = new JMenu("File");
+
                     i1 = new JMenuItem("Load Files");
-                    i1.addActionListener(this);
-                    JMenuItem i2 = new JMenuItem("Export as PNG");
+                        i1.addActionListener(this);
+                    i2 = new JMenuItem("Export as PNG");
+                        i2.addActionListener(this);
                     i3 = new JMenuItem("Exit");
-                    i3.addActionListener(this);
+                        i3.addActionListener(this);
 
                         m1.add(i1);
                         m1.add(i2);
@@ -208,6 +210,8 @@ public class Gui extends JPanel implements ActionListener{
     }
 
     public void actionPerformed( ActionEvent e ){
+        
+        //Load Files:
         if ((e.getSource() == load) | e.getSource() == i1){
             int returnVal = fChooser.showOpenDialog(Gui.this);
             if (returnVal == JFileChooser.APPROVE_OPTION){
@@ -220,7 +224,16 @@ public class Gui extends JPanel implements ActionListener{
             }else{System.out.println("Cancelled by the user");}
         }
 
-        if (e.getSource() == i3){System.exit(0);}
+        //Terminate Application:
+        if (e.getSource() == i3){
+            System.exit(0);}
+
+        //Export PNG:
+        if (e.getSource() == i2){
+            JFrame popup = new JFrame();
+            String nm = JOptionPane.showInputDialog(popup, "Save As:");
+            mainPanel.exportImage(nm);
+        }
 
     }
 }
