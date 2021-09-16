@@ -10,6 +10,7 @@
 
 import java.io.*;
 import java.util.*;
+import java.awt.Color;
 
 public class FileController {
 
@@ -113,22 +114,28 @@ public class FileController {
             ++totalSpecies;
             filein.nextLine();
         }
-        //System.out.println(totalSpecies);
         filein.close();
 
         String[][] specieslist = new String[totalSpecies][2];
+        int[] colourlist = new int[totalSpecies];
 
         filein = new Scanner(file);
         for(int l = 0; l < totalSpecies; ++l){
             int id = filein.nextInt();
-            //System.out.println(filein.nextLine());
-            String[] names = filein.nextLine().split(" ");
-            //System.out.println(names);
-            specieslist[id][0] = names[0];
-            specieslist[id][1] = names[1];
+            String line = filein.nextLine();
+            int comma = line.indexOf("“");
+            line = line.substring(comma+1);
+            comma = line.indexOf("”");
+            specieslist[id][0] = line.substring(0, comma);
+            line = line.substring(comma+3);
+            specieslist[id][1] = line.substring(0,line.length()-2);
+            Random r = new Random();		  
+            Color col = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
+            colourlist[id] = col.getRGB();
         }
         filein.close();
 
+        Species.setColourList(colourlist);
         Species.setSpeciesList(specieslist);
         System.out.println("Species file processed.");
         //System.out.println(Species.getSPECIES());
