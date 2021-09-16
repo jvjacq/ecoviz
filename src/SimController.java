@@ -23,14 +23,14 @@ public class SimController {
         filecontroller = new FileController();
         terrain = new Terrain();
         
-        filecontroller.readElevation(terrain, "src/data/S2000-2000-512.elv");
-        filecontroller.readSpecies("src/data/S2000-2000-512.spc.txt");
+        filecontroller.readElevation(terrain, "data/S2000-2000-512.elv");
+        filecontroller.readSpecies("data/S2000-2000-512.spc.txt");
 
         PlantLayer canopy = new PlantLayer();
         PlantLayer undergrowth = new PlantLayer();
 
-        filecontroller.readLayer(canopy, "src/data/S2000-2000-512_canopy.pdb");
-        filecontroller.readLayer(undergrowth, "src/data/S2000-2000-512_undergrowth.pdb");
+        filecontroller.readLayer(canopy, "data/S2000-2000-512_canopy.pdb");
+        filecontroller.readLayer(undergrowth, "data/S2000-2000-512_undergrowth.pdb");
 
         SwingUtilities.invokeLater(() -> new Gui(terrain,canopy,undergrowth)); //in case we use threads
         System.out.println("GUI is showing..."); 

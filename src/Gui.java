@@ -65,7 +65,7 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
             loadIn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             
             JLabel loading = new JLabel();
-                ImageIcon path = new ImageIcon("src/resources/ECOVIZ.gif");
+                ImageIcon path = new ImageIcon("resources/ECOVIZ.gif");
                 loading.setIcon(path);
             
             //Add button for loading in files:
