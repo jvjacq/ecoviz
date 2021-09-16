@@ -20,6 +20,7 @@ public class SimController {
 
     public static void main(String[] args) throws FileNotFoundException {
 
+        //FileLoader fileLoader = new FileLoader();
         filecontroller = new FileController();
         terrain = new Terrain();
         
@@ -32,7 +33,8 @@ public class SimController {
         filecontroller.readLayer(canopy, "data/S2000-2000-512_canopy.pdb");
         filecontroller.readLayer(undergrowth, "data/S2000-2000-512_undergrowth.pdb");
 
-        SwingUtilities.invokeLater(() -> new Gui(terrain,canopy,undergrowth)); //in case we use threads
+
+        SwingUtilities.invokeLater(() -> new Gui(terrain, canopy, undergrowth)); //in case we use threads
         System.out.println("GUI is showing..."); 
     }
 

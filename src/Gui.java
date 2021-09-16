@@ -49,7 +49,7 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
     private imgPanel mainPanel;
 
     
-    public Gui(Terrain land, PlantLayer c, PlantLayer u) {
+    public Gui(Terrain terrain, PlantLayer canopy, PlantLayer undergrowth) {
         
     //======================================================================
     //      Load in Files Frame:
@@ -112,7 +112,10 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
     //======================================================================
     //      West Panel (MAIN PANEL) : 
     //======================================================================
-            mainPanel = new imgPanel(land.deriveImg(), c.deriveImg(), u.deriveImg());
+            mainPanel = new imgPanel();
+                mainPanel.deriveImg(terrain);
+                mainPanel.deriveImg(canopy, true);
+                mainPanel.deriveImg(undergrowth, false);
                 mainPanel.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
                 mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
                 mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -172,7 +175,7 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
     pnlEast.add(wDirSlider);
     pnlEast.add(Box.createRigidArea(new Dimension(0,10)));
     //DRAW MINIMAP
-    miniMap mini = new miniMap(land.deriveImg(), c.deriveImg(), u.deriveImg());
+    miniMap mini = new miniMap(mainPanel.getTerrain(), mainPanel.getCanopy(), mainPanel.getUndergrowth());
     mini.setPreferredSize(new Dimension(200,200));
     mini.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
     mini.setOpaque(false);
