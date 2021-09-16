@@ -18,10 +18,6 @@ public class FileController {
     //      Read in the elevation values
     //========================================================================
     public void readElevation(Terrain terrain, String filename) throws FileNotFoundException{
-        //String fileName = "src/data/S6000-6000-256.elv";
-        //String fileName = "src/data/S2000-2000-512.elv";
-        //String fileName = "src/data/S4500-4500-1024.elv";
-
         File file = new File(filename);
         Scanner scanner = new Scanner(file);
 
@@ -29,11 +25,9 @@ public class FileController {
         int dimY = Integer.parseInt(scanner.next());
         Terrain.setDimX(dimX);
         Terrain.setDimY(dimY);
-        //System.out.println(dimX);
-        //System.out.println(dimY);
+
         float gridSpacing = Float.parseFloat(scanner.next());
         float latitude = Float.parseFloat(scanner.next());
-
         double[][] elevations = new double[dimY][dimX];
 
         while (scanner.hasNext()){
@@ -43,11 +37,11 @@ public class FileController {
                 }
             }
         }
-        //
+
         terrain.setGridSpacing(gridSpacing);
         terrain.setLatitude(latitude);
         terrain.setElevations(elevations);
-        //
+
         System.out.println("Elevation File has been read...");
         scanner.close();
     }
@@ -59,7 +53,7 @@ public class FileController {
         File file = new File(filename);
         Scanner filein = new Scanner(file);
 
-        int numSpecies = filein.nextInt();//Integer.parseInt(filein.next()); 
+        int numSpecies = filein.nextInt();
         layer.setNumSpecies(numSpecies);
 
         Species[] list = new Species[numSpecies];
@@ -67,7 +61,7 @@ public class FileController {
 
         for (int i=0;i<numSpecies;++i){
             //Species average Details:
-            int speciesID =  filein.nextInt();            
+            int speciesID =  filein.nextInt();
             float minHeight = Float.parseFloat( filein.next() );
             float maxHeight = Float.parseFloat(filein.next() );
             float avgRatio = Float.parseFloat(filein.next() );
@@ -77,24 +71,21 @@ public class FileController {
 
             for (int id = 0; id < numPlants;++id){
                 float height, canopy;
-                int xpos, ypos, zpos; 
+                int xpos, ypos, zpos;
                 xpos = Math.round(Float.parseFloat(filein.next()));
                 ypos = Math.round(Float.parseFloat(filein.next()));
                 zpos = Math.round(Float.parseFloat(filein.next()));  //Intentionally unused
                 height = Float.parseFloat(filein.next());
                 canopy = Float.parseFloat(filein.next());
-                
+
                 plantlist[id] = new Plant(speciesID, id, xpos, ypos, height, canopy);
-                
+
                 layer.setPlantAtLocation(xpos, ypos, speciesID, id);
             }
             species.setPlantList(plantlist);
             list[i] = species;
         }
         layer.setSpeciesList(list);
-        //
-        //System.out.println(layer.getSpeciesList());
-        //
         System.out.println("Plant database file read in successfully");
         filein.close();
     }
@@ -103,9 +94,6 @@ public class FileController {
     //      Read in Species
     //========================================================================
     public void readSpecies(String filename) throws FileNotFoundException{
-        //File file = new File("src/data/S6000-6000-256.spc.txt");
-        //File file = new File("src/data/S2000-2000-512.spc.txt");
-        //File file = new File("src/data/S4500-4500-1024.spc.txt");
         File file = new File(filename);
         Scanner filein = new Scanner(file);
 
@@ -138,6 +126,5 @@ public class FileController {
         Species.setColourList(colourlist);
         Species.setSpeciesList(specieslist);
         System.out.println("Species file processed.");
-        //System.out.println(Species.getSPECIES());
     }
 }

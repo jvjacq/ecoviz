@@ -29,11 +29,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+
 import javax.swing.event.ChangeListener;
+import java.awt.event.ItemListener;
 import javax.swing.event.ChangeEvent;
 import java.io.File;
 
-public class Gui extends JPanel implements ActionListener,ChangeListener{
+public class Gui extends JPanel implements ActionListener,ChangeListener,ItemListener{
 
     private JButton load;
     private JFileChooser fChooser;
@@ -45,44 +48,23 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
     private imgPanel mainPanel;
     private JButton btnFilter;
 
+    PlantLayer canopy,undergrowth;
+
     //East Panel:
     private JPanel pnlEast = new JPanel();
     private JLabel heading;
     private JTextArea plantDescription;
     private JLabel config;
     private miniMap mini;
+    private JCheckBox ChkUnderGrowth,ChkCanopy;
+
     //Filter Section:
-    JButton btnApply = new JButton("Apply");
-    JPanel fSelection = new JPanel();
+    private JButton btnBack = new JButton("Back");
+    private JPanel fSelection = new JPanel();
     
-    public Gui(Terrain terrain, PlantLayer canopy, PlantLayer undergrowth) {
-        
-    //======================================================================
-    //      Load in Files Frame:
-    //======================================================================
-    loadIn = new JFrame("Initialising");
-
-    //File Chooser:
-            fChooser = new JFileChooser();
-            fChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-
-            loadIn.setSize(400,400);
-            loadIn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            
-            JLabel loading = new JLabel();
-                ImageIcon path = new ImageIcon("resources/ECOVIZ.gif");
-                loading.setIcon(path);
-            
-            //Add button for loading in files:
-            load = new JButton();
-                load.setText("Load Files");
-                load.addActionListener(this);
-
-
-            //splash.getContentPane().add(loading, BorderLayout.CENTER);
-            loadIn.add(loading);
-            loadIn.getContentPane().add(BorderLayout.SOUTH, load);
+    public Gui(Terrain terrain, PlantLayer c, PlantLayer u) {
+        canopy=c;
+        undergrowth=u;
 
     //======================================================================
     //      Frame:
@@ -162,8 +144,8 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
         
         
         //Filter gui setup:
-        btnApply.setVisible(false);
-        btnApply.addActionListener(this);
+        btnBack.setVisible(false);
+        btnBack.addActionListener(this);
         fSelection.setVisible(false);
         fSelection.setLayout(new BoxLayout(fSelection,BoxLayout.PAGE_AXIS));
 
@@ -174,18 +156,20 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
 
         fSelection.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         
-        JCheckBox ChkUnderGrowth = new JCheckBox("Show Undergrowth",true);
+        ChkUnderGrowth = new JCheckBox("Show Undergrowth",true);
+        ChkUnderGrowth.addItemListener(this);
         ChkUnderGrowth.setBounds(100,100,50,50);
         fSelection.add(Box.createRigidArea(new Dimension(0,10)));
-        JCheckBox ChkOverGrowth = new JCheckBox("Show Canopy",true);
-        ChkOverGrowth.setBounds(100,100,50,50);
+        ChkCanopy = new JCheckBox("Show Canopy",true);
+        ChkCanopy.addItemListener(this);
+        ChkCanopy.setBounds(100,100,50,50);
         fSelection.add(Box.createRigidArea(new Dimension(0,10)));
 
         fSelection.add(ChkUnderGrowth,BorderLayout.CENTER);
-        fSelection.add(ChkOverGrowth,BorderLayout.CENTER);
+        fSelection.add(ChkCanopy,BorderLayout.CENTER);
         
         pnlEast.add(fSelection,BorderLayout.CENTER);
-        pnlEast.add(btnApply,BorderLayout.CENTER);
+        pnlEast.add(btnBack,BorderLayout.CENTER);
 
         //////////
     
@@ -300,12 +284,12 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
 
             //Show:
             heading.setText("   Select Your Filter:");
-            btnApply.setVisible(true);
+            btnBack.setVisible(true);
             fSelection.setVisible(true);
 
         }
 
-        if (e.getSource() == btnApply){
+        if (e.getSource() == btnBack){
             //Show:
             heading.setText("Plant Description:");
             plantDescription.setVisible(true);
@@ -316,15 +300,25 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
             btnFilter.setEnabled(true);
 
             //Hide:
-            btnApply.setVisible(false);
+            btnBack.setVisible(false);
             fSelection.setVisible(false);
         }
+
 
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        // TODO Auto-generated method stub
+
         pointerLbl.setText("Wind Direction: "+Integer.toString(wDirSlider.getValue())+" Degrees");
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        
+        if (ChkCanopy.isSelected()){ mainPanel.setShowCanopy(true);; }else{mainPanel.setShowCanopy(false);}
+
+        if (ChkUnderGrowth.isSelected()){ mainPanel.setSHowUnderGrowth(true); }else{mainPanel.setSHowUnderGrowth(false);}
+        
     }
 }
