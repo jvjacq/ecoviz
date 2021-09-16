@@ -20,6 +20,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.event.ActionEvent;
@@ -28,17 +29,26 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+
 import java.awt.color.*;
 
 //import java.io.File;
 import java.io.File;
-public class Gui extends JPanel implements ActionListener{
-    private imgPanel mainPanel;
+
+public class Gui extends JPanel implements ActionListener,ChangeListener{
+
     private JButton load;
     private JFileChooser fChooser;
     private JFrame frame;
     private JFrame loadIn;
     private JMenuItem i1,i2,i3;
+    private JLabel pointerLbl;
+    private JSlider wDirSlider;
+    private imgPanel mainPanel;
+
+    
     public Gui(Terrain land, PlantLayer c, PlantLayer u) {
         
     //======================================================================
@@ -126,8 +136,17 @@ public class Gui extends JPanel implements ActionListener{
     heading.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
     JTextArea plantDescription = new JTextArea("  Common Name:\n  Latin Name:\n  Height:\n  Canopy Radius:");
     plantDescription.setOpaque(false);
+    
+    //SLIDER FOR WIND DIRECTION:
+    wDirSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
+        wDirSlider.addChangeListener(this);
+
+    //Direction Image:
+    //ImageIcon pointer = new ImageIcon("src/resources/Direction.png");
+    pointerLbl = new JLabel("Wind Direction: 0 Degrees");
 
     //Add Components
+
     pnlEast.add(heading,BorderLayout.NORTH);
     pnlEast.add(Box.createRigidArea(new Dimension(0,5)));
     pnlEast.add(plantDescription,BorderLayout.NORTH);
@@ -146,7 +165,12 @@ public class Gui extends JPanel implements ActionListener{
 
     pnlEast.add(ChkUnderGrowth,BorderLayout.CENTER);
     pnlEast.add(ChkOverGrowth,BorderLayout.CENTER);
+    pnlEast.add(Box.createRigidArea(new Dimension(0,10)));
+    pnlEast.add(pointerLbl);
+    pnlEast.add(Box.createRigidArea(new Dimension(0,10)));
 
+    pnlEast.add(wDirSlider);
+    pnlEast.add(Box.createRigidArea(new Dimension(0,10)));
     //DRAW MINIMAP
     miniMap mini = new miniMap(land.deriveImg(), c.deriveImg(), u.deriveImg());
     mini.setPreferredSize(new Dimension(200,200));
@@ -235,5 +259,11 @@ public class Gui extends JPanel implements ActionListener{
             mainPanel.exportImage(nm);
         }
 
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        // TODO Auto-generated method stub
+        pointerLbl.setText("Wind Direction: "+Integer.toString(wDirSlider.getValue())+" Degrees");
     }
 }
