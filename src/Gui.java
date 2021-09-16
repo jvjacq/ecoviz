@@ -38,30 +38,29 @@ public class Gui extends JPanel implements ActionListener{
     private JFileChooser fChooser;
     private JFrame frame;
     private JFrame loadIn;
-    private JMenuItem i1,i3;
-    public Gui(Terrain land, PlantLayer c, PlantLayer u) {
+    private JMenuItem i1,i2,i3;
+    private JLabel pointerLbl;
+    private JSlider wDirSlider;
+    private imgPanel mainPanel;
+    private JButton btnFilter;
 
-    //======================================================================
-    //      Load in Files Frame:
-    //======================================================================
-            loadIn = new JFrame("Initialising");
+    PlantLayer canopy,undergrowth;
 
-            loadIn.setSize(400,400);
-            loadIn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //East Panel:
+    private JPanel pnlEast = new JPanel();
+    private JLabel heading;
+    private JTextArea plantDescription;
+    private JLabel config;
+    private miniMap mini;
+    private JCheckBox ChkUnderGrowth,ChkCanopy;
 
-            JLabel loading = new JLabel();
-                ImageIcon path = new ImageIcon("src/resources/ECOVIZ.gif");
-                loading.setIcon(path);
-
-            //Add button for loading in files:
-            load = new JButton();
-                load.setText("Load Files");
-                load.addActionListener(this);
-
-
-            //splash.getContentPane().add(loading, BorderLayout.CENTER);
-            loadIn.add(loading);
-            loadIn.getContentPane().add(BorderLayout.SOUTH, load);
+    //Filter Section:
+    private JButton btnBack = new JButton("Back");
+    private JPanel fSelection = new JPanel();
+    
+    public Gui(Terrain terrain, PlantLayer c, PlantLayer u) {
+        canopy=c;
+        undergrowth=u;
 
     //======================================================================
     //      Frame:
@@ -220,3 +219,4 @@ public class Gui extends JPanel implements ActionListener{
     }
 
 }
+
