@@ -37,11 +37,13 @@ public class imgPanel extends JPanel{
 	private Point startPoint;
 
 	private imgController imgcontroller;
+	private Gui gui;
 	private boolean showCanopy;
 	private boolean showUnderGrowth;
 
-	public imgPanel(){
-		imgcontroller = new imgController(this);
+	public imgPanel(Gui gui){
+		this.gui = gui;
+		imgcontroller = new imgController(this, gui);
 		addMouseWheelListener(imgcontroller);
 		addMouseListener(imgcontroller);
 		addMouseMotionListener(imgcontroller);
@@ -148,9 +150,11 @@ public class imgPanel extends JPanel{
   
 		imgGraphics.setComposite(AlphaComposite.Src);
 		Species[] specieslist = layer.getSpeciesList();
+		int[] colourlist = Species.getCOLOURS();
 		for (Species s: specieslist){
-		  Random r = new Random();
-		  imgGraphics.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat()));
+		  //Random r = new Random();
+		  //imgGraphics.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat()));
+		  imgGraphics.setColor(new Color(colourlist[s.getSpeciesID()], true));
 		  for(Plant p: s.getPlants()){
 			imgGraphics.fillOval(p.getX(),p.getY(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
 		  }
