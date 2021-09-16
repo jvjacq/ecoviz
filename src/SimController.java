@@ -15,10 +15,6 @@ public class SimController {
     private static Terrain terrain;
     private static FileController fileController;
     private static FileLoader fileLoader;
-    private static File elevationFile;
-    private static File undergrowthFile;
-    private static File canopyFile;
-    private static File textFile;
     private static File[] files;
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -38,3 +34,4 @@ public class SimController {
         System.out.println("GUI is showing...");
     }
 }
+
