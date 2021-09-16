@@ -113,7 +113,7 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
     //======================================================================
     //      West Panel (MAIN PANEL) : 
     //======================================================================
-            mainPanel = new imgPanel();
+            mainPanel = new imgPanel(this);
                 mainPanel.deriveImg(terrain);
                 mainPanel.deriveImg(canopy, true);
                 mainPanel.deriveImg(undergrowth, false);
@@ -256,6 +256,10 @@ public class Gui extends JPanel implements ActionListener,ChangeListener{
         frame.setVisible(true);
         //loadIn.setVisible(true);
 
+    }
+
+    public void setSpeciesDetails(String s){
+        this.plantDescription.setText(s);
     }
 
     public void actionPerformed( ActionEvent e ){
