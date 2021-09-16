@@ -9,33 +9,32 @@
 
 import java.io.FileNotFoundException;
 import javax.swing.SwingUtilities;
+import java.io.File;
 
 public class SimController {
-    //public static int frameX, frameY;
-    
-    //private static Gui gui;
-    //private static imgPanel
     private static Terrain terrain;
-    private static FileController filecontroller;
+    private static FileController fileController;
+    private static FileLoader fileLoader;
+    private static File elevationFile;
+    private static File undergrowthFile;
+    private static File canopyFile;
+    private static File textFile;
+    private static File[] files;
 
     public static void main(String[] args) throws FileNotFoundException {
-
-        //FileLoader fileLoader = new FileLoader();
-        filecontroller = new FileController();
+        fileLoader = new FileLoader();
+        fileController = new FileController();
+        fileLoader.loadFiles();
+        //fileLoader.loader();
+        files = fileLoader.getFiles();
         terrain = new Terrain();
-        
-        filecontroller.readElevation(terrain, "data/S2000-2000-512.elv");
-        filecontroller.readSpecies("data/S2000-2000-512.spc.txt");
-
+        fileController.readElevation(terrain, files[0].toString());
+        fileController.readSpecies(files[1].toString());
         PlantLayer canopy = new PlantLayer();
         PlantLayer undergrowth = new PlantLayer();
-
-        filecontroller.readLayer(canopy, "data/S2000-2000-512_canopy.pdb");
-        filecontroller.readLayer(undergrowth, "data/S2000-2000-512_undergrowth.pdb");
-
-
-        SwingUtilities.invokeLater(() -> new Gui(terrain, canopy, undergrowth)); //in case we use threads
-        System.out.println("GUI is showing..."); 
+        fileController.readLayer(canopy, files[2].toString());
+        fileController.readLayer(undergrowth, files[3].toString());
+        SwingUtilities.invokeLater(() -> new Gui(terrain,canopy,undergrowth));
+        System.out.println("GUI is showing...");
     }
-
 }
