@@ -12,6 +12,7 @@
 public class Species {
 
     private static String[][] SPECIES;
+    private static int[] COLOURS;
     private String commonName;
     private String latinName;
     private int speciesid;
@@ -69,6 +70,10 @@ public class Species {
         Species.SPECIES = list;
     }
 
+    public static void setColourList(int[] list){
+        Species.COLOURS = list;
+    }
+
     // Accessor Methods:
 
     public String getCommon(){
@@ -105,6 +110,10 @@ public class Species {
 
     public static String[][] getSPECIES(){
         return Species.SPECIES;
+    }
+
+    public static int[] getCOLOURS(){
+        return Species.COLOURS;
     }
 
     @Override
