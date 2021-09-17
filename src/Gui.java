@@ -5,27 +5,15 @@
 * Status: In progress
 */
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.event.KeyEvent;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
@@ -35,6 +23,9 @@ import javax.swing.event.ChangeListener;
 import java.awt.event.ItemListener;
 import javax.swing.event.ChangeEvent;
 import java.io.File;
+import java.io.IOException;
+
+import com.formdev.flatlaf.*;
 
 public class Gui extends JPanel implements ActionListener,ChangeListener,ItemListener{
 
@@ -42,26 +33,25 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
     private JFileChooser fChooser;
     private JFrame frame;
     private JFrame loadIn;
-    private JMenuItem i1,i2,i3;
+    private JMenuItem i1,i2,i3,a1,a2,a3,a4;
     private JLabel pointerLbl;
-    private JSlider wDirSlider;
+    private JSlider wDirSlider,spdSlider;
     private imgPanel mainPanel;
-    private JButton btnFilter;
 
     PlantLayer canopy,undergrowth;
 
     //East Panel:
-    private JPanel pnlEast = new JPanel();
-    private JLabel heading;
+    private JPanel pnlEast;
+    private JLabel fontExample;
     private JTextArea plantDescription;
     private JLabel config;
     private miniMap mini;
     private JCheckBox ChkUnderGrowth,ChkCanopy;
+    private JLabel lblSpeed;
 
     //Filter Section:
-    private JButton btnBack = new JButton("Back");
-    private JPanel fSelection = new JPanel();
-    
+    private JLabel lblSearch;
+    private JTextField search;
     public Gui(Terrain terrain, PlantLayer c, PlantLayer u) {
         canopy=c;
         undergrowth=u;
@@ -70,26 +60,9 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
     //      Frame:
     //======================================================================
             frame = new JFrame("EcoViz");
-            //frame.getContentPane().setBackground(Color.BLACK);
             frame.setSize(500,500);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    //======================================================================   
-    //      North Panel:
-    //======================================================================
-            JPanel pnlNorth = new JPanel();
-            pnlNorth.setBackground(new Color(16,120,173));
-            JLabel lblSearch = new JLabel("Search: ");
-            JTextField search = new JTextField(20);
-            btnFilter = new JButton("Filter");
-            btnFilter.addActionListener(this);
-
-            
-
-            //Add Components
-            pnlNorth.add(lblSearch);
-            pnlNorth.add(search);
-            pnlNorth.add(btnFilter);
 
 
     //======================================================================
@@ -111,74 +84,105 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
     //======================================================================
     //      East Panel: 
     //======================================================================
+    pnlEast = new JPanel(new BorderLayout());
     pnlEast.setPreferredSize(new Dimension(200,Terrain.getDimY()));
     pnlEast.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
     pnlEast.setBorder(BorderFactory.createRaisedBevelBorder());
     pnlEast.setLayout(new BoxLayout(pnlEast,BoxLayout.PAGE_AXIS));
 
-    heading = new JLabel("Plant Description");
-    Font f = heading.getFont();
-    heading.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+    fontExample = new JLabel(); 
+    Font f = fontExample.getFont();
+    fontExample.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+
+
+
     plantDescription = new JTextArea("  Common Name:\n  Latin Name:\n  Height:\n  Canopy Radius:");
     plantDescription.setOpaque(false);
-    
-    //SLIDER FOR WIND DIRECTION:
-    wDirSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
-        wDirSlider.addChangeListener(this);
-
-    //Direction Image:
-    //ImageIcon pointer = new ImageIcon("src/resources/Direction.png");
-    pointerLbl = new JLabel("Wind Direction: 0 Degrees");
-
-    //Add Components
-
-    pnlEast.add(heading,BorderLayout.NORTH);
-    pnlEast.add(Box.createRigidArea(new Dimension(0,5)));
-    pnlEast.add(plantDescription,BorderLayout.NORTH);
-    pnlEast.add(Box.createRigidArea(new Dimension(0,5)));
 
     //Configurations
     config = new JLabel("Configurations:");
     config.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
 
-        
-        
-        //Filter gui setup:
-        btnBack.setVisible(false);
-        btnBack.addActionListener(this);
-        fSelection.setVisible(false);
-        fSelection.setLayout(new BoxLayout(fSelection,BoxLayout.PAGE_AXIS));
-
-        fSelection.setPreferredSize(new Dimension(200,235));
-
-        fSelection.setBackground(new Color(85,193,219));
 
 
-        fSelection.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        //fSelection.setBackground(new Color(85,193,219));
+
+//SLIDER FOR WIND DIRECTION:
+wDirSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
+wDirSlider.addChangeListener(this);
+pointerLbl = new JLabel("Wind Direction: 0 Degrees");
+
+spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
+spdSlider.setMaximum(5);
+spdSlider.setMinimum(1);
+spdSlider.addChangeListener(this);
+lblSpeed = new JLabel("Simulation Speed: x1");
+
+search = new JTextField(20);
+search.setMaximumSize(search.getPreferredSize());
+lblSearch = new JLabel("Search: ");
         
         ChkUnderGrowth = new JCheckBox("Show Undergrowth",true);
         ChkUnderGrowth.addItemListener(this);
-        ChkUnderGrowth.setBounds(100,100,50,50);
-        fSelection.add(Box.createRigidArea(new Dimension(0,10)));
+        ChkUnderGrowth.setBounds(150,150,50,50);
         ChkCanopy = new JCheckBox("Show Canopy",true);
         ChkCanopy.addItemListener(this);
-        ChkCanopy.setBounds(100,100,50,50);
-        fSelection.add(Box.createRigidArea(new Dimension(0,10)));
+        ChkCanopy.setBounds(150,150,50,50);
 
-        fSelection.add(ChkUnderGrowth,BorderLayout.CENTER);
-        fSelection.add(ChkCanopy,BorderLayout.CENTER);
+
+
+        ////********************************************************** */
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setPreferredSize(new Dimension(200,250));
+
+        //ImageIcon icon = createImageIcon("");
+
+        //Details on Demand:
+        JPanel pnlDetails = new JPanel();
+            JLabel lblDetails = new JLabel("Details on Demand");
+            lblDetails.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+            //Add components to Details on Demand Panel
+            pnlDetails.add(lblDetails);
+            pnlDetails.add(plantDescription);
+
+        tabbedPane.addTab("Details",null,pnlDetails,"Shows Details on Demand");
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+
+        //Configurations:
+        JPanel pnlConfig = new JPanel();
+            JLabel lblConfig = new JLabel("Configurations");
+            lblConfig.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+            //Add components to Config Panel
+            pnlConfig.add(lblConfig);
+            pnlConfig.add(pointerLbl);
+            pnlConfig.add(wDirSlider);
+            pnlConfig.add(lblSpeed);
+            pnlConfig.add(spdSlider);
+
+
+        tabbedPane.addTab("Config",null,pnlConfig, "Change Simulation Settings");
+        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+
+        //Filters:
+        JPanel pnlFilters = new JPanel();
+            pnlFilters.setLayout(new BoxLayout(pnlFilters, BoxLayout.PAGE_AXIS ));
+            JLabel lblFilters = new JLabel("Filters");
+            lblFilters.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+            //Add components to Filter Panel
+            pnlFilters.add(lblFilters);
+            pnlFilters.add(lblSearch);
+            pnlFilters.add(search);
+            pnlFilters.add(ChkUnderGrowth);
+            pnlFilters.add(ChkCanopy);
+
+        tabbedPane.addTab("Filter",null,pnlFilters,"Edit Filters");
+        tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
         
-        pnlEast.add(fSelection,BorderLayout.CENTER);
-        pnlEast.add(btnBack,BorderLayout.CENTER);
 
-        //////////
-    
-    pnlEast.add(Box.createRigidArea(new Dimension(0,10)));
-    pnlEast.add(pointerLbl);
-    pnlEast.add(Box.createRigidArea(new Dimension(0,10)));
 
-    pnlEast.add(wDirSlider);
-    pnlEast.add(Box.createRigidArea(new Dimension(0,10)));
+        ////********************************************************** */
+
+
 
     //DRAW MINIMAP
     mini = new miniMap(mainPanel.getTerrain(), mainPanel.getCanopy(), mainPanel.getUndergrowth());
@@ -186,7 +190,8 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
     mini.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
     mini.setOpaque(false);
 
-    pnlEast.setBackground(new Color(85,193,219));
+    //pnlEast.setBackground(new Color(85,193,219));
+    pnlEast.add(tabbedPane);
     pnlEast.add(mini,BorderLayout.SOUTH);
 
 
@@ -197,7 +202,7 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
                 JLabel lblZoom = new JLabel("Scroll to Zoom                       ");
                 lblZoom.setForeground(Color.white);
                 JButton btnFire = new JButton("Simulate Fire");
-                pnlSouth.setBackground(new Color(8,78,137));
+                //pnlSouth.setBackground(new Color(8,78,137));
 
                 //Add Components
                 pnlSouth.add(lblZoom);
@@ -222,21 +227,42 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
                         m1.add(i3);
             
                 JMenu m2 = new JMenu("Help");
+                JMenu m3 = new JMenu("Appearance");
+
+                a1 = new JMenuItem("Dark Mode");
+                a2 = new JMenuItem("Light Mode");
+                a3 = new JMenuItem("Cosmo");
+                a4 = new JMenuItem("Forest");
+                m3.add(a1);
+                a1.addActionListener(this);
+
+                m3.add(a2);
+                a2.addActionListener(this);
+
+                m3.add(a3);
+                a3.addActionListener(this);
+
+                m3.add(a4);
+                a4.addActionListener(this);
+
+
+
                 mb.add(m1);
                 mb.add(m2);
+                mb.add(m3);
 
     //====================================================================== 
     //      Adding all to the Frame (ECOVIZ):
     //======================================================================
             frame.setJMenuBar(mb);
             frame.getContentPane().add(BorderLayout.SOUTH, pnlSouth);
-            frame.getContentPane().add(BorderLayout.NORTH, pnlNorth);
             frame.getContentPane().add(BorderLayout.WEST, pnlWest);
             frame.getContentPane().add(BorderLayout.EAST, pnlEast);
 
         
         // Show
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         //loadIn.setVisible(true);
 
@@ -272,36 +298,27 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
             mainPanel.exportImage(nm);
         }
 
-        if (e.getSource() == btnFilter){
+        if (e.getSource() == a1){
+            try{UIManager.setLookAndFeel(new FlatDarculaLaf());
+                System.out.println("Dark Mode Enabled");
+                SwingUtilities.updateComponentTreeUI(frame);
 
-            //Hide:
-            plantDescription.setVisible(false);
-            config.setVisible(false);
-            wDirSlider.setVisible(false);
-            pointerLbl.setVisible(false);
-            btnFilter.setEnabled(false);
-
-
-            //Show:
-            heading.setText("   Select Your Filter:");
-            btnBack.setVisible(true);
-            fSelection.setVisible(true);
-
+            }catch (Exception exc){
+                exc.printStackTrace();}
         }
+        if (e.getSource() == a2){
+            try{UIManager.setLookAndFeel(new FlatLightLaf());
+                System.out.println("Light Mode Enabled");
+                SwingUtilities.updateComponentTreeUI(frame);
 
-        if (e.getSource() == btnBack){
-            //Show:
-            heading.setText("Plant Description:");
-            plantDescription.setVisible(true);
-            config.setVisible(true);
-            wDirSlider.setVisible(true);
-            pointerLbl.setVisible(true);
-            mini.setVisible(true);
-            btnFilter.setEnabled(true);
-
-            //Hide:
-            btnBack.setVisible(false);
-            fSelection.setVisible(false);
+            }catch (Exception exc){
+                exc.printStackTrace();}
+        }
+        if (e.getSource() == a3){
+            System.out.println("Temporary Unavailable");
+        }
+        if (e.getSource() == a4){
+            System.out.println("Temporary Unavailable");
         }
 
 
@@ -311,6 +328,7 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
     public void stateChanged(ChangeEvent e) {
 
         pointerLbl.setText("Wind Direction: "+Integer.toString(wDirSlider.getValue())+" Degrees");
+        lblSpeed.setText("Simulation Speed: x"+Integer.toString(spdSlider.getValue()));
     }
 
     @Override
@@ -320,5 +338,14 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
 
         if (ChkUnderGrowth.isSelected()){ mainPanel.setSHowUnderGrowth(true); }else{mainPanel.setSHowUnderGrowth(false);}
         
+    }
+
+    protected JComponent makeTextPanel(String text){//Taken from tabbedPane.java demo (Oracle)
+        JPanel panel = new JPanel(false);
+        JLabel filler = new JLabel(text);
+        filler.setHorizontalAlignment(JLabel.CENTER);
+        panel.setLayout(new GridLayout(1,1));
+        panel.add(filler);
+        return panel;
     }
 }
