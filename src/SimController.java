@@ -9,6 +9,9 @@
 
 import java.io.FileNotFoundException;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import com.formdev.flatlaf.FlatDarculaLaf;
 import java.io.File;
 
 public class SimController {
@@ -18,6 +21,12 @@ public class SimController {
     private static File[] files;
 
     public static void main(String[] args) throws FileNotFoundException {
+
+        try{
+        UIManager.setLookAndFeel(new FlatDarculaLaf());
+    }catch (Exception e){
+            e.printStackTrace();
+        }
         fileLoader = new FileLoader();
         fileController = new FileController();
         fileLoader.loadFiles();

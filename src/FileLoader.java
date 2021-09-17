@@ -14,6 +14,7 @@ public class FileLoader{
     //      File Selection
     //========================================================================
     private JFrame frame;
+    
     File[] orderedFiles = new File[4];
     public void loadFiles(){
       fChooser = new JFileChooser();
@@ -72,9 +73,13 @@ public class FileLoader{
         loadIn = new JFrame("Initialising");
         loadIn.setSize(400,400);
         loadIn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        
+
+
 
         JLabel loading = new JLabel();
-        ImageIcon path = new ImageIcon("src/resources/ECOVIZ.gif");
+        ImageIcon path = new ImageIcon("resources/ECOVIZ.gif");
         loading.setIcon(path);
 
         //Add button for loading in files:
