@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import java.awt.Graphics2D;
 
 import java.awt.Graphics;
-import java.util.Random;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.awt.AlphaComposite;
@@ -36,17 +35,15 @@ public class ImagePanel extends JPanel{
 	private int xDiff,yDiff;
 	private Point startPoint;
 
-	private imgController imgcontroller;
-	private Gui gui;
 	private boolean showCanopy;
 	private boolean showUnderGrowth;
 
-	public ImagePanel(Gui gui){
-		this.gui = gui;
+	public ImagePanel(){
+		/*this.gui = gui;
 		imgcontroller = new imgController(this, gui);
 		addMouseWheelListener(imgcontroller);
 		addMouseListener(imgcontroller);
-		addMouseMotionListener(imgcontroller);
+		addMouseMotionListener(imgcontroller);*/
 		showCanopy=true;
 		showUnderGrowth=true;
 	}
@@ -164,8 +161,8 @@ public class ImagePanel extends JPanel{
 		} else {
 			this.undergrowth = img;
 		}      
-	  }
-//========================================================================
+	}
+	//========================================================================
     //      Overide Paint Component of the Panel:
     //========================================================================
 	@Override
