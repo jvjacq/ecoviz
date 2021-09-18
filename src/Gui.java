@@ -36,7 +36,7 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
     private JMenuItem i1,i2,i3,a1,a2,a3,a4;
     private JLabel pointerLbl;
     private JSlider wDirSlider,spdSlider;
-    private imgPanel mainPanel;
+    private ImagePanel mainPanel;
 
     PlantLayer canopy,undergrowth;
 
@@ -52,6 +52,50 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
     //Filter Section:
     private JLabel lblSearch;
     private JTextField search;
+
+    public JButton getLoadBtn(){
+        return this.load;
+    }
+
+    public JFileChooser getChooser(){
+        return this.fChooser;
+    }
+
+    public JMenuItem getMenu1(){
+        return this.i1;
+    }
+    public JMenuItem getMenu2(){
+        return this.i2;
+    }
+    public JMenuItem getMenu3(){
+        return this.i3;
+    }
+    public JMenuItem getMenu4(){
+        return this.a1;
+    }
+    public JMenuItem getMenu5(){
+        return this.a2;
+    }
+    public JMenuItem getMenu6(){
+        return this.a3;
+    }
+
+    public JMenuItem getMenu7(){
+        return this.a4;
+    }
+
+    public JCheckBox getUndergrowth(){
+        return this.ChkUnderGrowth;
+    }
+
+    public JCheckBox getCanopy(){
+        return this.ChkCanopy;
+    }
+
+    public ImagePanel getImage(){
+        return this.mainPanel;
+    }
+
     public Gui(Terrain terrain, PlantLayer c, PlantLayer u) {
         canopy=c;
         undergrowth=u;
@@ -59,26 +103,26 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
     //======================================================================
     //      Frame:
     //======================================================================
-            frame = new JFrame("EcoViz");
-            frame.setSize(500,500);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame = new JFrame("EcoViz");
+    frame.setSize(500,500);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
 
     //======================================================================
     //      West Panel (MAIN PANEL) : 
     //======================================================================
-            mainPanel = new imgPanel(this);
-                mainPanel.deriveImg(terrain);
-                mainPanel.deriveImg(canopy, true);
-                mainPanel.deriveImg(undergrowth, false);
-                mainPanel.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
-                mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-                mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+    mainPanel = new ImagePanel(this);
+        mainPanel.deriveImg(terrain);
+        mainPanel.deriveImg(canopy, true);
+        mainPanel.deriveImg(undergrowth, false);
+        mainPanel.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 
 
-            JPanel pnlWest = new JPanel();
-                pnlWest.add(mainPanel);
+    JPanel pnlWest = new JPanel();
+        pnlWest.add(mainPanel);
 
                 
     //======================================================================
@@ -107,80 +151,80 @@ public class Gui extends JPanel implements ActionListener,ChangeListener,ItemLis
 
         //fSelection.setBackground(new Color(85,193,219));
 
-//SLIDER FOR WIND DIRECTION:
-wDirSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
-wDirSlider.addChangeListener(this);
-pointerLbl = new JLabel("Wind Direction: 0 Degrees");
+    //SLIDER FOR WIND DIRECTION:
+    wDirSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
+    wDirSlider.addChangeListener(this);
+    pointerLbl = new JLabel("Wind Direction: 0 Degrees");
 
-spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
-spdSlider.setMaximum(5);
-spdSlider.setMinimum(1);
-spdSlider.addChangeListener(this);
-lblSpeed = new JLabel("Simulation Speed: x1");
+    spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
+    spdSlider.setMaximum(5);
+    spdSlider.setMinimum(1);
+    spdSlider.addChangeListener(this);
+    lblSpeed = new JLabel("Simulation Speed: x1");
 
-search = new JTextField(20);
-search.setMaximumSize(search.getPreferredSize());
-lblSearch = new JLabel("Search: ");
+    search = new JTextField(20);
+    search.setMaximumSize(search.getPreferredSize());
+    lblSearch = new JLabel("Search: ");
         
-        ChkUnderGrowth = new JCheckBox("Show Undergrowth",true);
-        ChkUnderGrowth.addItemListener(this);
-        ChkUnderGrowth.setBounds(150,150,50,50);
-        ChkCanopy = new JCheckBox("Show Canopy",true);
-        ChkCanopy.addItemListener(this);
-        ChkCanopy.setBounds(150,150,50,50);
+    ChkUnderGrowth = new JCheckBox("Show Undergrowth",true);
+    ChkUnderGrowth.addItemListener(this);
+    ChkUnderGrowth.setBounds(150,150,50,50);
+    ChkCanopy = new JCheckBox("Show Canopy",true);
+    ChkCanopy.addItemListener(this);
+    ChkCanopy.setBounds(150,150,50,50);
 
 
 
-        ////********************************************************** */
-        JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setPreferredSize(new Dimension(200,250));
+    ////********************************************************** */
+    JTabbedPane tabbedPane = new JTabbedPane();
+    tabbedPane.setPreferredSize(new Dimension(200,250));
 
-        //ImageIcon icon = createImageIcon("");
+    //ImageIcon icon = createImageIcon("");
 
-        //Details on Demand:
-        JPanel pnlDetails = new JPanel();
-            JLabel lblDetails = new JLabel("Details on Demand");
-            lblDetails.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            //Add components to Details on Demand Panel
-            pnlDetails.add(lblDetails);
-            pnlDetails.add(plantDescription);
+    //Details on Demand:
+    JPanel pnlDetails = new JPanel();
+        JLabel lblDetails = new JLabel("Details on Demand");
+        lblDetails.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+        //Add components to Details on Demand Panel
+        pnlDetails.add(lblDetails);
+        pnlDetails.add(plantDescription);
 
-        tabbedPane.addTab("Details",null,pnlDetails,"Shows Details on Demand");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+    tabbedPane.addTab("Details",null,pnlDetails,"Shows Details on Demand");
+    tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-        //Configurations:
-        JPanel pnlConfig = new JPanel();
-            JLabel lblConfig = new JLabel("Configurations");
-            lblConfig.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            //Add components to Config Panel
-            pnlConfig.add(lblConfig);
-            pnlConfig.add(pointerLbl);
-            pnlConfig.add(wDirSlider);
-            pnlConfig.add(lblSpeed);
-            pnlConfig.add(spdSlider);
-
-
-        tabbedPane.addTab("Config",null,pnlConfig, "Change Simulation Settings");
-        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
-
-        //Filters:
-        JPanel pnlFilters = new JPanel();
-            pnlFilters.setLayout(new BoxLayout(pnlFilters, BoxLayout.PAGE_AXIS ));
-            JLabel lblFilters = new JLabel("Filters");
-            lblFilters.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            //Add components to Filter Panel
-            pnlFilters.add(lblFilters);
-            pnlFilters.add(lblSearch);
-            pnlFilters.add(search);
-            pnlFilters.add(ChkUnderGrowth);
-            pnlFilters.add(ChkCanopy);
-
-        tabbedPane.addTab("Filter",null,pnlFilters,"Edit Filters");
-        tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
-        
+    //Configurations:
+    JPanel pnlConfig = new JPanel();
+        JLabel lblConfig = new JLabel("Configurations");
+        lblConfig.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+        //Add components to Config Panel
+        pnlConfig.add(lblConfig);
+        pnlConfig.add(pointerLbl);
+        pnlConfig.add(wDirSlider);
+        pnlConfig.add(lblSpeed);
+        pnlConfig.add(spdSlider);
 
 
-        ////********************************************************** */
+    tabbedPane.addTab("Config",null,pnlConfig, "Change Simulation Settings");
+    tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+
+    //Filters:
+    JPanel pnlFilters = new JPanel();
+        pnlFilters.setLayout(new BoxLayout(pnlFilters, BoxLayout.PAGE_AXIS ));
+        JLabel lblFilters = new JLabel("Filters");
+        lblFilters.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+        //Add components to Filter Panel
+        pnlFilters.add(lblFilters);
+        pnlFilters.add(lblSearch);
+        pnlFilters.add(search);
+        pnlFilters.add(ChkUnderGrowth);
+        pnlFilters.add(ChkCanopy);
+
+    tabbedPane.addTab("Filter",null,pnlFilters,"Edit Filters");
+    tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
+    
+
+
+    ////********************************************************** */
 
 
 
@@ -198,66 +242,66 @@ lblSearch = new JLabel("Search: ");
     //======================================================================
     //      South Panel:
     //======================================================================
-            JPanel pnlSouth = new JPanel();
-                JLabel lblZoom = new JLabel("Scroll to Zoom                       ");
-                lblZoom.setForeground(Color.white);
-                JButton btnFire = new JButton("Simulate Fire");
-                //pnlSouth.setBackground(new Color(8,78,137));
+    JPanel pnlSouth = new JPanel();
+        JLabel lblZoom = new JLabel("Scroll to Zoom                       ");
+        lblZoom.setForeground(Color.white);
+        JButton btnFire = new JButton("Simulate Fire");
+        //pnlSouth.setBackground(new Color(8,78,137));
 
-                //Add Components
-                pnlSouth.add(lblZoom);
-                pnlSouth.add(btnFire);
+        //Add Components
+        pnlSouth.add(lblZoom);
+        pnlSouth.add(btnFire);
 
     //====================================================================== 
     //      MenuBar:
     //======================================================================
-                JMenuBar mb = new JMenuBar();
+        JMenuBar mb = new JMenuBar();
 
-                JMenu m1 = new JMenu("File");
+        JMenu m1 = new JMenu("File");
 
-                    i1 = new JMenuItem("Load Files");
-                        i1.addActionListener(this);
-                    i2 = new JMenuItem("Export as PNG");
-                        i2.addActionListener(this);
-                    i3 = new JMenuItem("Exit");
-                        i3.addActionListener(this);
+            i1 = new JMenuItem("Load Files");
+                i1.addActionListener(this);
+            i2 = new JMenuItem("Export as PNG");
+                i2.addActionListener(this);
+            i3 = new JMenuItem("Exit");
+                i3.addActionListener(this);
 
-                        m1.add(i1);
-                        m1.add(i2);
-                        m1.add(i3);
-            
-                JMenu m2 = new JMenu("Help");
-                JMenu m3 = new JMenu("Appearance");
+                m1.add(i1);
+                m1.add(i2);
+                m1.add(i3);
+    
+        JMenu m2 = new JMenu("Help");
+        JMenu m3 = new JMenu("Appearance");
 
-                a1 = new JMenuItem("Dark Mode");
-                a2 = new JMenuItem("Light Mode");
-                a3 = new JMenuItem("Cosmo");
-                a4 = new JMenuItem("Forest");
-                m3.add(a1);
-                a1.addActionListener(this);
+        a1 = new JMenuItem("Dark Mode");
+        a2 = new JMenuItem("Light Mode");
+        a3 = new JMenuItem("Cosmo");
+        a4 = new JMenuItem("Forest");
+        m3.add(a1);
+        a1.addActionListener(this);
 
-                m3.add(a2);
-                a2.addActionListener(this);
+        m3.add(a2);
+        a2.addActionListener(this);
 
-                m3.add(a3);
-                a3.addActionListener(this);
+        m3.add(a3);
+        a3.addActionListener(this);
 
-                m3.add(a4);
-                a4.addActionListener(this);
+        m3.add(a4);
+        a4.addActionListener(this);
 
 
 
-                mb.add(m1);
-                mb.add(m2);
-                mb.add(m3);
+        mb.add(m1);
+        mb.add(m2);
+        mb.add(m3);
 
     //====================================================================== 
     //      Adding all to the Frame (ECOVIZ):
     //======================================================================
-            frame.setJMenuBar(mb);
-            frame.getContentPane().add(BorderLayout.SOUTH, pnlSouth);
-            frame.getContentPane().add(BorderLayout.WEST, pnlWest);
-            frame.getContentPane().add(BorderLayout.EAST, pnlEast);
+        frame.setJMenuBar(mb);
+        frame.getContentPane().add(BorderLayout.SOUTH, pnlSouth);
+        frame.getContentPane().add(BorderLayout.WEST, pnlWest);
+        frame.getContentPane().add(BorderLayout.EAST, pnlEast);
 
         
         // Show
@@ -267,9 +311,46 @@ lblSearch = new JLabel("Search: ");
         //loadIn.setVisible(true);
 
     }
+    //END OF CONSTRUCTOR
 
     public void setSpeciesDetails(String s){
         this.plantDescription.setText(s);
+    }
+
+    public void exportView(){
+        JFrame popup = new JFrame();
+        String name = JOptionPane.showInputDialog(popup, "Save As:");
+        mainPanel.exportImage(name);
+    }
+
+    public void changeTheme(int theme){
+        LookAndFeel obj = new FlatDarculaLaf();
+        String message = "";
+        switch(theme){
+            
+            case 0:
+                message = "Dark Mode Enabled";
+                break;
+            case 1: 
+                obj = new FlatLightLaf();
+                message = "Light Mode Enabled";
+                break;
+            case 2: 
+                //obj = new FlatDarculaLaf();
+                message = "Dark Mode default";
+                break;
+            case 3: 
+                //obj = new FlatDarculaLaf();
+                message = "Dark Mode default";
+                break;
+        }
+        try{
+            UIManager.setLookAndFeel(obj);
+            System.out.println(message);
+            SwingUtilities.updateComponentTreeUI(frame);
+        }catch (Exception e){
+            System.out.println("Caught exception with laf library");
+        }
     }
 
     public void actionPerformed( ActionEvent e ){
