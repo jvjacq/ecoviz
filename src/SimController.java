@@ -7,40 +7,23 @@
 * Status: In progress
 */
 
-import java.io.FileNotFoundException;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import com.formdev.flatlaf.FlatDarculaLaf;
-import java.io.File;
 
 public class SimController {
-    private static Terrain terrain;
-    private static FileController fileController;
-    private static FileLoader fileLoader;
-    private static File[] files;
 
-    public static void main(String[] args) throws FileNotFoundException {
-
+    public static void main(String[] args){
         try{
-        UIManager.setLookAndFeel(new FlatDarculaLaf());
-    }catch (Exception e){
+            UIManager.setLookAndFeel(new FlatDarculaLaf());
+        }catch (Exception e){
             e.printStackTrace();
         }
-        fileLoader = new FileLoader();
-        fileController = new FileController();
-        fileLoader.loadFiles();
-        //fileLoader.loader();
-        files = fileLoader.getFiles();
-        terrain = new Terrain();
-        fileController.readElevation(terrain, files[0].toString());
-        fileController.readSpecies(files[1].toString());
-        PlantLayer canopy = new PlantLayer();
+        Gui gui = new Gui();
+        Terrain terrain = new Terrain();
         PlantLayer undergrowth = new PlantLayer();
-        fileController.readLayer(canopy, files[2].toString());
-        fileController.readLayer(undergrowth, files[3].toString());
-        SwingUtilities.invokeLater(() -> new Gui(terrain,canopy,undergrowth));
-        System.out.println("GUI is showing...");
+        PlantLayer canopy = new PlantLayer();
+        Controller controller = new Controller(gui, terrain, undergrowth, canopy);
+        controller.initController();
     }
 }
 
