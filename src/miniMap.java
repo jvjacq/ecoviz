@@ -14,29 +14,38 @@ import java.awt.image.BufferedImage;
 
 public class miniMap extends JPanel{
 
-	private BufferedImage eImg;
-	private BufferedImage cImg;
-	private BufferedImage uImg;
+	private ImagePanel image;
+	private BufferedImage terrain;
+	private BufferedImage canopy;
+	private BufferedImage undergrowth;
 
 
 	public miniMap(BufferedImage img, BufferedImage layer1, BufferedImage layer0){
-		cImg = layer1;
-		uImg = layer0;
-		eImg = img;
+		canopy = layer1;
+		undergrowth = layer0;
+		terrain = img;
 		
 		//resize minimap
 		miniature();
 	}
 
+	public miniMap(ImagePanel image){
+		this.image = image;
+	}
+
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		Graphics2D graphics2d = (Graphics2D) g;
-		if (eImg != null) {
+		terrain = image.getTerrain();
+		undergrowth = image.getUndergrowth();
+		canopy = image.getCanopy();
+		miniature();
 
-		graphics2d.drawImage(eImg, 0,0,null);
-		graphics2d.drawImage(uImg, 0,0,null);
-		graphics2d.drawImage(cImg, 0,0,null);
+		Graphics2D graphics2d = (Graphics2D) g;
+		if (terrain != null) {
+			graphics2d.drawImage(terrain, 0,0,null);
+			graphics2d.drawImage(undergrowth, 0,0,null);
+			graphics2d.drawImage(canopy, 0,0,null);
 		}
 	}
 
@@ -44,32 +53,33 @@ public class miniMap extends JPanel{
 	public void miniature(){
 
 		//Elevation
-		Image tempElv = eImg.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image tempElv = terrain.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 		BufferedImage outElv = new BufferedImage(200,200,BufferedImage.TYPE_INT_ARGB);
 
-		//Canopy
-		Image tempCanopy = cImg.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-		BufferedImage outCanopy = new BufferedImage(200,200,BufferedImage.TYPE_INT_ARGB);
-
 		//Undergrowth
-		Image tempUnder = uImg.getScaledInstance(200,200,Image.SCALE_SMOOTH);
+		Image tempUnder = undergrowth.getScaledInstance(200,200,Image.SCALE_SMOOTH);
 		BufferedImage outUnder = new BufferedImage(200,200,BufferedImage.TYPE_INT_ARGB);
 
+		//Canopy
+		Image tempCanopy = canopy.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		BufferedImage outCanopy = new BufferedImage(200,200,BufferedImage.TYPE_INT_ARGB);
+
 		Graphics2D g = outElv.createGraphics();
-		Graphics2D g2 = outCanopy.createGraphics();
-		Graphics2D g3 =	outUnder.createGraphics();
+		Graphics2D g2 = outUnder.createGraphics();
+		Graphics2D g3 =	outCanopy.createGraphics();
 
 		g.drawImage(tempElv,0,0,null);
-		g2.drawImage(tempCanopy,0,0,null);
-		g3.drawImage(tempUnder,0,0,null);
+		g2.drawImage(tempUnder,0,0,null);
+		g3.drawImage(tempCanopy,0,0,null);
+		
 
 		g.dispose();
 		g2.dispose();
 		g3.dispose();
 
-		eImg=outElv;
-		uImg=outUnder;
-		cImg=outCanopy;
+		terrain=outElv;
+		undergrowth=outUnder;
+		canopy=outCanopy;
 
 	}
 
