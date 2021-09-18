@@ -5,7 +5,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.Point;
 import java.awt.MouseInfo;
-import java.awt.Color;
 
 public class imgController implements MouseWheelListener, MouseListener, MouseMotionListener{
     private ImagePanel image;
