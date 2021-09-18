@@ -45,8 +45,8 @@ public class FileController {
         File file = new File(filename);
         Scanner scanner = new Scanner(file);
 
-        int dimX = Integer.parseInt(scanner.next());
-        int dimY = Integer.parseInt(scanner.next());
+        int dimX = (int)Math.round(Integer.parseInt(scanner.next()));
+        int dimY = (int)Math.round(Integer.parseInt(scanner.next()));
         Terrain.setDimX(dimX);
         Terrain.setDimY(dimY);
 
