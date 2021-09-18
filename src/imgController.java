@@ -8,10 +8,10 @@ import java.awt.MouseInfo;
 import java.awt.Color;
 
 public class imgController implements MouseWheelListener, MouseListener, MouseMotionListener{
-    private imgPanel image;
+    private ImagePanel image;
     private Gui gui;
 
-    public imgController(imgPanel img, Gui gui){
+    public imgController(ImagePanel img, Gui gui){
         this.image = img;
         this.gui = gui;
     }
