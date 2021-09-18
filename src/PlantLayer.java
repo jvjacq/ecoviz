@@ -1,22 +1,3 @@
-/*
-* File: PlantLayer.java
-* Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 1.3
-* Created: +++++++++++ Owen insert date here +++++++
-* Last edited: 26/08/2021
-* Status: In progress
-*/
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-import java.util.Random;
-import java.awt.image.BufferedImage;
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.lang.Math;
-
 public class PlantLayer{
 
     //ID 0 = no PlantType
@@ -25,11 +6,9 @@ public class PlantLayer{
     //private int[][] burnt;
     private Species[] specieslist;
     private int numSpecies; //per layer
-    //private BufferedImage img;
-    // Constructors:
     
     public PlantLayer(){
-      idLocations = new int[Terrain.getDimX()][Terrain.getDimY()][2];
+      //Nothing yet
     }
 
     //Mutator Methods:
@@ -63,30 +42,8 @@ public class PlantLayer{
       return this.specieslist;
     }
 
-    // Methods:
-
-    //========================================================================
-    //      Create the colourful circles
-    //========================================================================
-    public BufferedImage deriveImg(){
-      int dimx = Terrain.getDimX();
-      int dimy = Terrain.getDimY();
-
-      BufferedImage img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
-      Graphics2D imgGraphics = img.createGraphics();
-
-      imgGraphics.setComposite(AlphaComposite.Clear);
-      imgGraphics.fillRect(0, 0, dimx, dimy);
-
-      imgGraphics.setComposite(AlphaComposite.Src);
-      for (Species s: specieslist){
-        Random r = new Random();
-        imgGraphics.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat()));
-        for(Plant p: s.getPlants()){
-          imgGraphics.fillOval(p.getX(),p.getY(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
-        }
-      }
-      return img;      
+    public void setLocations(int dimx, int dimy){
+      idLocations = new int[dimx][dimy][2];
     }
 
     public void removePlant(int dimx, int dimy) {
@@ -104,17 +61,5 @@ public class PlantLayer{
        // return idLocations[dimx][dimy];
        return null;
     }
-
-    public void getLayer() {
-      //return idLocations;
-      
-    }
-    /*public int[][] getBurnt(){
-      return burnt;
-    }
-
-    public BufferedImage getImg(){
-      return img;
-    }*/
 
 }
