@@ -20,7 +20,7 @@ import java.awt.MouseInfo;
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
 
-public class imgPanel extends JPanel{
+public class ImagePanel extends JPanel{
 
 	private int dimY, dimX;
 	private BufferedImage terrain;
@@ -41,7 +41,7 @@ public class imgPanel extends JPanel{
 	private boolean showCanopy;
 	private boolean showUnderGrowth;
 
-	public imgPanel(Gui gui){
+	public ImagePanel(Gui gui){
 		this.gui = gui;
 		imgcontroller = new imgController(this, gui);
 		addMouseWheelListener(imgcontroller);
