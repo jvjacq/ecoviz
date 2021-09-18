@@ -14,6 +14,30 @@ import java.awt.Color;
 
 public class FileController {
 
+    
+    public int validateFiles(File[] list, String[] filenames){
+        int test = 0;
+        for(File file: list){
+            if (file.toString().contains(".elv")){
+                filenames[0] = file.toString();
+                ++test;
+              }
+              if (file.toString().contains(".spc.txt")){
+                filenames[1] = file.toString();
+                ++test;
+              }
+              if (file.toString().contains("undergrowth.pdb")){
+                filenames[2] = file.toString();
+                ++test;
+              }
+              if (file.toString().contains("canopy.pdb")){
+                filenames[3] = file.toString();
+                ++test;
+              }
+        }
+        return test;
+    }
+
     //========================================================================
     //      Read in the elevation values
     //========================================================================
@@ -55,7 +79,7 @@ public class FileController {
 
         int numSpecies = filein.nextInt();
         layer.setNumSpecies(numSpecies);
-
+        layer.setLocations(Terrain.getDimX(), Terrain.getDimY());
         Species[] list = new Species[numSpecies];
         //set location array based on dimensions
 
