@@ -39,6 +39,10 @@ public class ImagePanel extends JPanel{
 	private boolean showCanopy;
 	private boolean showUnderGrowth;
 
+	private float scale;
+
+	private int circles;
+
 	public ImagePanel(){
 		/*this.gui = gui;
 		imgcontroller = new imgController(this, gui);
@@ -46,7 +50,11 @@ public class ImagePanel extends JPanel{
 		addMouseListener(imgcontroller);
 		addMouseMotionListener(imgcontroller);*/
 		showCanopy=true;
-		showUnderGrowth=true;
+		showUnderGrowth=false;
+		circles = 0;
+	}
+	public float getScale(){
+		return this.scale;
 	}
 
 	public int getStartX(){
@@ -71,6 +79,10 @@ public class ImagePanel extends JPanel{
 
 	public BufferedImage getUndergrowth(){
 		return this.undergrowth;
+	}
+
+	public void setScale(float f){
+		this.scale = f;
 	}
 
 	public void setStartPoint(Point p){
@@ -107,6 +119,9 @@ public class ImagePanel extends JPanel{
 	//      Create the greyscale top-down view
 	//========================================================================
 	public void deriveImg(Terrain terrain){
+		//
+		circles = 0;
+		//
 		dimX = Terrain.getDimX();
 		dimY = Terrain.getDimY();
 		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
@@ -130,9 +145,9 @@ public class ImagePanel extends JPanel{
 				img.setRGB(x, y, col.getRGB());
 			}
 		}
-		AffineTransform at = AffineTransform.getScaleInstance(2.0, 2.0);
+		AffineTransform at = AffineTransform.getScaleInstance(scale, scale);
 		AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-		BufferedImage scaled = new BufferedImage(dimX*2,dimY*2,BufferedImage.TYPE_INT_ARGB);
+		BufferedImage scaled = new BufferedImage(Math.round(dimX*scale),Math.round(dimY*scale),BufferedImage.TYPE_INT_ARGB);
 		scaled = ato.filter(img, scaled);
 		this.terrain = scaled;
 	}
@@ -141,8 +156,8 @@ public class ImagePanel extends JPanel{
     //      Create the colourful circles
     //========================================================================
     public void deriveImg(PlantLayer layer, boolean canopy){
-		int dimx = Terrain.getDimX()*2;
-		int dimy = Terrain.getDimY()*2;
+		int dimx = Math.round(Terrain.getDimX()*scale);
+		int dimy = Math.round(Terrain.getDimY()*scale);
   
 		BufferedImage img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = img.createGraphics();
@@ -150,7 +165,7 @@ public class ImagePanel extends JPanel{
 		imgGraphics.setComposite(AlphaComposite.Clear);
 		imgGraphics.fillRect(0, 0, dimx, dimy);
   
-		imgGraphics.setComposite(AlphaComposite.Src);
+		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		Species[] specieslist = layer.getSpeciesList();
 		int[] colourlist = Species.getCOLOURS();
 		for (Species s: specieslist){
@@ -158,14 +173,42 @@ public class ImagePanel extends JPanel{
 		  //imgGraphics.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat()));
 		  imgGraphics.setColor(new Color(colourlist[s.getSpeciesID()], true));
 		  for(Plant p: s.getPlants()){
-			imgGraphics.fillOval(p.getX()*2,p.getY()*2,((int)p.getCanopy())*2*2,((int)p.getCanopy())*2*2);
+			++circles;
+			imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
 		  }
 		}
 		if(canopy){
 			this.canopy = img;	
 		} else {
 			this.undergrowth = img;
-		}      
+		}
+		//
+		System.out.println(circles);      
+	}
+	//========================================================================
+    //      Create the colourful circles
+    //========================================================================
+    public void derivePlants(){
+		int dimx = Math.round(Terrain.getDimX()*scale);
+		int dimy = Math.round(Terrain.getDimY()*scale);
+  
+		BufferedImage img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
+		Graphics2D imgGraphics = img.createGraphics();
+  
+		imgGraphics.setComposite(AlphaComposite.Clear);
+		imgGraphics.fillRect(0, 0, dimx, dimy);
+  
+		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		int[] colourlist = Species.getCOLOURS();
+
+		for(Plant p: PlantLayer.getPlantList()){
+			imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
+			++circles;
+			imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
+		}
+		canopy = img;
+		//
+		System.out.println(circles);      
 	}
 	//========================================================================
     //      Overide Paint Component of the Panel:
@@ -178,7 +221,7 @@ public class ImagePanel extends JPanel{
 
 		if (zoom) {
 			AffineTransform affine = new AffineTransform();
-
+			
 			double xRelative = MouseInfo.getPointerInfo().getLocation().getX()-getLocationOnScreen().getX();
 			double yRelative = MouseInfo.getPointerInfo().getLocation().getY()-getLocationOnScreen().getY();
 
@@ -231,7 +274,8 @@ public class ImagePanel extends JPanel{
 		repaint();
 	}
 	public void setSHowUnderGrowth(boolean b){
-		showUnderGrowth=b;
+		showUnderGrowth=false;
+		//showUnderGrowth=b;
 		repaint();
 	}
 
