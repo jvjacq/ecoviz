@@ -73,7 +73,8 @@ public class Plant implements Comparable<Plant>{
 
     @Override
     public int compareTo(Plant other) {
-        if(this.height == other.getHeight()) return 1;
-        else return -1;
+        if(this.height > other.getHeight()) return 1;
+        else if(this.height < other.getHeight()) return -1;
+        else return 0;
     }
 }
