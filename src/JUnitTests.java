@@ -1,6 +1,4 @@
 import static org.junit.Assert.*;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.Point;
@@ -44,7 +42,7 @@ public class JUnitTests {
 		ImagePanel imagePanelTest = new ImagePanel();
 
 		Point testPoint = new Point(10,15);
-		
+
 		imagePanelTest.setStartPoint(testPoint);				//setStartPoint()
 		assertEquals(imagePanelTest.getStartX(), testPoint.x);	//getStartX()
 		assertEquals(imagePanelTest.getStartY(), testPoint.y);  //getStartY()
