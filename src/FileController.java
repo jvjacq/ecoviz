@@ -15,27 +15,27 @@ import java.awt.Color;
 public class FileController {
 
     
-    public int validateFiles(File[] list, String[] filenames){
-        int test = 0;
+    public boolean validateFiles(File[] list, String[] filenames){
+        boolean elv = false, spc = false, undergrowth = false, canopy = false;
         for(File file: list){
             if (file.toString().contains(".elv")){
                 filenames[0] = file.toString();
-                ++test;
+                elv = true;
               }
               if (file.toString().contains(".spc.txt")){
                 filenames[1] = file.toString();
-                ++test;
+                spc = true;
               }
               if (file.toString().contains("undergrowth.pdb")){
                 filenames[2] = file.toString();
-                ++test;
+                undergrowth = true;
               }
               if (file.toString().contains("canopy.pdb")){
                 filenames[3] = file.toString();
-                ++test;
+                canopy = true;
               }
         }
-        return test;
+        return elv & spc & undergrowth & canopy;
     }
 
     //========================================================================
@@ -45,8 +45,8 @@ public class FileController {
         File file = new File(filename);
         Scanner scanner = new Scanner(file);
 
-        int dimX = (int)Math.round(Integer.parseInt(scanner.next()));
-        int dimY = (int)Math.round(Integer.parseInt(scanner.next()));
+        int dimX = Integer.parseInt(scanner.next());
+        int dimY = Integer.parseInt(scanner.next());
         Terrain.setDimX(dimX);
         Terrain.setDimY(dimY);
 
@@ -96,15 +96,16 @@ public class FileController {
             for (int id = 0; id < numPlants;++id){
                 float height, canopy;
                 int xpos, ypos, zpos;
-                xpos = Math.round(Float.parseFloat(filein.next()));
-                ypos = Math.round(Float.parseFloat(filein.next()));
+                xpos = (int)Math.round(Float.parseFloat(filein.next())/0.9144);
+                ypos = (int)Math.round(Float.parseFloat(filein.next())/0.9144);
                 zpos = Math.round(Float.parseFloat(filein.next()));  //Intentionally unused
                 height = Float.parseFloat(filein.next());
                 canopy = Float.parseFloat(filein.next());
 
                 plantlist[id] = new Plant(speciesID, id, xpos, ypos, height, canopy);
 
-                layer.setPlantAtLocation(xpos, ypos, speciesID, id);
+                if(( !(xpos > Terrain.getDimX()-1) ) & ( !(ypos > Terrain.getDimY()-1) ) )
+                    layer.setPlantAtLocation(xpos, ypos, speciesID, id);
             }
             species.setPlantList(plantlist);
             list[i] = species;
@@ -142,7 +143,7 @@ public class FileController {
             line = line.substring(comma+3);
             specieslist[id][1] = line.substring(0,line.length()-2);
             Random r = new Random();		  
-            Color col = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
+            Color col = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat(), 0.5f);
             colourlist[id] = col.getRGB();
         }
         filein.close();
