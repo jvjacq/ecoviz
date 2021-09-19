@@ -2,7 +2,6 @@ import java.awt.event.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.Math;
 
 public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener{
     private Gui gui;
@@ -55,7 +54,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 System.out.println("Incorrect number of files selected!\nPlease select:\n   > 1 '.elv' file\n   > 2 '.pdb' files\n  > 1 '.spc.txt' file.");
                 loadFiles();
             }else{
-                if (files.validateFiles(list, filenames) != 4){
+                if(!files.validateFiles(list, filenames)){
                     System.out.println("The selected files could not be loaded, please try again.");
                     loadFiles();
                 }else{
@@ -71,9 +70,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                     }
                 }
             }       
+        }else{
+            System.out.println("Cancelled by the user.");
         }
-        //cancelled message
-        //erro cehck incorrect
     }
 
     public void refreshView(){
@@ -82,8 +81,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.deriveImg(terrain);
         image.deriveImg(undergrowth, false);
         image.deriveImg(canopy, true);
-        image.setPreferredSize(new Dimension((int)Math.round(Terrain.getDimX()*0.9144),(int)Math.round(Terrain.getDimY()*0.9144)));
-        gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX() + 220 ,Terrain.getDimY() + 50));
+        image.setPreferredSize(new Dimension(Terrain.getDimX()*2,Terrain.getDimY()*2));
+        gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX()*2 + 220 ,Terrain.getDimY()*2 + 100));
         gui.getMain().pack();
         gui.getMain().setLocationRelativeTo(null);      
         gui.getMain().setVisible(true);
