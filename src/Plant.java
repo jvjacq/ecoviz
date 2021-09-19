@@ -58,7 +58,7 @@ public class Plant {
         return this.filter;
     }
 
-    //Mutator methdos
+    //Mutator methods
     public void toggleFilter(){
         this.filter = !(this.filter);
     }
