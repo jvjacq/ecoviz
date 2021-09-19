@@ -7,16 +7,22 @@ public class Fire {
 	private int dimY;
 	private int [][] fireGrid;
 	private PlantLayer[] plantLayers;
-	private float [][] land;
 	BufferedImage fireImage;
-	private boolean	waterPresent = false;
-	private int[] lowest; 
 
 	Fire (int dimX, int dimY, PlantLayer[] plantLayers) {
         this.dimX=dimX;
         this.dimY=dimY;
         this.plantLayers=plantLayers;
         fireGrid = new int[dimX][dimY];
+    }
+
+    public boolean isFire(int x, int y){
+        boolean firePresent = false;
+        if (fireGrid[x][y]==1){
+            firePresent = true;
+        }
+
+        return firePresent;
     }
 
     public void addFire(int x,int y){

@@ -39,11 +39,6 @@ public class ImagePanel extends JPanel{
 	private boolean showUnderGrowth;
 
 	public ImagePanel(){
-		/*this.gui = gui;
-		imgcontroller = new imgController(this, gui);
-		addMouseWheelListener(imgcontroller);
-		addMouseListener(imgcontroller);
-		addMouseMotionListener(imgcontroller);*/
 		showCanopy=true;
 		showUnderGrowth=true;
 	}
