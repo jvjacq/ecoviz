@@ -3,15 +3,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.awt.Point;
+
 
 public class JUnitTests {
-	@Test
-	public void example() {
-		//Example
-		String test = "Test";
-		String input = "Test";
-		assertEquals(test,input);
-	}
 	
 	@Test
 	public void testPlant() {
@@ -44,4 +39,15 @@ public class JUnitTests {
 				assertEquals(testFilter,true);
 	}
 
+	@Test	//(Unfinished)
+	public void testImagePanel(){
+		ImagePanel imagePanelTest = new ImagePanel();
+
+		Point testPoint = new Point(10,15);
+		
+		imagePanelTest.setStartPoint(testPoint);				//setStartPoint()
+		assertEquals(imagePanelTest.getStartX(), testPoint.x);	//getStartX()
+		assertEquals(imagePanelTest.getStartY(), testPoint.y);  //getStartY()
+
+	}
 }
