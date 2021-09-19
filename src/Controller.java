@@ -2,6 +2,7 @@ import java.awt.event.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Collections;
 
 public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener{
     private Gui gui;
@@ -63,6 +64,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                         files.readSpecies(filenames[1]);
                         files.readLayer(undergrowth, filenames[2]);
                         files.readLayer(canopy, filenames[3]);
+                        Collections.sort(PlantLayer.getPlantList());
                         System.out.println("All files read in successfully.");
                         refreshView();
                     }catch(FileNotFoundException e){
@@ -78,11 +80,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void refreshView(){
         gui.getLoadFrame().setVisible(false);
         gui.getEast().setPreferredSize(new Dimension(200,Terrain.getDimY()));
+        image.setScale(1024/Terrain.getDimX());
         image.deriveImg(terrain);
-        image.deriveImg(undergrowth, false);
-        image.deriveImg(canopy, true);
-        image.setPreferredSize(new Dimension(Terrain.getDimX()*2,Terrain.getDimY()*2));
-        gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX()*2 + 220 ,Terrain.getDimY()*2 + 100));
+        image.derivePlants();
+        //image.deriveImg(undergrowth, false);
+        //image.deriveImg(canopy, true);
+        image.setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale()),Math.round(Terrain.getDimY()*image.getScale())));
+        gui.getMain().setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale())+220,Math.round(Terrain.getDimY()*image.getScale())+100));
         gui.getMain().pack();
         gui.getMain().setLocationRelativeTo(null);      
         gui.getMain().setVisible(true);
