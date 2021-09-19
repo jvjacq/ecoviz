@@ -46,61 +46,6 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
     private JLabel lblSearch;
     private JTextField search;
 
-    public JFrame getMain(){
-        return this.frame;
-    }
-
-    public JFrame getLoadFrame(){
-        return this.loadIn;
-    }
-
-    public JButton getLoadBtn(){
-        return this.load;
-    }
-
-    public JFileChooser getChooser(){
-        return this.fChooser;
-    }
-
-    public JMenuItem getMenu1(){
-        return this.i1;
-    }
-    public JMenuItem getMenu2(){
-        return this.i2;
-    }
-    public JMenuItem getMenu3(){
-        return this.i3;
-    }
-    public JMenuItem getMenu4(){
-        return this.a1;
-    }
-    public JMenuItem getMenu5(){
-        return this.a2;
-    }
-    public JMenuItem getMenu6(){
-        return this.a3;
-    }
-
-    public JMenuItem getMenu7(){
-        return this.a4;
-    }
-
-    public JCheckBox getUndergrowth(){
-        return this.ChkUnderGrowth;
-    }
-
-    public JCheckBox getCanopy(){
-        return this.ChkCanopy;
-    }
-
-    public ImagePanel getImage(){
-        return this.mainPanel;
-    }
-
-    public JPanel getEast(){
-        return this.pnlEast;
-    }
-
     public Gui() {
         //canopy=c;
         //undergrowth=u;
@@ -385,6 +330,61 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
     public boolean showChooser(){
         JFrame fr = new JFrame();
         return fChooser.showOpenDialog(fr) == JFileChooser.APPROVE_OPTION;
+    }
+
+    public JFrame getMain(){
+        return this.frame;
+    }
+
+    public JFrame getLoadFrame(){
+        return this.loadIn;
+    }
+
+    public JButton getLoadBtn(){
+        return this.load;
+    }
+
+    public JFileChooser getChooser(){
+        return this.fChooser;
+    }
+
+    public JMenuItem getMenu1(){
+        return this.i1;
+    }
+    public JMenuItem getMenu2(){
+        return this.i2;
+    }
+    public JMenuItem getMenu3(){
+        return this.i3;
+    }
+    public JMenuItem getMenu4(){
+        return this.a1;
+    }
+    public JMenuItem getMenu5(){
+        return this.a2;
+    }
+    public JMenuItem getMenu6(){
+        return this.a3;
+    }
+
+    public JMenuItem getMenu7(){
+        return this.a4;
+    }
+
+    public JCheckBox getUndergrowth(){
+        return this.ChkUnderGrowth;
+    }
+
+    public JCheckBox getCanopy(){
+        return this.ChkCanopy;
+    }
+
+    public ImagePanel getImage(){
+        return this.mainPanel;
+    }
+
+    public JPanel getEast(){
+        return this.pnlEast;
     }
 
     @Override
