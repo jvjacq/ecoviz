@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import java.awt.Graphics2D;
 
 import java.awt.Graphics;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.awt.AlphaComposite;
@@ -129,15 +130,19 @@ public class ImagePanel extends JPanel{
 				img.setRGB(x, y, col.getRGB());
 			}
 		}
-		this.terrain = img;
+		AffineTransform at = AffineTransform.getScaleInstance(2.0, 2.0);
+		AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		BufferedImage scaled = new BufferedImage(dimX*2,dimY*2,BufferedImage.TYPE_INT_ARGB);
+		scaled = ato.filter(img, scaled);
+		this.terrain = scaled;
 	}
 
 	//========================================================================
     //      Create the colourful circles
     //========================================================================
     public void deriveImg(PlantLayer layer, boolean canopy){
-		int dimx = Terrain.getDimX();
-		int dimy = Terrain.getDimY();
+		int dimx = Terrain.getDimX()*2;
+		int dimy = Terrain.getDimY()*2;
   
 		BufferedImage img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = img.createGraphics();
@@ -153,7 +158,7 @@ public class ImagePanel extends JPanel{
 		  //imgGraphics.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat()));
 		  imgGraphics.setColor(new Color(colourlist[s.getSpeciesID()], true));
 		  for(Plant p: s.getPlants()){
-			imgGraphics.fillOval(p.getX(),p.getY(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
+			imgGraphics.fillOval(p.getX()*2,p.getY()*2,((int)p.getCanopy())*2*2,((int)p.getCanopy())*2*2);
 		  }
 		}
 		if(canopy){
