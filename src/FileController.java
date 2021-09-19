@@ -14,7 +14,8 @@ import java.awt.Color;
 
 public class FileController {
 
-    
+    private int totalPlants;
+
     public boolean validateFiles(File[] list, String[] filenames){
         boolean elv = false, spc = false, undergrowth = false, canopy = false;
         for(File file: list){
@@ -42,6 +43,10 @@ public class FileController {
     //      Read in the elevation values
     //========================================================================
     public void readElevation(Terrain terrain, String filename) throws FileNotFoundException{
+        //
+        totalPlants = 0;
+        PlantLayer.setPlantList();
+        //
         File file = new File(filename);
         Scanner scanner = new Scanner(file);
 
@@ -90,6 +95,9 @@ public class FileController {
             float maxHeight = Float.parseFloat(filein.next() );
             float avgRatio = Float.parseFloat(filein.next() );
             int numPlants = filein.nextInt();
+            //
+            totalPlants += numPlants;
+            //
             Species species = new Species(speciesID, minHeight, maxHeight, avgRatio, numPlants);
             Plant[] plantlist = new Plant[numPlants];
 
@@ -102,8 +110,11 @@ public class FileController {
                 height = Float.parseFloat(filein.next());
                 canopy = Float.parseFloat(filein.next());
 
-                plantlist[id] = new Plant(speciesID, id, xpos, ypos, height, canopy);
-
+                Plant plant = new Plant(speciesID, id, xpos, ypos, height, canopy);
+                plantlist[id] = plant;
+                //
+                PlantLayer.addPlant(plant);
+                //
                 if(( !(xpos > Terrain.getDimX()-1) ) & ( !(ypos > Terrain.getDimY()-1) ) )
                     layer.setPlantAtLocation(xpos, ypos, speciesID, id);
             }
@@ -111,7 +122,7 @@ public class FileController {
             list[i] = species;
         }
         layer.setSpeciesList(list);
-        System.out.println("Plant database file read in successfully");
+        System.out.println("Plant database file read in successfully " + totalPlants);
         filein.close();
     }
 
