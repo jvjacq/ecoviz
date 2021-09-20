@@ -15,6 +15,7 @@ import java.awt.Color;
 public class FileController {
 
     private int totalPlants;
+    private float scale;
 
     public boolean validateFiles(File[] list, String[] filenames){
         boolean elv = false, spc = false, undergrowth = false, canopy = false;
@@ -50,8 +51,15 @@ public class FileController {
         File file = new File(filename);
         Scanner scanner = new Scanner(file);
 
-        int dimX = Integer.parseInt(scanner.next());
-        int dimY = Integer.parseInt(scanner.next());
+        int baseX = Integer.parseInt(scanner.next());
+        int baseY = Integer.parseInt(scanner.next());
+        Terrain.setBaseX(baseX);
+        Terrain.setBaseY(baseY);
+        //
+        scale = 1024/baseX;
+        int dimX = Math.round(baseX * scale);
+        int dimY = Math.round(baseY * scale);
+        //
         Terrain.setDimX(dimX);
         Terrain.setDimY(dimY);
 
@@ -60,8 +68,8 @@ public class FileController {
         double[][] elevations = new double[dimY][dimX];
 
         while (scanner.hasNext()){
-            for (int y=0; y<dimY;y++){
-                for (int x=0; x<dimX;x++){
+            for (int y=0; y<baseY;y++){
+                for (int x=0; x<baseX;x++){
                     elevations[y][x] = Double.parseDouble(scanner.next());
                 }
             }
@@ -99,16 +107,18 @@ public class FileController {
             totalPlants += numPlants;
             //
             Species species = new Species(speciesID, minHeight, maxHeight, avgRatio, numPlants);
+            species.setColour(Species.getCOLOURS()[speciesID]);
+            //
             Plant[] plantlist = new Plant[numPlants];
 
             for (int id = 0; id < numPlants;++id){
                 float height, canopy;
                 int xpos, ypos, zpos;
-                xpos = (int)Math.round(Float.parseFloat(filein.next())/0.9144);
-                ypos = (int)Math.round(Float.parseFloat(filein.next())/0.9144);
+                xpos = (int)Math.round(Float.parseFloat(filein.next())/0.9144*scale);
+                ypos = (int)Math.round(Float.parseFloat(filein.next())/0.9144*scale);
                 zpos = Math.round(Float.parseFloat(filein.next()));  //Intentionally unused
                 height = Float.parseFloat(filein.next());
-                canopy = Float.parseFloat(filein.next());
+                canopy = Float.parseFloat(filein.next())*scale;
 
                 Plant plant = new Plant(speciesID, id, xpos, ypos, height, canopy);
                 plantlist[id] = plant;
