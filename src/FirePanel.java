@@ -1,5 +1,7 @@
+//View processor 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
@@ -16,6 +18,20 @@ public class FirePanel extends JPanel implements Runnable {
 		this.fire = fire;
         this.segmentHigh = segmentHigh;
         this.segmentLow = segmentLow;
+	}
+
+    @Override
+    //Paints the threads segment onto its panel
+    protected synchronized void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+		int width = getWidth();
+		int height = getHeight();
+
+		fire.deriveFireImage();
+		g.drawImage(fire.getImage(), 0, 0, null);
+		repaint();
+
 	}
 
     @Override

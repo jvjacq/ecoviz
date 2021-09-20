@@ -1,3 +1,4 @@
+//Controller
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FireController {
@@ -17,7 +18,7 @@ public class FireController {
 
     public void startSimulation(){
         //Generate Fire Data:
-        Fire fireData = new Fire(width,height);
+        Fire fireData = new Fire(width,height,undergrowth,canopy);
 
         //Split Grid into 4 (4 Threads will be operating):
         int gridSize = width*height;
