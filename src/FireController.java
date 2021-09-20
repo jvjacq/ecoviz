@@ -17,7 +17,7 @@ public class FireController {
 
     public void startSimulation(){
         //Generate Fire Data:
-        Fire fireData = new Fire(width,height,createPlantGrid());
+        Fire fireData = new Fire(width,height);
 
         //Split Grid into 4 (4 Threads will be operating):
         int gridSize = width*height;

@@ -10,10 +10,10 @@ public class Fire {
 	private int [][] plantGrid;
 	BufferedImage fireImage;
 
-	public Fire (int dimX, int dimY, int[][] plantGrid) {
+	public Fire (int dimX, int dimY) {
         this.dimX=dimX;
         this.dimY=dimY;
-        this.plantGrid=plantGrid;   //Every location with a plant is represented with a 1... otherwise 0 if none
+        this.plantGrid=createPlantGrid();   //Every location with a plant is represented with a 1... otherwise 0 if none
         fireGrid = new int[dimX][dimY];
     }
 
