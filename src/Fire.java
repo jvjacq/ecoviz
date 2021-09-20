@@ -36,7 +36,13 @@ public class Fire {
             }
         }
     }
-
+    public int[][] createPlantGrid(){
+        int[][] plantGrid = new int[dimX][dimY];
+        //Using canopy and undergrowth - Populate Grid
+        //...
+        //...
+        return plantGrid;
+    }
     public void clearGrid(){
         for (int x = 0;x<dimX;x++){
             for (int y = 0;y<dimY;y++){
