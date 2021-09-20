@@ -11,6 +11,8 @@ public class Terrain {
     private double[][] elevations;
     private static int dimX;
     private static int dimY;
+    private static int baseX;
+    private static int baseY;
     private double gridSpacing = 0.0;
     private double latitude = 0.0;
     //private BufferedImage img;
@@ -26,6 +28,14 @@ public class Terrain {
 
     public static int getDimY(){
         return Terrain.dimY;
+    }
+
+    public static int getBaseX(){
+        return Terrain.baseX;
+    }
+
+    public static int getBaseY(){
+        return Terrain.baseY;
     }
 
     public double[][] getElevations(){
@@ -59,6 +69,14 @@ public class Terrain {
 
     public static void setDimY(int Y){       
         Terrain.dimY = Y;
+    }
+
+    public static void setBaseX(int X){
+        Terrain.baseX = X;
+    }
+
+    public static void setBaseY(int Y){       
+        Terrain.baseY = Y;
     }
 
 }
