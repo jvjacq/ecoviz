@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class PlantLayer{
 
     //ID 0 = no PlantType
@@ -5,10 +7,12 @@ public class PlantLayer{
     private int[][][] idLocations;
     //private int[][] burnt;
     private Species[] specieslist;
+    private static ArrayList<Plant> plantlist;
     private int numSpecies; //per layer
+    private boolean filter;
     
     public PlantLayer(){
-      //Nothing yet
+      this.filter = true;
     }
 
     //Mutator Methods:
@@ -23,6 +27,31 @@ public class PlantLayer{
 
     public void setSpeciesList(Species[] list){
       this.specieslist = list;
+    }
+
+    public void setLayer(int[][][] newLocations) {
+      idLocations = newLocations;
+    }
+
+    public void setFilter(boolean filter) {
+      this.filter = filter;
+    }
+
+    public void setLocations(int dimx, int dimy){
+      idLocations = new int[dimx][dimy][2];
+    }
+
+    public void removePlant(int dimx, int dimy) {
+      idLocations[dimx][dimy][0] = 0;
+      idLocations[dimx][dimy][1] = -1;  //Burnt would be double -1?
+    }
+
+    public static void setPlantList() {
+      PlantLayer.plantlist = new ArrayList<Plant>();
+    }
+
+    public static void addPlant(Plant plant){
+      PlantLayer.plantlist.add(plant);
     }
 
     // Accessor Methods
@@ -42,24 +71,17 @@ public class PlantLayer{
       return this.specieslist;
     }
 
-    public void setLocations(int dimx, int dimy){
-      idLocations = new int[dimx][dimy][2];
-    }
-
-    public void removePlant(int dimx, int dimy) {
-      idLocations[dimx][dimy][0] = 0;
-      idLocations[dimx][dimy][1] = -1;  //Burnt would be double -1?
-    }
-
-    // Mutator methods:
-    public void setLayer(int[][][] newLocations) {
-      idLocations = newLocations;
-    }
-
-    // Accessor methods:
     public Species getPlant(int dimx, int dimy) {
        // return idLocations[dimx][dimy];
        return null;
     }
+
+    public boolean getFilter() {
+      return this.filter;
+   }
+
+   public static ArrayList<Plant> getPlantList() {
+    return PlantLayer.plantlist;
+ }
 
 }

@@ -8,6 +8,7 @@
 * Status: In progress
 * MVC - Model
 */
+import java.awt.Color;
 
 public class Species {
 
@@ -21,6 +22,7 @@ public class Species {
     private float avgRatio;
     private int numPlants;
     private Plant[] plantList;
+    private Color colour;
 
     public Species(int id, float minH, float maxH, float avg, int num){
         this.speciesid = id;
@@ -64,6 +66,10 @@ public class Species {
 
     public void setPlantList(Plant[] list){
         this.plantList = list;
+    }
+
+    public void setColour(int rgb){
+        this.colour = new Color(rgb, true);
     }
 
     public static void setSpeciesList(String[][] list){

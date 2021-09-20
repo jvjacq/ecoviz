@@ -9,7 +9,7 @@
 */
 
 
-public class Plant {
+public class Plant implements Comparable<Plant>{
     
     private int speciesid;
     private int plantid;
@@ -69,5 +69,12 @@ public class Plant {
 
     public void setPosY(int Y){
         this.posy = Y;
+    }
+
+    @Override
+    public int compareTo(Plant other) {
+        if(this.height > other.getHeight()) return 1;
+        else if(this.height < other.getHeight()) return -1;
+        else return 0;
     }
 }

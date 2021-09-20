@@ -2,7 +2,7 @@ import java.awt.event.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.Math;
+import java.util.Collections;
 
 public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener{
     private Gui gui;
@@ -86,7 +86,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 System.out.println("Incorrect number of files selected!\nPlease select:\n   > 1 '.elv' file\n   > 2 '.pdb' files\n  > 1 '.spc.txt' file.");
                 loadFiles();
             }else{
-                if (files.validateFiles(list, filenames) != 4){
+                if(!files.validateFiles(list, filenames)){
                     System.out.println("The selected files could not be loaded, please try again.");
                     loadFiles();
                 }else{
@@ -95,6 +95,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                         files.readSpecies(filenames[1]);
                         files.readLayer(undergrowth, filenames[2]);
                         files.readLayer(canopy, filenames[3]);
+                        Collections.sort(PlantLayer.getPlantList());
                         System.out.println("All files read in successfully.");
                         refreshView();
                     }catch(FileNotFoundException e){
@@ -102,19 +103,52 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                     }
                 }
             }       
+        }else{
+            System.out.println("Cancelled by the user.");
         }
-        //cancelled message
-        //erro cehck incorrect
+    }
+
+    private boolean insideCanopy(Point point, Plant plant){
+        //int x = Math.round(point.x/image.getScale());
+        //int y = Math.round(point.y/image.getScale());
+        return (Math.pow((point.x - plant.getX()),2) + Math.pow((point.y - plant.getY()),2) ) <= Math.pow(plant.getCanopy(),2);
+    }
+
+    public void changeSpeciesColour(int id, int rgb){
+        int[] colours = Species.getCOLOURS();
+        Color c = new Color(0,0,0,1.0f);
+        colours[id] = c.getRGB();
+        image.derivePlants();
+        image.repaint();
+        //colours[id]
+        /*Species[] cSpecies = canopy.getSpeciesList();
+        Species[] uSpecies = canopy.getSpeciesList();
+        for(Species s: cSpecies){
+            if(s.getSpeciesID() == id){
+                s.setColour(0);
+                break;
+            }
+        }
+        for(Species s: uSpecies){
+            if(s.getSpeciesID() == id){
+                s.setColour(0);
+                break;
+            }
+        }*/
     }
 
     public void refreshView(){
         gui.getLoadFrame().setVisible(false);
         gui.getEast().setPreferredSize(new Dimension(200,Terrain.getDimY()));
+        //image.setScale(1024/Terrain.getDimX());
         image.deriveImg(terrain);
-        image.deriveImg(undergrowth, false);
-        image.deriveImg(canopy, true);
-        image.setPreferredSize(new Dimension((int)Math.round(Terrain.getDimX()*0.9144),(int)Math.round(Terrain.getDimY()*0.9144)));
-        gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX() + 220 ,Terrain.getDimY() + 50));
+        image.derivePlants();
+        //image.deriveImg(undergrowth, false);
+        //image.deriveImg(canopy, true);
+        //image.setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale()),Math.round(Terrain.getDimY()*image.getScale())));
+        //gui.getMain().setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale())+220,Math.round(Terrain.getDimY()*image.getScale())+100));
+        image.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
+        gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX()+220,Terrain.getDimY()+100));
         gui.getMain().pack();
         gui.getMain().setLocationRelativeTo(null);      
         gui.getMain().setVisible(true);
@@ -150,9 +184,22 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     @Override
     public void mouseClicked(MouseEvent e) {
         Point click = e.getPoint();
-
-        //Details on Demand:
-        int col = image.getCanopy().getRGB(click.x, click.y);
+        int id = -1;
+        System.out.println(click.x + " " + click.y);
+        for(Plant plant: PlantLayer.getPlantList()){
+            if(insideCanopy(click, plant)){
+                //Will be lowest plant
+                id = plant.getSpeciesID();
+                changeSpeciesColour(id, 0);
+                System.out.println("Plant: " + plant.getX() + " " + plant.getY());
+                break;
+            }
+        }
+        if(id > -1){
+            String[][] specieslist = Species.getSPECIES();
+            gui.setSpeciesDetails("Common name:\n" + specieslist[id][0] + "\nLatin name:\n" + specieslist[id][1]);
+        }
+        /*int col = image.getCanopy().getRGB(click.x, click.y);
         int[] speciesColours = Species.getCOLOURS();
         String[][] specieslist = Species.getSPECIES();
         for(int idx = 0; idx < speciesColours.length; ++idx){
@@ -160,7 +207,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 gui.setSpeciesDetails("Common name:\n" + specieslist[idx][0] + "\nLatin name:\n" + specieslist[idx][1]);
                 break;
             }
-        }
+        }*/
         
         //Fire Placement:
         if (fireMode){
@@ -179,7 +226,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     @Override
 	public void mouseReleased(MouseEvent e) {
 		image.setReleased(true);
-		image.repaint();
+		//image.repaint();
 		
 	}
 
