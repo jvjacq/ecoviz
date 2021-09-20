@@ -11,6 +11,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private PlantLayer undergrowth;
     private PlantLayer canopy;
     private FileController files;
+    private FireController fireController;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
         this.gui = gui;
@@ -18,10 +19,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.terrain = terrain;
         this.undergrowth = undergrowth;
         this.canopy = canopy;
-        this.files = new FileController();     
+        this.files = new FileController();    
     }
 
     public void initController(){
+        gui.getFireBtn().addActionListener(e -> runFireSim());
         gui.getLoadBtn().addActionListener(e -> loadFiles());
         gui.getMenu1().addActionListener(e -> loadFiles());
         gui.getMenu2().addActionListener(e -> gui.exportView());
@@ -35,6 +37,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.addMouseWheelListener(this);
         //gui.changeTheme(0); //###
         initView();
+    }
+
+    public void runFireSim(){
+        System.out.println("Running Fire Simulation");
+        fireController = new FireController(Terrain.getDimX(),Terrain.getDimY(),undergrowth,canopy);
+        
     }
 
     public void initView(){
