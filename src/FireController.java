@@ -15,7 +15,6 @@ public class FireController {
         this.height=height;
         this.undergrowth = undergrowth;
         this.canopy = canopy;
-
         //Generate Fire Data:
         fireData = new Fire(width,height,undergrowth,canopy);
     }
@@ -42,10 +41,10 @@ public class FireController {
 		int segment4High = Math.round(gridSize / 4 * 2);
 
         //Create 4 Panels for threads to work on seperately:
-        FirePanel seg1 = new FirePanel( fireData, segment1Low, segment1High); //Gonna add another class soon
-        FirePanel seg2 = new FirePanel( fireData, segment2Low, segment2High); //Gonna add another class soon
-        FirePanel seg3 = new FirePanel( fireData, segment3Low, segment3High); //Gonna add another class soon
-        FirePanel seg4 = new FirePanel( fireData, segment4Low, segment4High); //Gonna add another class soon
+        FireThread seg1 = new FireThread( fireData, segment1Low, segment1High); //Gonna add another class soon
+        FireThread seg2 = new FireThread( fireData, segment2Low, segment2High); //Gonna add another class soon
+        FireThread seg3 = new FireThread( fireData, segment3Low, segment3High); //Gonna add another class soon
+        FireThread seg4 = new FireThread( fireData, segment4Low, segment4High); //Gonna add another class soon
 
         //Create the Threads:
         inFlow.set(true);

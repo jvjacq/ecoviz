@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-public class FirePanel extends JPanel implements Runnable {
+public class FireThread extends JPanel implements Runnable {
     private AtomicBoolean flowing = new AtomicBoolean(false);
     private AtomicInteger stepCounter = new AtomicInteger(0);
 
@@ -14,7 +14,7 @@ public class FirePanel extends JPanel implements Runnable {
     private int segmentHigh;
     private int[] traversal;
     
-    public FirePanel(Fire fire, int segmentLow, int segmentHigh) {
+    public FireThread(Fire fire, int segmentLow, int segmentHigh) {
 		this.fire = fire;
         this.segmentHigh = segmentHigh;
         this.segmentLow = segmentLow;

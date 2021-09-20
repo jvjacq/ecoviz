@@ -34,7 +34,7 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
     private JButton btnBack;
 
     //FireSim Controls:
-    private JButton btnPlay;
+    private JButton btnRender;
     private JButton btnPause;
     private JButton btnReset;
 
@@ -68,8 +68,8 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
     public JButton getBackBtn(){
         return this.btnBack;
     }
-    public JButton getPlayBtn(){
-        return this.btnPlay;
+    public JButton getRenderBtn(){
+        return this.btnRender;
     }
 
     public JButton getResetBtn(){
@@ -299,8 +299,8 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
             btnFire = new JButton("Simulate Fire");
             btnBack = new JButton("Leave Fire Simulator");
 
-            btnPlay = new JButton("Play");
-            btnPlay.setVisible(false);
+            btnRender = new JButton("Render");
+            btnRender.setVisible(false);
 
             btnPause = new JButton("Pause");
             btnPause.setVisible(false);
@@ -315,7 +315,7 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
 
 
             pnlSouth.add(btnFire);
-            pnlSouth.add(btnPlay);
+            pnlSouth.add(btnRender);
             pnlSouth.add(btnPause);
             pnlSouth.add(btnReset);
             pnlSouth.add(btnBack);

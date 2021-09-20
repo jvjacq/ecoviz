@@ -27,6 +27,11 @@ public class Fire {
         genPermute();   // create randomly permuted list of indices for traversal 
     }
 
+   // public void setDimX(int dimX){this.dimX=dimX;}
+   // public void setDimY(int dimY){this.dimY=dimY;}
+   // public void setCanopy(PlantLayer canopy){this.canopy=canopy;}
+   // public void setUnder(PlantLayer undergrowth){this.undergrowth=undergrowth;}
+
     public boolean isFire(int x, int y){
         boolean firePresent = false;
         if (fireGrid[x][y]==1){
@@ -44,6 +49,7 @@ public class Fire {
                     }
             }
         }
+        deriveFireImage();
     }
 
     public int[][] createPlantGrid(PlantLayer under, PlantLayer can){
