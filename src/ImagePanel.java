@@ -39,7 +39,7 @@ public class ImagePanel extends JPanel{
 	private boolean showCanopy;
 	private boolean showUnderGrowth;
 
-	private float scale;
+	//private float scale;
 
 	private int circles;
 
@@ -53,9 +53,9 @@ public class ImagePanel extends JPanel{
 		showUnderGrowth=false;
 		circles = 0;
 	}
-	public float getScale(){
+	/*public float getScale(){
 		return this.scale;
-	}
+	}*/
 
 	public int getStartX(){
 		return this.startPoint.x;
@@ -81,9 +81,9 @@ public class ImagePanel extends JPanel{
 		return this.undergrowth;
 	}
 
-	public void setScale(float f){
+	/*public void setScale(float f){
 		this.scale = f;
-	}
+	}*/
 
 	public void setStartPoint(Point p){
 		this.startPoint = p;
@@ -122,8 +122,10 @@ public class ImagePanel extends JPanel{
 		//
 		circles = 0;
 		//
-		dimX = Terrain.getDimX();
-		dimY = Terrain.getDimY();
+		dimX = Terrain.getBaseX();
+		dimY = Terrain.getBaseY();
+		int scale = 1024/dimX;
+
 		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
 		double maxh = -10000.0f;
 		double minh = 10000.0f;
@@ -147,7 +149,8 @@ public class ImagePanel extends JPanel{
 		}
 		AffineTransform at = AffineTransform.getScaleInstance(scale, scale);
 		AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-		BufferedImage scaled = new BufferedImage(Math.round(dimX*scale),Math.round(dimY*scale),BufferedImage.TYPE_INT_ARGB);
+		//BufferedImage scaled = new BufferedImage(Math.round(dimX*scale),Math.round(dimY*scale),BufferedImage.TYPE_INT_ARGB);
+		BufferedImage scaled = new BufferedImage(Terrain.getDimX(),Terrain.getDimY(),BufferedImage.TYPE_INT_ARGB);
 		scaled = ato.filter(img, scaled);
 		this.terrain = scaled;
 	}
@@ -156,8 +159,10 @@ public class ImagePanel extends JPanel{
     //      Create the colourful circles
     //========================================================================
     public void deriveImg(PlantLayer layer, boolean canopy){
-		int dimx = Math.round(Terrain.getDimX()*scale);
-		int dimy = Math.round(Terrain.getDimY()*scale);
+		//int dimx = Math.round(Terrain.getDimX()*scale);
+		//int dimy = Math.round(Terrain.getDimY()*scale);
+		int dimx = Math.round(Terrain.getDimX());
+		int dimy = Math.round(Terrain.getDimY());
   
 		BufferedImage img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = img.createGraphics();
@@ -174,7 +179,8 @@ public class ImagePanel extends JPanel{
 		  imgGraphics.setColor(new Color(colourlist[s.getSpeciesID()], true));
 		  for(Plant p: s.getPlants()){
 			++circles;
-			imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
+			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
+			imgGraphics.fillOval(p.getX(),p.getY(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
 		  }
 		}
 		if(canopy){
@@ -189,8 +195,10 @@ public class ImagePanel extends JPanel{
     //      Create the colourful circles
     //========================================================================
     public void derivePlants(){
-		int dimx = Math.round(Terrain.getDimX()*scale);
-		int dimy = Math.round(Terrain.getDimY()*scale);
+		//int dimx = Math.round(Terrain.getDimX()*scale);
+		//int dimy = Math.round(Terrain.getDimY()*scale);
+		int dimx = Math.round(Terrain.getDimX());
+		int dimy = Math.round(Terrain.getDimY());
   
 		BufferedImage img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = img.createGraphics();
@@ -200,11 +208,12 @@ public class ImagePanel extends JPanel{
   
 		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		int[] colourlist = Species.getCOLOURS();
-
+		
 		for(Plant p: PlantLayer.getPlantList()){
 			imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
 			++circles;
-			imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
+			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
+			imgGraphics.fillOval(p.getX(),p.getY(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
 		}
 		canopy = img;
 		//
