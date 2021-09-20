@@ -2,6 +2,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.lang.Math;
+import java.util.ArrayList;
 
 public class Fire {
     private int dimX;
@@ -9,12 +10,15 @@ public class Fire {
 	private int [][] fireGrid;
 	private int [][] plantGrid;
 	BufferedImage fireImage;
+    ArrayList<Integer> permute;	// permuted list of integers in range [0, dimx*dimy)
+
 
 	public Fire (int dimX, int dimY) {
         this.dimX=dimX;
         this.dimY=dimY;
         this.plantGrid=createPlantGrid();   //Every location with a plant is represented with a 1... otherwise 0 if none
         fireGrid = new int[dimX][dimY];
+        genPermute();   // create randomly permuted list of indices for traversal 
     }
 
     public boolean isFire(int x, int y){
@@ -25,6 +29,7 @@ public class Fire {
 
         return firePresent;
     }
+
 
     public void addFire(int x,int y){
         //Add Fire To grid
@@ -139,6 +144,29 @@ public class Fire {
             }
         }
 
+    }
+
+    public int getDim(){
+        return dimX*dimY;
+    }
+
+    // generate a permuted list of linear index positions to allow a random traversal over the terrain:
+    public void genPermute() {
+		permute = new ArrayList<Integer>();
+		for(int idx = 0; idx < getDim(); idx++)
+			permute.add(idx);
+		java.util.Collections.shuffle(permute);
+	}
+
+    // find permuted 2D location from a linear index in the range [0, dimx*dimy)
+    public void getPermute(int i, int[] loc){
+        locate(permute.get(i),loc);
+    }
+
+    // convert linear position into 2D location in grid
+    public void locate(int pos, int[] index){
+        index[0] = (int) pos/dimY;
+        index[1] = (int) pos % dimY;
     }
 
 }
