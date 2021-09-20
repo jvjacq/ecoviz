@@ -35,7 +35,6 @@ public class Fire {
         return firePresent;
     }
 
-
     public void addFire(int x,int y){
         //Add Fire To grid
         for (int i = -3;i<4;i++){
@@ -46,6 +45,7 @@ public class Fire {
             }
         }
     }
+
     public int[][] createPlantGrid(PlantLayer under, PlantLayer can){
         int[][] plantGrid = new int[dimX][dimY];
         //Using canopy and undergrowth - Populate Grid
@@ -59,6 +59,7 @@ public class Fire {
                 fireGrid[x][y] = 0;
             }
         }
+        System.out.println("All Fire Cleared/Extinguished");
     }
 
     public void moveFire(int x, int y){

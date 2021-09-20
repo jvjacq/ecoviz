@@ -7,6 +7,7 @@ public class FireController {
     private PlantLayer undergrowth;
     private PlantLayer canopy;
     private AtomicBoolean inFlow = new AtomicBoolean(false);
+    private Fire fireData;
 
 
     public FireController(int width, int height, PlantLayer undergrowth,PlantLayer canopy){
@@ -14,12 +15,17 @@ public class FireController {
         this.height=height;
         this.undergrowth = undergrowth;
         this.canopy = canopy;
+
+        //Generate Fire Data:
+        fireData = new Fire(width,height,undergrowth,canopy);
+    }
+
+    public Fire getFire(){
+
+        return fireData;
     }
 
     public void startSimulation(){
-        //Generate Fire Data:
-        Fire fireData = new Fire(width,height,undergrowth,canopy);
-
         //Split Grid into 4 (4 Threads will be operating):
         int gridSize = width*height;
 
