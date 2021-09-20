@@ -75,12 +75,6 @@ public class FireController {
 
     }
 
-    public int[][] createPlantGrid(){
-        int[][] plantGrid = new int[width][height];
-        //Using canopy and undergrowth - Populate Grid
-        //...
-        //...
-        return plantGrid;
-    }
+
 
 }
