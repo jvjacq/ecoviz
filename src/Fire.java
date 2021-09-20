@@ -53,6 +53,7 @@ public class Fire {
         //...
         return plantGrid;
     }
+
     public void clearGrid(){
         for (int x = 0;x<dimX;x++){
             for (int y = 0;y<dimY;y++){
@@ -64,13 +65,14 @@ public class Fire {
 
     public void moveFire(int x, int y){
         double rand = Math.random() * 100;
+        int chance = 20;
         
         fireGrid[x][y]=2;   //ASH or Burnt (Darker red - For nice aesthetic)
 
         if (plantGrid[x-1][y]==1){  //West ←
             //100% chance of fire spread
             fireGrid[x-1][y]=1; //FIRE
-        } else if (rand < 20) {
+        } else if (rand < chance) {
             //20% chance of fire spread
             fireGrid[x-1][y]=1; //FIRE
         }
@@ -79,7 +81,7 @@ public class Fire {
             //100% chance of fire spread
             fireGrid[x+1][y]=1; //FIRE
 
-        } else if (rand < 20) {
+        } else if (rand < chance) {
             //20% chance of fire spread
             fireGrid[x+1][y]=1; //FIRE
         }
@@ -87,7 +89,7 @@ public class Fire {
         if (plantGrid[x+1][y+1]==1){  //North East 🡥
             //100% chance of fire spread
             fireGrid[x+1][y+1]=1; //FIRE
-        } else if (rand < 20) {
+        } else if (rand < chance) {
             //20% chance of fire spread
             fireGrid[x+1][y+1]=1; //FIRE
         }
@@ -95,7 +97,7 @@ public class Fire {
         if (plantGrid[x][y+1]==1){  //North ↑
             //100% chance of fire spread
             fireGrid[x][y+1]=1; //FIRE
-        } else if (rand < 20) {
+        } else if (rand < chance) {
             //20% chance of fire spread
             fireGrid[x][y+1]=1; //FIRE
         }
@@ -103,7 +105,7 @@ public class Fire {
         if (plantGrid[x-1][y+1]==1){  //North West 🡤
             //100% chance of fire spread
             fireGrid[x-1][y+1]=1; //FIRE
-        } else if (rand < 20) {
+        } else if (rand < chance) {
             //20% chance of fire spread
             fireGrid[x-1][y+1]=1; //FIRE
         }
@@ -111,7 +113,7 @@ public class Fire {
         if (plantGrid[x-1][y-1]==1){  //South ↓
             //100% chance of fire spread
             fireGrid[x-1][y]=1; //FIRE
-        } else if (rand < 20) {
+        } else if (rand < chance) {
             //20% chance of fire spread
             fireGrid[x-1][y-1]=1; //FIRE
         }
@@ -119,7 +121,7 @@ public class Fire {
         if (plantGrid[x+1][y-1]==1){  //South East 🡦
             //100% chance of fire spread
             fireGrid[x+1][y-1]=1; //FIRE
-        } else if (rand < 20) {
+        } else if (rand < chance) {
             //20% chance of fire spread
             fireGrid[x+1][y-1]=1; //FIRE
         }
@@ -127,7 +129,7 @@ public class Fire {
         if (plantGrid[x-1][y-1]==1){  //South West 🡧
             //100% chance of fire spread
             fireGrid[x-1][y-1]=1; //FIRE
-        } else if (rand < 20) {
+        } else if (rand < chance) {
             //20% chance of fire spread
             fireGrid[x-1][y-1]=1; //FIRE
         }
