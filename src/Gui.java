@@ -30,7 +30,7 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
     private JLabel pointerLbl;
     private JSlider wDirSlider,spdSlider;
     private ImagePanel mainPanel;
-
+    private JButton btnFire;
     PlantLayer canopy,undergrowth;
 
     //East Panel:
@@ -52,6 +52,10 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
 
     public JFrame getLoadFrame(){
         return this.loadIn;
+    }
+
+    public JButton getFireBtn(){
+        return this.btnFire;
     }
 
     public JButton getLoadBtn(){
@@ -271,7 +275,7 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
             pnlSouth.setLayout(new BorderLayout());
             JLabel lblZoom = new JLabel("Scroll to Zoom                       ");
             lblZoom.setForeground(Color.white);
-            JButton btnFire = new JButton("Simulate Fire");
+            btnFire = new JButton("Simulate Fire");
 
             //Add Components
             //pnlSouth.add(lblZoom);
@@ -408,4 +412,5 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
         panel.add(filler);
         return panel;
     }
+
 }
