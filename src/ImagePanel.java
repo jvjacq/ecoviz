@@ -26,6 +26,7 @@ public class ImagePanel extends JPanel{
 	private BufferedImage terrain;
 	private BufferedImage canopy;
 	private BufferedImage undergrowth;
+	private BufferedImage fire;
 
 	private	double zoomMultiplier = 1;
 	private double prevZoomMultiplier = 1;
@@ -44,11 +45,6 @@ public class ImagePanel extends JPanel{
 	private int circles;
 
 	public ImagePanel(){
-		/*this.gui = gui;
-		imgcontroller = new imgController(this, gui);
-		addMouseWheelListener(imgcontroller);
-		addMouseListener(imgcontroller);
-		addMouseMotionListener(imgcontroller);*/
 		showCanopy=true;
 		showUnderGrowth=false;
 		circles = 0;
@@ -67,6 +63,10 @@ public class ImagePanel extends JPanel{
 
 	public double getZoomMult(){
 		return this.zoomMultiplier;
+	}
+
+	public BufferedImage getFire(){
+		return this.fire;
 	}
 
 	public BufferedImage getTerrain(){

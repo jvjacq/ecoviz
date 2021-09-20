@@ -30,6 +30,13 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
     private JLabel pointerLbl;
     private JSlider wDirSlider,spdSlider;
     private ImagePanel mainPanel;
+    private JButton btnFire;
+    private JButton btnBack;
+
+    //FireSim Controls:
+    private JButton btnPlay;
+    private JButton btnPause;
+    private JButton btnReset;
 
     PlantLayer canopy,undergrowth;
 
@@ -45,6 +52,80 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
     //Filter Section:
     private JLabel lblSearch;
     private JTextField search;
+
+    public JFrame getMain(){
+        return this.frame;
+    }
+
+    public JFrame getLoadFrame(){
+        return this.loadIn;
+    }
+
+    public JButton getFireBtn(){
+        return this.btnFire;
+    }
+
+    public JButton getBackBtn(){
+        return this.btnBack;
+    }
+    public JButton getPlayBtn(){
+        return this.btnPlay;
+    }
+
+    public JButton getResetBtn(){
+        return this.btnReset;
+    }
+
+    public JButton getPauseBtn(){
+        return this.btnPause;
+    }
+
+    public JButton getLoadBtn(){
+        return this.load;
+    }
+
+    public JFileChooser getChooser(){
+        return this.fChooser;
+    }
+
+    public JMenuItem getMenu1(){
+        return this.i1;
+    }
+    public JMenuItem getMenu2(){
+        return this.i2;
+    }
+    public JMenuItem getMenu3(){
+        return this.i3;
+    }
+    public JMenuItem getMenu4(){
+        return this.a1;
+    }
+    public JMenuItem getMenu5(){
+        return this.a2;
+    }
+    public JMenuItem getMenu6(){
+        return this.a3;
+    }
+
+    public JMenuItem getMenu7(){
+        return this.a4;
+    }
+
+    public JCheckBox getUndergrowth(){
+        return this.ChkUnderGrowth;
+    }
+
+    public JCheckBox getCanopy(){
+        return this.ChkCanopy;
+    }
+
+    public ImagePanel getImage(){
+        return this.mainPanel;
+    }
+
+    public JPanel getEast(){
+        return this.pnlEast;
+    }
 
     public Gui() {
         //canopy=c;
@@ -194,12 +275,8 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
 
         tabbedPane.addTab("Filter",null,pnlFilters,"Edit Filters");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
-        
-
 
         ////********************************************************** */
-
-
 
         //DRAW MINIMAP
         //mini = new miniMap(mainPanel.getTerrain(), mainPanel.getCanopy(), mainPanel.getUndergrowth());
@@ -217,14 +294,34 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
         //      South Panel:
         //======================================================================
         JPanel pnlSouth = new JPanel();
-            JLabel lblZoom = new JLabel("Scroll to Zoom                       ");
-            lblZoom.setForeground(Color.white);
-            JButton btnFire = new JButton("Simulate Fire");
-            //pnlSouth.setBackground(new Color(8,78,137));
+            pnlSouth.setLayout(new BoxLayout(pnlSouth,BoxLayout.X_AXIS));
+
+            btnFire = new JButton("Simulate Fire");
+            btnBack = new JButton("Leave Fire Simulator");
+
+            btnPlay = new JButton("Play");
+            btnPlay.setVisible(false);
+
+            btnPause = new JButton("Pause");
+            btnPause.setVisible(false);
+
+            btnReset = new JButton("Reset");
+            btnReset.setVisible(false);
 
             //Add Components
-            pnlSouth.add(lblZoom);
+            
+            btnBack.setVisible(false);
+            btnBack.setBackground(Color.RED);
+
+
             pnlSouth.add(btnFire);
+            pnlSouth.add(btnPlay);
+            pnlSouth.add(btnPause);
+            pnlSouth.add(btnReset);
+            pnlSouth.add(btnBack);
+
+            
+
 
         //====================================================================== 
         //      MenuBar:
@@ -332,61 +429,6 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
         return fChooser.showOpenDialog(fr) == JFileChooser.APPROVE_OPTION;
     }
 
-    public JFrame getMain(){
-        return this.frame;
-    }
-
-    public JFrame getLoadFrame(){
-        return this.loadIn;
-    }
-
-    public JButton getLoadBtn(){
-        return this.load;
-    }
-
-    public JFileChooser getChooser(){
-        return this.fChooser;
-    }
-
-    public JMenuItem getMenu1(){
-        return this.i1;
-    }
-    public JMenuItem getMenu2(){
-        return this.i2;
-    }
-    public JMenuItem getMenu3(){
-        return this.i3;
-    }
-    public JMenuItem getMenu4(){
-        return this.a1;
-    }
-    public JMenuItem getMenu5(){
-        return this.a2;
-    }
-    public JMenuItem getMenu6(){
-        return this.a3;
-    }
-
-    public JMenuItem getMenu7(){
-        return this.a4;
-    }
-
-    public JCheckBox getUndergrowth(){
-        return this.ChkUnderGrowth;
-    }
-
-    public JCheckBox getCanopy(){
-        return this.ChkCanopy;
-    }
-
-    public ImagePanel getImage(){
-        return this.mainPanel;
-    }
-
-    public JPanel getEast(){
-        return this.pnlEast;
-    }
-
     @Override
     public void stateChanged(ChangeEvent e) {
 
@@ -411,4 +453,5 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
         panel.add(filler);
         return panel;
     }
+
 }

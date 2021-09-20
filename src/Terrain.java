@@ -46,7 +46,7 @@ public class Terrain {
         return this.gridSpacing;
     }
 
-    public double getLattitude(){
+    public double getLatitude(){
         return this.latitude;
     }
     
