@@ -249,12 +249,8 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
 
         tabbedPane.addTab("Filter",null,pnlFilters,"Edit Filters");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
-        
-
 
         ////********************************************************** */
-
-
 
         //DRAW MINIMAP
         //mini = new miniMap(mainPanel.getTerrain(), mainPanel.getCanopy(), mainPanel.getUndergrowth());
@@ -272,14 +268,15 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
         //      South Panel:
         //======================================================================
         JPanel pnlSouth = new JPanel();
+            pnlSouth.setLayout(new BorderLayout());
             JLabel lblZoom = new JLabel("Scroll to Zoom                       ");
             lblZoom.setForeground(Color.white);
             JButton btnFire = new JButton("Simulate Fire");
-            //pnlSouth.setBackground(new Color(8,78,137));
 
             //Add Components
-            pnlSouth.add(lblZoom);
-            pnlSouth.add(btnFire);
+            //pnlSouth.add(lblZoom);
+
+            pnlSouth.add(btnFire,BorderLayout.CENTER);
 
         //====================================================================== 
         //      MenuBar:

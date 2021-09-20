@@ -25,6 +25,7 @@ public class ImagePanel extends JPanel{
 	private BufferedImage terrain;
 	private BufferedImage canopy;
 	private BufferedImage undergrowth;
+	private BufferedImage fire;
 
 	private	double zoomMultiplier = 1;
 	private double prevZoomMultiplier = 1;
@@ -53,6 +54,10 @@ public class ImagePanel extends JPanel{
 
 	public double getZoomMult(){
 		return this.zoomMultiplier;
+	}
+
+	public BufferedImage getFire(){
+		return this.fire;
 	}
 
 	public BufferedImage getTerrain(){
