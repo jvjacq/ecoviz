@@ -86,6 +86,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 System.out.println("Incorrect number of files selected!\nPlease select:\n   > 1 '.elv' file\n   > 2 '.pdb' files\n  > 1 '.spc.txt' file.");
                 loadFiles();
             }else{
+                //System.out.println(list[0].toString()  + " " + list[1].toString()  + " " + list[2].toString()  + " " + list[3].toString());
                 if(!files.validateFiles(list, filenames)){
                     System.out.println("The selected files could not be loaded, please try again.");
                     loadFiles();
@@ -185,13 +186,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void mouseClicked(MouseEvent e) {
         Point click = e.getPoint();
         int id = -1;
-        System.out.println(click.x + " " + click.y);
+        //System.out.println(click.x + " " + click.y);
         for(Plant plant: PlantLayer.getPlantList()){
             if(insideCanopy(click, plant)){
                 //Will be lowest plant
                 id = plant.getSpeciesID();
                 changeSpeciesColour(id, 0);
-                System.out.println("Plant: " + plant.getX() + " " + plant.getY());
+                //System.out.println("Plant: " + plant.getX() + " " + plant.getY());
                 break;
             }
         }
