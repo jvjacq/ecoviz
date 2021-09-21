@@ -185,36 +185,37 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     @Override
     public void mouseClicked(MouseEvent e) {
         Point click = e.getPoint();
-        int id = -1;
-        //System.out.println(click.x + " " + click.y);
-        for(Plant plant: PlantLayer.getPlantList()){
-            if(insideCanopy(click, plant)){
-                //Will be lowest plant
-                id = plant.getSpeciesID();
-                changeSpeciesColour(id, 0);
-                //System.out.println("Plant: " + plant.getX() + " " + plant.getY());
-                break;
-            }
-        }
-        if(id > -1){
-            String[][] specieslist = Species.getSPECIES();
-            gui.setSpeciesDetails("Common name:\n" + specieslist[id][0] + "\nLatin name:\n" + specieslist[id][1]);
-        }
-        /*int col = image.getCanopy().getRGB(click.x, click.y);
-        int[] speciesColours = Species.getCOLOURS();
-        String[][] specieslist = Species.getSPECIES();
-        for(int idx = 0; idx < speciesColours.length; ++idx){
-            if(speciesColours[idx] == col){
-                gui.setSpeciesDetails("Common name:\n" + specieslist[idx][0] + "\nLatin name:\n" + specieslist[idx][1]);
-                break;
-            }
-        }*/
-        
         //Fire Placement:
         if (fireMode){
-        fireController.getFire().addFire(click.x, click.y);
-        System.out.println("Fire Added");
+            fireController.getFire().addFire(click.x, click.y);
+            System.out.println("Fire Added");
+        }else{
+            int id = -1;
+            //System.out.println(click.x + " " + click.y);
+            for(Plant plant: PlantLayer.getPlantList()){
+                if(insideCanopy(click, plant)){
+                    //Will be lowest plant
+                    id = plant.getSpeciesID();
+                    changeSpeciesColour(id, 0);
+                    //System.out.println("Plant: " + plant.getX() + " " + plant.getY());
+                    break;
+                }
+            }
+            if(id > -1){
+                String[][] specieslist = Species.getSPECIES();
+                gui.setSpeciesDetails("Common name:\n" + specieslist[id][0] + "\nLatin name:\n" + specieslist[id][1]);
+            }
+            /*int col = image.getCanopy().getRGB(click.x, click.y);
+            int[] speciesColours = Species.getCOLOURS();
+            String[][] specieslist = Species.getSPECIES();
+            for(int idx = 0; idx < speciesColours.length; ++idx){
+                if(speciesColours[idx] == col){
+                    gui.setSpeciesDetails("Common name:\n" + specieslist[idx][0] + "\nLatin name:\n" + specieslist[idx][1]);
+                    break;
+                }
+            }*/
         }
+        
     }
 
     @Override
