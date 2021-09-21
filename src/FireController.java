@@ -1,5 +1,13 @@
 //Controller
+import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 
 public class FireController {
     static long startTime;
@@ -7,34 +15,147 @@ public class FireController {
     private static int width; 
     private static int height; 
     
-    private AtomicBoolean inFlow = new AtomicBoolean(false);
+    private static AtomicBoolean inFlow = new AtomicBoolean(false);
     private static Fire fireData;
     
-    private int initLimit;
+    private static int initLimit;
 
     private static FireThread mainThread;
-    private FireThread seg1,seg2,seg3,seg4;
+    private static FireThread seg1;
+
+    private static FireThread seg2;
+
+    private static FireThread seg3;
+
+    private static FireThread seg4;
 
 
     public FireController(int width, int height, PlantLayer undergrowth,PlantLayer canopy){
-        this.width=width;
-        this.height=height;
+        FireController.width=width;
+        FireController.height=height;
         
         //Generate Fire Data:
         fireData = new Fire(width,height);
         startTime = 0;
     }
 
-    public static void setup(){
-        mainThread = new FireThread(fireData, (width*height));
+    public static void setupGUI(int frameX, int frameY, Fire fireData) {
 
-        Thread fpt = new Thread(mainThread);
+  	JFrame frame = new JFrame("Waterflow");
+  	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  	frame.getContentPane().setLayout(new BorderLayout());
+
+    JPanel g = new JPanel();
+		g.setLayout(new BoxLayout(g, BoxLayout.PAGE_AXIS));
+
+		mainThread = new FireThread(fireData, (frameX*frameY));
+		mainThread.setPreferredSize(new Dimension(frameX,frameY));
+		g.add(mainThread);
+
+		mainThread.addMouseListener(new ClickListener(mainThread));
+		JPanel b = new JPanel();
+	  b.setLayout(new BoxLayout(b, BoxLayout.LINE_AXIS));
+		JLabel counterL = new JLabel(mainThread.getCounter());
+		JButton resetB = new JButton("Reset");
+		JButton pauseB = new JButton("Pause");
+		JButton playB = new JButton("Play");
+		JButton endB = new JButton("End");
+
+		/*Timer refresh = new Timer(100, new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				counterL.setText(mainThread.getCounter());
+			}
+		});*/
+
+		resetB.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				mainThread.resetCounter();
+				counterL.setText(mainThread.getCounter());
+				mainThread.resetFire();
+				inFlow.set(false);
+				mainThread.flowStop();
+				seg1.flowStop();
+				seg2.flowStop();
+				seg3.flowStop();
+				seg4.flowStop();
+				mainThread.resetCounter();
+				counterL.setText(mainThread.getCounter());
+			}
+		});
+
+		pauseB.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				inFlow.set(false);
+				mainThread.flowStop();
+				seg1.flowStop();
+				seg2.flowStop();
+				seg3.flowStop();
+				seg4.flowStop();
+				counterL.setText(mainThread.getCounter());
+			}
+		});
+
+		playB.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				//refresh.start();
+				inFlow.set(true);
+				mainThread.flowStart();
+				seg1.flowStart();
+				seg2.flowStart();
+				seg3.flowStart();
+				seg4.flowStart();
+				counterL.setText(mainThread.getCounter());
+			}
+		});
+
+		endB.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				mainThread.flowStop();
+				seg1.flowStop();
+				seg2.flowStop();
+				seg3.flowStop();
+				seg4.flowStop();
+				frame.dispose();
+				System.exit(0);
+			}
+		});
+
+		/*Timer init = new Timer(50, new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				if (initLimit < 1){
+					mainThread.clickFire(10, 10);
+					playB.doClick();
+					initLimit++;
+					resetB.doClick();
+				}
+			}
+		});*/
+
+		g.add(b);
+		b.add(resetB);
+		b.add(pauseB);
+		b.add(playB);
+		b.add(endB);
+		b.add(counterL);
+
+		frame.setSize(frameX, frameY+50);	// a little extra space at the bottom for buttons
+  	frame.setLocationRelativeTo(null);	// center window on screen
+  	frame.add(g);				// add contents to window
+		frame.setContentPane(g);
+		frame.setVisible(true);
+		Thread fpt = new Thread(mainThread);
 		fpt.start();
-    }
+		initLimit = 0;
+		//init.start();
+
+		}
+
 
     public void runSimulation(){   //Emulates Flow main method
         //Split Grid into 4 (4 Threads will be operating):
         
+        SwingUtilities.invokeLater(()->setupGUI(width, height, fireData));
+
             int gridSize = width*height;
 
             int segment1Low = 0;
@@ -58,7 +179,7 @@ public class FireController {
         //Create the Threads:
         inFlow.set(true);
         
-       // while (inFlow.get()){
+        while (inFlow.get()){
             
             Thread t1 = new Thread(seg1);
             Thread t2 = new Thread(seg2);
@@ -89,7 +210,7 @@ public class FireController {
 
         }
 
-   // }
+    }
 	// start timer
 	private static void tick(){
 		startTime = System.currentTimeMillis();
