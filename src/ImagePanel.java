@@ -155,7 +155,7 @@ public class ImagePanel extends JPanel{
 		this.terrain = scaled;
 	}
 
-	//========================================================================
+	/*========================================================================
     //      Create the colourful circles
     //========================================================================
     public void deriveImg(PlantLayer layer, boolean canopy){
@@ -168,7 +168,7 @@ public class ImagePanel extends JPanel{
 		Graphics2D imgGraphics = img.createGraphics();
   
 		imgGraphics.setComposite(AlphaComposite.Clear);
-		imgGraphics.fillRect(0, 0, dimx, dimy);
+		imgGraphics.fillRect(dimx/2, dimy/2, dimx, dimy);
   
 		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		Species[] specieslist = layer.getSpeciesList();
@@ -190,7 +190,7 @@ public class ImagePanel extends JPanel{
 		}
 		//
 		System.out.println(circles);      
-	}
+	}*/
 	//========================================================================
     //      Create the colourful circles
     //========================================================================
@@ -204,16 +204,21 @@ public class ImagePanel extends JPanel{
 		Graphics2D imgGraphics = img.createGraphics();
   
 		imgGraphics.setComposite(AlphaComposite.Clear);
-		imgGraphics.fillRect(0, 0, dimx, dimy);
-  
+		imgGraphics.fillRect(0,0, dimx, dimy);
+		
 		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		//
+		//imgGraphics.setColor(new Color(0,0,0,1.0f));
+		//imgGraphics.fillOval(0,0,10,10);
+		//
 		int[] colourlist = Species.getCOLOURS();
 		
 		for(Plant p: PlantLayer.getPlantList()){
 			imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
 			++circles;
 			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
-			imgGraphics.fillOval(p.getX(),p.getY(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
+			//System.out.println("Plant before print: " + p.getX() + " " + p.getY());
+			imgGraphics.fillOval(p.getX()-(int)p.getCanopy(),p.getY()-(int)p.getCanopy(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
 		}
 		canopy = img;
 		//
