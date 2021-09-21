@@ -70,12 +70,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getResetBtn().setVisible(false);
         gui.getRenderBtn().setVisible(false);
         fireMode=false;
+
     }
 
     public void renderFireSim(){
         System.out.println("Rendering the Fire Simulation");
         //Start Simulation
-        fireController.startSimulation();
+        fireController.startSimulation(image.getTerrain(),image.getUndergrowth(),image.getCanopy());
     }
 
     public void initView(){

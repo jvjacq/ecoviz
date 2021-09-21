@@ -2,6 +2,8 @@
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
 
 import javax.swing.JPanel;
 
@@ -13,7 +15,22 @@ public class FireThread extends JPanel implements Runnable {
     private int segmentLow;
     private int segmentHigh;
     private int[] traversal;
+    private BufferedImage landImg;
+    private BufferedImage underImg;
+    private BufferedImage canImg;
     
+
+    //Constructor 1 (main Thread):
+    public FireThread(Fire fire,BufferedImage landImg, BufferedImage underImg, BufferedImage canImg) {
+		this.fire = fire;
+        this.landImg=landImg;
+        this.underImg=underImg;
+        this.canImg=canImg;
+        this.segmentHigh = segmentHigh;
+        this.segmentLow = segmentLow;
+	}
+    
+    //Constructor 2:
     public FireThread(Fire fire, int segmentLow, int segmentHigh) {
 		this.fire = fire;
         this.segmentHigh = segmentHigh;
@@ -27,6 +44,13 @@ public class FireThread extends JPanel implements Runnable {
 
 		int width = getWidth();
 		int height = getHeight();
+
+        if (landImg!=null && underImg!=null && canImg!=null){   //Only if mainThread
+            g.drawImage(landImg, 0, 0, null);
+            g.drawImage(underImg, 0, 0, null);
+            g.drawImage(canImg, 0, 0, null);
+
+        }
 
 		fire.deriveFireImage();
 		g.drawImage(fire.getImage(), 0, 0, null);
