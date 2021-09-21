@@ -117,7 +117,7 @@ public class ImagePanel extends JPanel{
 		this.zoomMultiplier = multiplier;
 	}
 
-
+	
 
 	//========================================================================
 	//      Create the greyscale top-down view
