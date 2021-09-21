@@ -1,0 +1,5 @@
+0 “A” “Oxalis oregano”
+1 “B” “Artemesia californica”
+2 “C” “Adenostoma fasciculatum”
+3 “D” “Polystichum munitum”
+4 “E” “Arctostaphylos manzanita”
