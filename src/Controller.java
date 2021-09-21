@@ -74,9 +74,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void renderFireSim(){
-        System.out.println("Rendering the Fire Simulation");
-        //Start Simulation
-        fireController.startSimulation(image.getTerrain(),image.getUndergrowth(),image.getCanopy());
+        System.out.println("Running the Fire Simulation");
+
+        //Run:
+        fireController.runSimulation();
     }
 
     public void initView(){

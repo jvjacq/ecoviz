@@ -10,19 +10,17 @@ public class Fire {
 	private int dimY;
 	private int [][] fireGrid;
 	private int [][] plantGrid;
-    private PlantLayer canopy;
-    private PlantLayer undergrowth;
+
 	private BufferedImage fireImage;
     private ArrayList<Integer> permute;	// permuted list of integers in range [0, dimx*dimy)
 
 
-	public Fire (int dimX, int dimY, PlantLayer canopy, PlantLayer undergrowth) {
+	public Fire (int dimX, int dimY) {
         this.dimX=dimX;
         this.dimY=dimY;
-        this.canopy = canopy;
-        this.undergrowth = undergrowth;
 
-        this.plantGrid=createPlantGrid(undergrowth,canopy);   //Every location with a plant is represented with a 1... otherwise 0 if none
+
+        this.plantGrid=createPlantGrid();   //Every location with a plant is represented with a 1... otherwise 0 if none
         fireGrid = new int[dimX][dimY];
         genPermute();   // create randomly permuted list of indices for traversal 
     }
@@ -52,7 +50,7 @@ public class Fire {
         deriveFireImage();
     }
 
-    public int[][] createPlantGrid(PlantLayer under, PlantLayer can){
+    public int[][] createPlantGrid(){
         int[][] plantGrid = new int[dimX][dimY];
         //Using canopy and undergrowth - Populate Grid
         //...
