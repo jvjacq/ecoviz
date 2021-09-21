@@ -222,7 +222,7 @@ public class ImagePanel extends JPanel{
 		}
 		canopy = img;
 		//
-		System.out.println(circles);      
+		//System.out.println(circles);      
 	}
 	//========================================================================
     //      Overide Paint Component of the Panel:
