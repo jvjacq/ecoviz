@@ -10,18 +10,14 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ItemEvent;
-
 import javax.swing.event.ChangeListener;
-import java.awt.event.ItemListener;
 import javax.swing.event.ChangeEvent;
 
 import com.formdev.flatlaf.*;
 
-public class Gui extends JPanel implements ChangeListener,ItemListener{
+public class Gui extends JPanel implements ChangeListener{
 
     private JButton load;
     private JFileChooser fChooser;
@@ -114,11 +110,11 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
         return this.a4;
     }
 
-    public JCheckBox getUndergrowth(){
+    public JCheckBox getChkUndergrowth(){
         return this.ChkUnderGrowth;
     }
 
-    public JCheckBox getCanopy(){
+    public JCheckBox getChkCanopy(){
         return this.ChkCanopy;
     }
 
@@ -236,10 +232,10 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
         lblSearch = new JLabel("Search: ");
             
         ChkUnderGrowth = new JCheckBox("Show Undergrowth",true);
-        ChkUnderGrowth.addItemListener(this);
+        //ChkUnderGrowth.addItemListener(this);
         ChkUnderGrowth.setBounds(150,150,50,50);
         ChkCanopy = new JCheckBox("Show Canopy",true);
-        ChkCanopy.addItemListener(this);
+        //ChkCanopy.addItemListener(this);
         ChkCanopy.setBounds(150,150,50,50);
 
 
@@ -405,6 +401,14 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
         pnlFilters.add(chk);
         return chk;
     }
+
+    public void clearFilters(){
+        if(filterlist == null) return;
+        for(JCheckBox chk: this.filterlist){
+            pnlFilters.remove(chk);
+        }
+    }
+
     public void setSpeciesDetails(String s){
         this.plantDescription.setText(s);
     }
@@ -457,14 +461,14 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
         lblSpeed.setText("Simulation Speed: x"+Integer.toString(spdSlider.getValue()));
     }
 
-    @Override
+    /*@Override
     public void itemStateChanged(ItemEvent e) {
         
         if (ChkCanopy.isSelected()){ mainPanel.setShowCanopy(true);; }else{mainPanel.setShowCanopy(false);}
 
         if (ChkUnderGrowth.isSelected()){ mainPanel.setSHowUnderGrowth(true); }else{mainPanel.setSHowUnderGrowth(false);}
         
-    }
+    }*/
 
     protected JComponent makeTextPanel(String text){//Taken from tabbedPane.java demo (Oracle)
         JPanel panel = new JPanel(false);
