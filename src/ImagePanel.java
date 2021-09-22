@@ -46,7 +46,7 @@ public class ImagePanel extends JPanel{
 
 	public ImagePanel(){
 		showCanopy=true;
-		showUnderGrowth=false;
+		showUnderGrowth=true;
 		circles = 0;
 	}
 	/*public float getScale(){
@@ -213,14 +213,14 @@ public class ImagePanel extends JPanel{
 		//
 		Species[] specieslist = PlantLayer.getAllSpecies();
 		//int[] colourlist = Species.getCOLOURS();
-		
+		//System.out.println(this.showCanopy + " " + this.showUnderGrowth);
 		for(Plant p: PlantLayer.getPlantList()){
 			//imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
 			imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
 			++circles;
 			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
 			//System.out.println("Plant before print: " + p.getX() + " " + p.getY());
-			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter())){
+			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) | (this.showUnderGrowth && !p.getLayer()))){
 				imgGraphics.fillOval(p.getX()-(int)p.getCanopy(),p.getY()-(int)p.getCanopy(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
 			}
 		}
@@ -270,8 +270,9 @@ public class ImagePanel extends JPanel{
 		}
 		
 		graphics2d.drawImage(terrain, 0, 0, null);
-		if (showUnderGrowth){graphics2d.drawImage(undergrowth, 0, 0, null);}
-		if (showCanopy){graphics2d.drawImage(canopy, 0, 0, null);}
+		//if (showUnderGrowth){graphics2d.drawImage(undergrowth, 0, 0, null);}
+		//if (showCanopy){graphics2d.drawImage(canopy, 0, 0, null);}
+		graphics2d.drawImage(canopy, 0, 0, null);
 
 		}
 	}
@@ -291,8 +292,8 @@ public class ImagePanel extends JPanel{
 		showCanopy=b;
 		repaint();
 	}
-	public void setSHowUnderGrowth(boolean b){
-		showUnderGrowth=false;
+	public void setShowUnderGrowth(boolean b){
+		showUnderGrowth=b;
 		//showUnderGrowth=b;
 		repaint();
 	}
