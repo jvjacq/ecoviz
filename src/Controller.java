@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
 
+import javax.swing.JCheckBox;
+
 public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener{
     private Gui gui;
     private ImagePanel image;
@@ -13,6 +15,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private FileController files;
     private FireController fireController;
     private boolean fireMode;
+    private int numSpecies;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
         this.gui = gui;
@@ -93,9 +96,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 }else{
                     try{
                         files.readElevation(terrain, filenames[0]);
-                        files.readSpecies(filenames[1]);
-                        files.readLayer(undergrowth, filenames[2]);
-                        files.readLayer(canopy, filenames[3]);
+                        numSpecies = files.readSpecies(filenames[1]);
+                        files.readLayer(undergrowth, filenames[2], false);
+                        files.readLayer(canopy, filenames[3], true); //true = canopy
                         Collections.sort(PlantLayer.getPlantList());
                         System.out.println("All files read in successfully.");
                         refreshView();
@@ -115,24 +118,32 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         return (Math.pow((point.x - plant.getX()),2) + Math.pow((point.y - plant.getY()),2) ) <= Math.pow(plant.getCanopy(),2);
     }
 
-    public void changeSpeciesColour(int id, int rgb){
-        int[] colours = Species.getCOLOURS();
+    public void changeSpeciesColour(int id){
+        Species[] specieslist = PlantLayer.getAllSpecies();
+        //int[] colours = Species.getCOLOURS();
         Color c = new Color(0,0,0,1.0f);
-        colours[id] = c.getRGB();
+        //colours[id] = c.getRGB();
+        Color prev = specieslist[id].getColour();
+        specieslist[id].setColour(c);
         image.derivePlants();
         image.repaint();
-        //colours[id]
-        /*Species[] cSpecies = canopy.getSpeciesList();
-        Species[] uSpecies = canopy.getSpeciesList();
+        specieslist[id].setColour(prev);
+        /*Need overarching species list
+        Species[] cSpecies = canopy.getSpeciesList();
+        Species[] uSpecies = undergrowth.getSpeciesList();
+        //Species[] species = PlantLayer.getAllSpecies();
+        boolean reset = false;
         for(Species s: cSpecies){
             if(s.getSpeciesID() == id){
-                s.setColour(0);
+                colours[id] = s.getColour().getRGB();
+                reset = true;
                 break;
             }
         }
+        if(reset) return;
         for(Species s: uSpecies){
             if(s.getSpeciesID() == id){
-                s.setColour(0);
+                colours[id] = s.getColour();
                 break;
             }
         }*/
@@ -149,10 +160,37 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         //image.setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale()),Math.round(Terrain.getDimY()*image.getScale())));
         //gui.getMain().setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale())+220,Math.round(Terrain.getDimY()*image.getScale())+100));
         image.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
+        addSpeciesFilters();
         gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX()+220,Terrain.getDimY()+100));
         gui.getMain().pack();
         gui.getMain().setLocationRelativeTo(null);      
         gui.getMain().setVisible(true);
+    }
+
+    public void addSpeciesFilters(){
+        Species[] list = PlantLayer.getAllSpecies();
+        JCheckBox[] filters = new JCheckBox[numSpecies];
+        for(int x = 0; x < numSpecies; ++x){
+            JCheckBox chk = gui.addFilter(list[x].getCommon());
+            chk.addItemListener(e -> filterSpecies());
+            filters[x] = chk;
+        }
+        gui.setFilterList(filters);
+    }
+
+    public void filterSpecies(){
+        Species[] list = PlantLayer.getAllSpecies();
+        JCheckBox[] filters = gui.getFilterList();
+        for(int idx = 0; idx < numSpecies; ++idx){
+            if(filters[idx].isSelected()){
+                list[idx].setFilter(true); 
+            }else{
+                list[idx].setFilter(false); 
+            }
+        }
+        image.derivePlants();
+        image.repaint();
+
     }
 
     @Override
@@ -196,14 +234,14 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 if(insideCanopy(click, plant)){
                     //Will be lowest plant
                     id = plant.getSpeciesID();
-                    changeSpeciesColour(id, 0);
+                    changeSpeciesColour(id);
                     //System.out.println("Plant: " + plant.getX() + " " + plant.getY());
                     break;
                 }
             }
             if(id > -1){
-                String[][] specieslist = Species.getSPECIES();
-                gui.setSpeciesDetails("Common name:\n" + specieslist[id][0] + "\nLatin name:\n" + specieslist[id][1]);
+                Species[] specieslist = PlantLayer.getAllSpecies();
+                gui.setSpeciesDetails("Common name:\n" + specieslist[id].getCommon() + "\nLatin name:\n" + specieslist[id].getLatin());
             }
             /*int col = image.getCanopy().getRGB(click.x, click.y);
             int[] speciesColours = Species.getCOLOURS();
