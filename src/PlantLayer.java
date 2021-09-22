@@ -51,8 +51,8 @@ public class PlantLayer{
       PlantLayer.plantlist = new ArrayList<Plant>();
     }
 
-    public static void setAllSpecies(int num) {
-      PlantLayer.allSpecies = new Species[num];
+    public static void setAllSpecies(Species[] list) {
+      PlantLayer.allSpecies = list;
     }
 
     public static void addSpecies(Species s){
