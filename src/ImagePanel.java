@@ -211,14 +211,18 @@ public class ImagePanel extends JPanel{
 		//imgGraphics.setColor(new Color(0,0,0,1.0f));
 		//imgGraphics.fillOval(0,0,10,10);
 		//
-		int[] colourlist = Species.getCOLOURS();
+		Species[] specieslist = PlantLayer.getAllSpecies();
+		//int[] colourlist = Species.getCOLOURS();
 		
 		for(Plant p: PlantLayer.getPlantList()){
-			imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
+			//imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
+			imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
 			++circles;
 			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
 			//System.out.println("Plant before print: " + p.getX() + " " + p.getY());
-			imgGraphics.fillOval(p.getX()-(int)p.getCanopy(),p.getY()-(int)p.getCanopy(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
+			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter())){
+				imgGraphics.fillOval(p.getX()-(int)p.getCanopy(),p.getY()-(int)p.getCanopy(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
+			}
 		}
 		canopy = img;
 		//
