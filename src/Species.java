@@ -21,9 +21,16 @@ public class Species {
     private float maxHeight;
     private float avgRatio;
     private int numPlants;
-    private Plant[] plantList;
+    private Plant[] canopy;
+    private Plant[] undergrowth;
     private Color colour;
 
+
+    public Species(String common, String latin){
+        this.commonName = common;
+        this.latinName = latin;
+    }
+    
     public Species(int id, float minH, float maxH, float avg, int num){
         this.speciesid = id;
         this.minHeight = minH;
@@ -64,8 +71,12 @@ public class Species {
         this.numPlants = num;
     }
 
-    public void setPlantList(Plant[] list){
-        this.plantList = list;
+    public void setCanopyPlants(Plant[] list){
+        this.canopy = list;
+    }
+
+    public void setUnderPlants(Plant[] list){
+        this.undergrowth = list;
     }
 
     public void setColour(int rgb){
@@ -110,8 +121,12 @@ public class Species {
         return this.numPlants;
     }
 
-    public Plant[] getPlants(){
-        return this.plantList;
+    public Plant[] getCanopyPlants(){
+        return this.canopy;
+    }
+
+    public Plant[] getUnderPlants(){
+        return this.undergrowth;
     }
 
     public int getColour(){
