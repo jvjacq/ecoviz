@@ -89,7 +89,7 @@ public class Fire {
         double rand = Math.random() * 100;
         int chance = 20;
         
-        fireGrid[x][y]=2;   //ASH or Burnt (Darker red - For nice aesthetic)
+        fireGrid[x][y]=2;   //ASH cant move anymore
 
         if (plantGrid[x-1][y]==1){  //West ←
             //100% chance of fire spread

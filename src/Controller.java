@@ -16,7 +16,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private FileController files;
     private boolean fireMode;
     private Fire fire;
-    private boolean runningFireSim;
+    private Timer timer;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
         this.gui = gui;
@@ -51,6 +51,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void resetFireSim(){
         fire.clearGrid();
         gui.repaint();
+        timer.cancel();
     }
 
     public void openFireSim(){
@@ -72,15 +73,14 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getRenderBtn().setVisible(false);
         resetFireSim();
         fireMode=false;
+        timer.cancel();
 
     }
 
     public void renderFireSim(){
         int delay = 10;
         System.out.println("Running the Fire Simulation");
-        runningFireSim=true;
-        Timer timer = new Timer();
-
+        timer = new Timer();
         timer.schedule(new TimerTask(){
 
             @Override
@@ -94,11 +94,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             }
             
         }, 0, delay);
-       
-
-
-        //Run:
-        //fireController.runSimulation();
     }
 
     public void initView(){
