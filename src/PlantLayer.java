@@ -10,6 +10,8 @@ public class PlantLayer{
     private static ArrayList<Plant> plantlist;
     private int numSpecies; //per layer
     private boolean filter;
+
+    int [][] plantGrid; //For FireSim
     
     public PlantLayer(){
       this.filter = true;
@@ -23,6 +25,20 @@ public class PlantLayer{
     public void setPlantAtLocation(int x, int y, int speciesid, int plantid){
         this.idLocations[y][x][0] = speciesid;
         this.idLocations[y][x][1] = plantid;
+        
+        //For FirSim:
+        //Create "hit box" (Currently a square XD)
+        this.plantGrid[y][x]=1; //!! x and y have been switched in certain cases (will cause issues when loading non square data)
+        /*for (int i=-1;i<1;i++){
+          for (int j = -1; j<1; j++){
+            if (i>=0 && i<Terrain.getDimX() && j>=0 && j<Terrain.getDimY()){
+                this.plantGrid[i][j]=1;
+              }
+          }
+        }*/
+
+
+
     }
 
     public void setSpeciesList(Species[] list){
@@ -39,6 +55,9 @@ public class PlantLayer{
 
     public void setLocations(int dimx, int dimy){
       idLocations = new int[dimx][dimy][2];
+
+      //For FireSim:
+      this.plantGrid= new int[dimx][dimy];
     }
 
     public void removePlant(int dimx, int dimy) {
@@ -55,6 +74,10 @@ public class PlantLayer{
     }
 
     // Accessor Methods
+    public int[][] getPlantGrid(){
+      return plantGrid;
+    }
+
     public int[][][] getLocations(){
         return this.idLocations;
     }

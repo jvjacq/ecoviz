@@ -268,7 +268,6 @@ public class ImagePanel extends JPanel{
 		if (showUnderGrowth){graphics2d.drawImage(undergrowth, 0, 0, null);}
 		if (showCanopy){graphics2d.drawImage(canopy, 0, 0, null);}
 		graphics2d.drawImage(fire, 0, 0, null);
-		System.out.println("refresh");
 		}
 	}
 
