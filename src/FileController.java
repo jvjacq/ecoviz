@@ -125,8 +125,8 @@ public class FileController {
                 height = Float.parseFloat(filein.next());
                 canopy = Float.parseFloat(filein.next())*scale;
 
-                Plant plant = new Plant(speciesID, id, xpos, ypos, height, canopy);
-                plant.setLayer(bCanopy);
+                Plant plant = new Plant(speciesID, id, xpos, ypos, height, canopy, bCanopy);
+                //plant.setLayer(bCanopy);
                 plantlist[id] = plant;
                 //
                 PlantLayer.addPlant(plant);
