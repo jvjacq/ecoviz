@@ -28,8 +28,8 @@ public class ImagePanel extends JPanel{
 	private BufferedImage undergrowth;
 	private BufferedImage fire;
 
-	private	double zoomMultiplier = 1;
-	private double prevZoomMultiplier = 1;
+	private	double zoomMultiplier;
+	private double prevZoomMultiplier;
 	private boolean zoom;
 
 	private boolean dragger,released;
@@ -45,9 +45,11 @@ public class ImagePanel extends JPanel{
 	private int circles;
 
 	public ImagePanel(){
-		showCanopy=true;
-		showUnderGrowth=true;
-		circles = 0;
+		this.zoomMultiplier = 1;
+		this.prevZoomMultiplier = 1;
+		this.showCanopy=true;
+		this.showUnderGrowth=true;
+		this.circles = 0;
 	}
 	/*public float getScale(){
 		return this.scale;
@@ -125,8 +127,9 @@ public class ImagePanel extends JPanel{
 		dimX = Terrain.getBaseX();
 		dimY = Terrain.getBaseY();
 		int scale = 1024/dimX;
-
+		
 		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+		//BufferedImage img = new BufferedImage((int)dimX/zoomMultiplier,(int)dimY/zoomMultiplier,BufferedImage.TYPE_INT_ARGB);
 		double maxh = -10000.0f;
 		double minh = 10000.0f;
 		double[][] elevations = terrain.getElevations();
