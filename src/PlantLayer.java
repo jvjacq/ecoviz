@@ -6,8 +6,9 @@ public class PlantLayer{
     //ID -1 = burnt?
     private int[][][] idLocations;
     //private int[][] burnt;
-    private Species[] specieslist;
+    //private Species[] specieslist;
     private static ArrayList<Plant> plantlist;
+    private static Species[] allSpecies;
     private int numSpecies; //per layer
     private boolean filter;
     
@@ -25,9 +26,9 @@ public class PlantLayer{
         this.idLocations[y][x][1] = plantid;
     }
 
-    public void setSpeciesList(Species[] list){
+    /*public void setSpeciesList(Species[] list){
       this.specieslist = list;
-    }
+    }*/
 
     public void setLayer(int[][][] newLocations) {
       idLocations = newLocations;
@@ -50,6 +51,14 @@ public class PlantLayer{
       PlantLayer.plantlist = new ArrayList<Plant>();
     }
 
+    public static void setAllSpecies(int num) {
+      PlantLayer.allSpecies = new Species[num];
+    }
+
+    public static void addSpecies(Species s){
+      PlantLayer.allSpecies[s.getSpeciesID()] = s;
+    }
+
     public static void addPlant(Plant plant){
       PlantLayer.plantlist.add(plant);
     }
@@ -67,9 +76,9 @@ public class PlantLayer{
       return this.idLocations[y][x];
     }
     
-    public Species[] getSpeciesList(){
+    /*public Species[] getSpeciesList(){
       return this.specieslist;
-    }
+    }*/
 
     public Species getPlant(int dimx, int dimy) {
        // return idLocations[dimx][dimy];
@@ -78,10 +87,18 @@ public class PlantLayer{
 
     public boolean getFilter() {
       return this.filter;
-   }
+    }
 
-   public static ArrayList<Plant> getPlantList() {
-    return PlantLayer.plantlist;
- }
+    public static ArrayList<Plant> getPlantList() {
+      return PlantLayer.plantlist;
+    }
+
+    public static Species[] getAllSpecies(){
+      return PlantLayer.allSpecies;
+    }
+
+    public static Species getSpeciesAtID(int id){
+      return PlantLayer.allSpecies[id];
+    }
 
 }
