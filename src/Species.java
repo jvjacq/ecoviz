@@ -114,6 +114,10 @@ public class Species {
         return this.plantList;
     }
 
+    public int getColour(){
+        return this.colour.getRGB();
+    }
+
     public static String[][] getSPECIES(){
         return Species.SPECIES;
     }
