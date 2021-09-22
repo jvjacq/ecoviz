@@ -241,7 +241,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             }
             if(id > -1){
                 Species[] specieslist = PlantLayer.getAllSpecies();
-                gui.setSpeciesDetails("Common name:\n" + specieslist[id].getCommon() + "\nLatin name:\n" + specieslist[id].getLatin());
+                gui.setSpeciesDetails(specieslist[id].toString());
             }
             /*int col = image.getCanopy().getRGB(click.x, click.y);
             int[] speciesColours = Species.getCOLOURS();
