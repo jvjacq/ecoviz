@@ -130,25 +130,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.derivePlants();
         image.repaint();
         specieslist[id].setColour(prev);
-        /*Need overarching species list
-        Species[] cSpecies = canopy.getSpeciesList();
-        Species[] uSpecies = undergrowth.getSpeciesList();
-        //Species[] species = PlantLayer.getAllSpecies();
-        boolean reset = false;
-        for(Species s: cSpecies){
-            if(s.getSpeciesID() == id){
-                colours[id] = s.getColour().getRGB();
-                reset = true;
-                break;
-            }
-        }
-        if(reset) return;
-        for(Species s: uSpecies){
-            if(s.getSpeciesID() == id){
-                colours[id] = s.getColour();
-                break;
-            }
-        }*/
     }
 
     public void refreshView(){
@@ -243,29 +224,24 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             System.out.println("Fire Added");
         }else{
             int id = -1;
-            //System.out.println(click.x + " " + click.y);
+            Species[] list = PlantLayer.getAllSpecies();
             for(Plant plant: PlantLayer.getPlantList()){
-                if(insideCanopy(click, plant)){
-                    //Will be lowest plant
-                    id = plant.getSpeciesID();
-                    changeSpeciesColour(id);
-                    //System.out.println("Plant: " + plant.getX() + " " + plant.getY());
-                    break;
+                if(list[plant.getSpeciesID()].getFilter()){
+                    if(insideCanopy(click, plant)){
+                        //Will be lowest plant
+                        id = plant.getSpeciesID();
+                        changeSpeciesColour(id);
+                        break;
+                    }
                 }
             }
             if(id > -1){
                 Species[] specieslist = PlantLayer.getAllSpecies();
                 gui.setSpeciesDetails(specieslist[id].toString());
+            }else{
+                gui.setSpeciesDetails("Select any plant to \n view details!");
+                image.repaint();
             }
-            /*int col = image.getCanopy().getRGB(click.x, click.y);
-            int[] speciesColours = Species.getCOLOURS();
-            String[][] specieslist = Species.getSPECIES();
-            for(int idx = 0; idx < speciesColours.length; ++idx){
-                if(speciesColours[idx] == col){
-                    gui.setSpeciesDetails("Common name:\n" + specieslist[idx][0] + "\nLatin name:\n" + specieslist[idx][1]);
-                    break;
-                }
-            }*/
         }
         
     }
