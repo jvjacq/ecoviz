@@ -20,13 +20,14 @@ public class Plant implements Comparable<Plant>{
     private boolean filter;
     private boolean layer;
 
-    public Plant(int sid, int pid, int x, int y, float height, float rad){
+    public Plant(int sid, int pid, int x, int y, float height, float rad, boolean canopy){
         this.speciesid = sid;
         this.plantid = pid;
         this.posx = x;
         this.posy = y;
         this.height = height;
         this.canopyRadius = rad;
+        layer = canopy; //True for canopy false for under
         this.filter = true;
     }
 
