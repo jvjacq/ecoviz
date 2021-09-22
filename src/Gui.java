@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ItemEvent;
@@ -48,6 +49,8 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
     private miniMap mini;
     private JCheckBox ChkUnderGrowth,ChkCanopy;
     private JLabel lblSpeed;
+    private JPanel pnlFilters;
+    private JCheckBox[] filterlist;
 
     //Filter Section:
     private JLabel lblSearch;
@@ -125,6 +128,18 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
 
     public JPanel getEast(){
         return this.pnlEast;
+    }
+
+    public JPanel getFilterPanel(){
+        return this.pnlFilters;
+    }
+
+    public JCheckBox[] getFilterList(){
+        return this.filterlist;
+    }
+
+    public void setFilterList(JCheckBox[] list){
+        this.filterlist = list;
     }
 
     public Gui() {
@@ -262,7 +277,7 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
         //Filters:
-        JPanel pnlFilters = new JPanel();
+        pnlFilters = new JPanel();
             pnlFilters.setLayout(new BoxLayout(pnlFilters, BoxLayout.PAGE_AXIS ));
             JLabel lblFilters = new JLabel("Filters");
             lblFilters.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
@@ -384,6 +399,12 @@ public class Gui extends JPanel implements ChangeListener,ItemListener{
     }
     //END OF CONSTRUCTOR
 
+    public JCheckBox addFilter(String name){
+        JCheckBox chk = new JCheckBox(name, true);
+        chk.setBounds(150,150,50,50);
+        pnlFilters.add(chk);
+        return chk;
+    }
     public void setSpeciesDetails(String s){
         this.plantDescription.setText(s);
     }
