@@ -40,6 +40,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getMenu5().addActionListener(e -> gui.changeTheme(1));
         gui.getMenu6().addActionListener(e -> gui.changeTheme(2));
         gui.getMenu7().addActionListener(e -> gui.changeTheme(3));
+        gui.getChkCanopy().addItemListener(e -> filterLayers());
+        gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         image.addMouseListener(this);
         image.addMouseMotionListener(this);
         image.addMouseWheelListener(this);
@@ -168,6 +170,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void addSpeciesFilters(){
+        gui.clearFilters();
         Species[] list = PlantLayer.getAllSpecies();
         JCheckBox[] filters = new JCheckBox[numSpecies];
         for(int x = 0; x < numSpecies; ++x){
@@ -192,6 +195,16 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.repaint();
 
     }
+    
+    public void filterLayers(){
+        if (gui.getChkCanopy().isSelected()) image.setShowCanopy(true); 
+        else image.setShowCanopy(false);
+
+        if (gui.getChkUndergrowth().isSelected()) image.setShowUnderGrowth(true); 
+        else image.setShowUnderGrowth(false);
+        image.derivePlants();
+        image.repaint();
+    }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
@@ -204,6 +217,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 		}
 		if (e.getWheelRotation() > 0) {	// Zoom out
 			multiplier /=1.1;	//Adjust for smoothness
+            if(multiplier < 1) multiplier = 1;
             image.setZoomMult(multiplier);
 			image.repaint();
 		}        
