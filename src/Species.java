@@ -39,7 +39,7 @@ public class Species {
         this.filter = true;
     }
 
-    public Species(int id, float minH, float maxH, float avg, int num){
+    /*public Species(int id, float minH, float maxH, float avg, int num){
         this.speciesid = id;
         this.minHeight = minH;
         this.maxHeight = maxH;
@@ -47,7 +47,7 @@ public class Species {
         this.numPlants = num;
         //this.commonName = Species.SPECIES[id][0];
         //this.latinName = Species.SPECIES[id][1];
-    }
+    }*/
 
     //Mutator Methods:
 
@@ -159,9 +159,7 @@ public class Species {
 
     @Override
     public String toString() {
-        String output = "Common Name: " + getCommon() + "/n";
-        output += "Latin Name: " + getLatin() + "/n";
-
-        return output;
+        //Way to access tallest/shortest?
+        return "Common name:\n" + this.commonName + "\nLatin name:\n" + this.latinName + "\nShortest plant:\n" + this.minHeight + "\nTallest plant:\n" + this.maxHeight + "\nAvg. Ration of Canopy/Height:\n" + this.avgRatio + "\nTotal number of individuals:\n" + this.numPlants;
     }
 }
