@@ -18,6 +18,7 @@ public class Plant implements Comparable<Plant>{
     private double height;
     private double canopyRadius;
     private boolean filter;
+    private boolean layer;
 
     public Plant(int sid, int pid, int x, int y, float height, float rad){
         this.speciesid = sid;
@@ -26,7 +27,7 @@ public class Plant implements Comparable<Plant>{
         this.posy = y;
         this.height = height;
         this.canopyRadius = rad;
-        this.filter = false;
+        this.filter = true;
     }
 
     //Accessor methods
@@ -58,6 +59,10 @@ public class Plant implements Comparable<Plant>{
         return this.filter;
     }
 
+    public boolean getLayer(){
+        return this.layer;
+    }
+
     //Mutator methods
     public void toggleFilter(){
         this.filter = !(this.filter);
@@ -69,6 +74,10 @@ public class Plant implements Comparable<Plant>{
 
     public void setPosY(int Y){
         this.posy = Y;
+    }
+
+    public void setLayer(boolean b){
+        this.layer = b;
     }
 
     @Override
