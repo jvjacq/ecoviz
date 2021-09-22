@@ -4,6 +4,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener{
     private Gui gui;
@@ -12,9 +14,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private PlantLayer undergrowth;
     private PlantLayer canopy;
     private FileController files;
-    private FireController fireController;
     private boolean fireMode;
     private Fire fire;
+    private boolean runningFireSim;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
         this.gui = gui;
@@ -58,9 +60,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getRenderBtn().setVisible(true);
         fireMode=true;
 
-        //Setup fireController:
-        fireController = new FireController(Terrain.getDimX(),Terrain.getDimY(),undergrowth,canopy);
-        fire = fireController.getFire();
+        //Setup fire:
+        fire = new Fire(Terrain.getDimX(), Terrain.getDimY());
 
     }
 
@@ -69,15 +70,35 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getBackBtn().setVisible(false);
         gui.getResetBtn().setVisible(false);
         gui.getRenderBtn().setVisible(false);
+        resetFireSim();
         fireMode=false;
 
     }
 
     public void renderFireSim(){
+        int delay = 10;
         System.out.println("Running the Fire Simulation");
+        runningFireSim=true;
+        Timer timer = new Timer();
+
+        timer.schedule(new TimerTask(){
+
+            @Override
+            public void run() {
+
+            fire.simulate(0,(Terrain.getDimX()*Terrain.getDimY()) );    //Run simulation on all
+            fire.deriveFireImage();
+            BufferedImage updatedFireImage = fire.getImage();
+            image.setFire(updatedFireImage);
+            image.repaint();
+            }
+            
+        }, 0, delay);
+       
+
 
         //Run:
-        fireController.runSimulation();
+        //fireController.runSimulation();
     }
 
     public void initView(){

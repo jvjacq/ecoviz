@@ -10,6 +10,7 @@ public class Fire {
 	private int dimY;
 	private int [][] fireGrid;
 	private int [][] plantGrid;
+    private int[] traversal;
 
 	private BufferedImage fireImage;
     private ArrayList<Integer> permute;	// permuted list of integers in range [0, dimx*dimy)
@@ -19,6 +20,7 @@ public class Fire {
         this.dimX=dimX;
         this.dimY=dimY;
 
+        traversal = new int[dimX*dimY];
 
         this.plantGrid=createPlantGrid();   //Every location with a plant is represented with a 1... otherwise 0 if none
         fireGrid = new int[dimX][dimY];
@@ -29,6 +31,22 @@ public class Fire {
    // public void setDimY(int dimY){this.dimY=dimY;}
    // public void setCanopy(PlantLayer canopy){this.canopy=canopy;}
    // public void setUnder(PlantLayer undergrowth){this.undergrowth=undergrowth;}
+
+   public void simulate(int segmentLow, int segmentHigh) {
+    // check each grid point to see if it has fire
+    // if it has fire then check all neighbours
+    // if it can move, then move it, otherwise go to next position
+
+    for (int i = segmentLow;i<segmentHigh;i++){
+        getPermute(i,traversal);
+
+        //Move fire if can:
+        if (isFire(traversal[0],traversal[1]) == true){
+            moveFire(traversal[0],traversal[1]);
+            
+        }
+    }
+}
 
     public boolean isFire(int x, int y){
         boolean firePresent = false;
@@ -150,8 +168,13 @@ public class Fire {
 
         for (int x = 0; x < dimX; x++){
             for (int y = 0; y < dimY; y++){
-                if (fireGrid[x][y] != 0){
+                if (fireGrid[x][y] == 1){
                     g2d.fillRect(x,y,1,1);
+                } else if(fireGrid[x][y]==2){
+                    g2d.setColor(Color.DARK_GRAY);
+                    g2d.fillRect(x,y,1,1);
+                    g2d.setColor(Color.RED);
+
                 }
             }
         }
