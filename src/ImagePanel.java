@@ -211,7 +211,20 @@ public class ImagePanel extends JPanel{
 		super.paintComponent(g);
 		Graphics2D graphics2d = (Graphics2D) g;
 		if (terrain != null) {
+		if (dragger){
+			/*AffineTransform affine = new AffineTransform();
+			affine.translate(xOffset+xDiff,yOffset+yDiff);
+			affine.scale(zoomMultiplier,zoomMultiplier);
+			graphics2d.transform(affine);*/
 
+			if (released){
+				xOffset += xDiff;
+				yOffset += yDiff;
+				//zoomPlants
+				dragger = false;
+			}
+
+		}
 		if (zoom) {
 			//AffineTransform affine = new AffineTransform();
 			
@@ -220,7 +233,7 @@ public class ImagePanel extends JPanel{
 			xRelative /= prevZoomMultiplier; 
 			yRelative /= prevZoomMultiplier;
 			if(zoomMultiplier < prevZoomMultiplier){ xRelative -= xOffset; yRelative -= yOffset; }
-			else if(zoomMultiplier > prevZoomMultiplier){ xRelative += xOffset; yRelative += yOffset; }
+			else if(zoomMultiplier >= prevZoomMultiplier){ xRelative += xOffset; yRelative += yOffset; }
 			//System.out.println(xRelative + " " + yRelative);
 			int newDimX = (int)Math.ceil(dimX/zoomMultiplier);
 			int newDimY = (int)Math.ceil(dimY/zoomMultiplier);
@@ -258,24 +271,10 @@ public class ImagePanel extends JPanel{
 			affine.translate(xOffset,yOffset);
 			affine.scale(zoomMultiplier, zoomMultiplier);
 			prevZoomMultiplier = zoomMultiplier;
-			graphics2d.transform(affine);
-			zoom = false;*/
+			graphics2d.transform(affine);*/
+			if(zoomMultiplier == 1) zoom = false;
 		} 
 		//else derivePlants()
-		
-		if (dragger){
-			AffineTransform affine = new AffineTransform();
-			affine.translate(xOffset+xDiff,yOffset+yDiff);
-			affine.scale(zoomMultiplier,zoomMultiplier);
-			graphics2d.transform(affine);
-
-			if (released){
-				xOffset += xDiff;
-				yOffset += yDiff;
-				dragger = false;
-			}
-
-		}
 		
 		graphics2d.drawImage(zoomTerrain, 0, 0, null);
 		//if (showUnderGrowth){graphics2d.drawImage(undergrowth, 0, 0, null);}
