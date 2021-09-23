@@ -69,6 +69,10 @@ public class ImagePanel extends JPanel{
 		return this.fire;
 	}
 
+	public void setFire(BufferedImage fire){
+		this.fire = fire;
+	}
+
 	public BufferedImage getTerrain(){
 		return this.terrain;
 	}
@@ -113,7 +117,7 @@ public class ImagePanel extends JPanel{
 		this.zoomMultiplier = multiplier;
 	}
 
-
+	
 
 	//========================================================================
 	//      Create the greyscale top-down view
@@ -263,7 +267,8 @@ public class ImagePanel extends JPanel{
 		graphics2d.drawImage(terrain, 0, 0, null);
 		if (showUnderGrowth){graphics2d.drawImage(undergrowth, 0, 0, null);}
 		if (showCanopy){graphics2d.drawImage(canopy, 0, 0, null);}
-
+		graphics2d.drawImage(fire, 0, 0, null);
+		System.out.println("refresh");
 		}
 	}
 
