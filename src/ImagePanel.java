@@ -28,8 +28,8 @@ public class ImagePanel extends JPanel{
 	private BufferedImage undergrowth;
 	private BufferedImage fire;
 
-	private	double zoomMultiplier = 1;
-	private double prevZoomMultiplier = 1;
+	private	double zoomMultiplier;
+	private double prevZoomMultiplier;
 	private boolean zoom;
 
 	private boolean dragger,released;
@@ -45,9 +45,11 @@ public class ImagePanel extends JPanel{
 	private int circles;
 
 	public ImagePanel(){
-		showCanopy=true;
-		showUnderGrowth=false;
-		circles = 0;
+		this.zoomMultiplier = 1;
+		this.prevZoomMultiplier = 1;
+		this.showCanopy=true;
+		this.showUnderGrowth=true;
+		this.circles = 0;
 	}
 	/*public float getScale(){
 		return this.scale;
@@ -126,11 +128,12 @@ public class ImagePanel extends JPanel{
 		//
 		circles = 0;
 		//
-		dimX = Terrain.getBaseX();
-		dimY = Terrain.getBaseY();
+		int dimX = Terrain.getBaseX();
+		int dimY = Terrain.getBaseY();
 		int scale = 1024/dimX;
 
 		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+		//BufferedImage img = new BufferedImage((int)dimX/zoomMultiplier,(int)dimY/zoomMultiplier,BufferedImage.TYPE_INT_ARGB);
 		double maxh = -10000.0f;
 		double minh = 10000.0f;
 		double[][] elevations = terrain.getElevations();
@@ -201,28 +204,32 @@ public class ImagePanel extends JPanel{
     public void derivePlants(){
 		//int dimx = Math.round(Terrain.getDimX()*scale);
 		//int dimy = Math.round(Terrain.getDimY()*scale);
-		int dimx = Math.round(Terrain.getDimX());
-		int dimy = Math.round(Terrain.getDimY());
+		dimX = Math.round(Terrain.getDimX());
+		dimY = Math.round(Terrain.getDimY());
   
-		BufferedImage img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = img.createGraphics();
   
 		imgGraphics.setComposite(AlphaComposite.Clear);
-		imgGraphics.fillRect(0,0, dimx, dimy);
+		imgGraphics.fillRect(0,0, dimX, dimY);
 		
 		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		//
 		//imgGraphics.setColor(new Color(0,0,0,1.0f));
 		//imgGraphics.fillOval(0,0,10,10);
 		//
-		int[] colourlist = Species.getCOLOURS();
-		
+		Species[] specieslist = PlantLayer.getAllSpecies();
+		//int[] colourlist = Species.getCOLOURS();
+		//System.out.println(this.showCanopy + " " + this.showUnderGrowth);
 		for(Plant p: PlantLayer.getPlantList()){
-			imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
+			//imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
+			imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
 			++circles;
 			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
 			//System.out.println("Plant before print: " + p.getX() + " " + p.getY());
-			imgGraphics.fillOval(p.getX()-(int)p.getCanopy(),p.getY()-(int)p.getCanopy(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
+			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) | (this.showUnderGrowth && !p.getLayer()))){
+				imgGraphics.fillOval(p.getX()-(int)p.getCanopy(),p.getY()-(int)p.getCanopy(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
+			}
 		}
 		canopy = img;
 		//
@@ -242,7 +249,14 @@ public class ImagePanel extends JPanel{
 			
 			double xRelative = MouseInfo.getPointerInfo().getLocation().getX()-getLocationOnScreen().getX();
 			double yRelative = MouseInfo.getPointerInfo().getLocation().getY()-getLocationOnScreen().getY();
-
+			//System.out.println(xRelative + " " + yRelative);
+			double centerx;
+			if(xRelative > dimX/2) centerx = Math.min(Math.abs(xRelative - dimX), dimX/zoomMultiplier/2);
+			else centerx = Math.max(xRelative, dimX/zoomMultiplier/2);
+			double centery;
+			if(yRelative > dimY/2) centery = Math.min(Math.abs(yRelative - dimY), dimY/zoomMultiplier/2);
+			else centery = Math.max(yRelative, dimY/zoomMultiplier/2);
+			System.out.println(centerx + " " + centery);
 			double divident = zoomMultiplier/prevZoomMultiplier;
 
 			xOffset = divident * xOffset + (1-divident)*xRelative;
@@ -270,8 +284,9 @@ public class ImagePanel extends JPanel{
 		}
 		
 		graphics2d.drawImage(terrain, 0, 0, null);
-		if (showUnderGrowth){graphics2d.drawImage(undergrowth, 0, 0, null);}
-		if (showCanopy){graphics2d.drawImage(canopy, 0, 0, null);}
+		//if (showUnderGrowth){graphics2d.drawImage(undergrowth, 0, 0, null);}
+		//if (showCanopy){graphics2d.drawImage(canopy, 0, 0, null);}
+		graphics2d.drawImage(canopy, 0, 0, null);
 		graphics2d.drawImage(fire, 0, 0, null);
 		System.out.println("refresh");
 		}
@@ -292,8 +307,8 @@ public class ImagePanel extends JPanel{
 		showCanopy=b;
 		repaint();
 	}
-	public void setSHowUnderGrowth(boolean b){
-		showUnderGrowth=false;
+	public void setShowUnderGrowth(boolean b){
+		showUnderGrowth=b;
 		//showUnderGrowth=b;
 		repaint();
 	}

@@ -12,8 +12,8 @@ import java.awt.Color;
 
 public class Species {
 
-    private static String[][] SPECIES;
-    private static int[] COLOURS;
+    //private static String[][] SPECIES;
+    //private static int[] COLOURS;
     private String commonName;
     private String latinName;
     private int speciesid;
@@ -21,18 +21,33 @@ public class Species {
     private float maxHeight;
     private float avgRatio;
     private int numPlants;
-    private Plant[] plantList;
+    private Plant[] canopy;
+    private Plant[] undergrowth;
     private Color colour;
+    private boolean filter;
 
-    public Species(int id, float minH, float maxH, float avg, int num){
+
+    public Species(int id, String common, String latin, Color colour){
+        this.speciesid = id;
+        this.commonName = common;
+        this.latinName = latin;
+        this.colour = colour;
+        this.minHeight = -1;
+        this.maxHeight = -1;
+        this.avgRatio = 0;
+        this.numPlants = 0;
+        this.filter = true;
+    }
+
+    /*public Species(int id, float minH, float maxH, float avg, int num){
         this.speciesid = id;
         this.minHeight = minH;
         this.maxHeight = maxH;
         this.avgRatio = avg;
         this.numPlants = num;
-        this.commonName = Species.SPECIES[id][0];
-        this.latinName = Species.SPECIES[id][1];
-    }
+        //this.commonName = Species.SPECIES[id][0];
+        //this.latinName = Species.SPECIES[id][1];
+    }*/
 
     //Mutator Methods:
 
@@ -64,21 +79,29 @@ public class Species {
         this.numPlants = num;
     }
 
-    public void setPlantList(Plant[] list){
-        this.plantList = list;
+    public void setCanopyPlants(Plant[] list){
+        this.canopy = list;
     }
 
-    public void setColour(int rgb){
-        this.colour = new Color(rgb, true);
+    public void setUnderPlants(Plant[] list){
+        this.undergrowth = list;
     }
 
-    public static void setSpeciesList(String[][] list){
+    public void setColour(Color col){
+        this.colour = col;
+    }
+
+    public void setFilter(boolean b){
+        this.filter = b;
+    }
+
+    /*public static void setSpeciesList(String[][] list){
         Species.SPECIES = list;
     }
 
     public static void setColourList(int[] list){
         Species.COLOURS = list;
-    }
+    }*/
 
     // Accessor Methods:
 
@@ -110,23 +133,33 @@ public class Species {
         return this.numPlants;
     }
 
-    public Plant[] getPlants(){
-        return this.plantList;
+    public Plant[] getCanopyPlants(){
+        return this.canopy;
     }
 
-    public static String[][] getSPECIES(){
+    public Plant[] getUnderPlants(){
+        return this.undergrowth;
+    }
+
+    public Color getColour(){
+        return this.colour;
+    }
+
+    public boolean getFilter(){
+        return this.filter;
+    }
+
+    /*public static String[][] getSPECIES(){
         return Species.SPECIES;
     }
 
     public static int[] getCOLOURS(){
         return Species.COLOURS;
-    }
+    }*/
 
     @Override
     public String toString() {
-        String output = "Common Name: " + getCommon() + "/n";
-        output += "Latin Name: " + getLatin() + "/n";
-
-        return output;
+        //Way to access tallest/shortest?
+        return "Common name:\n" + this.commonName + "\nLatin name:\n" + this.latinName + "\nShortest plant:\n" + this.minHeight + "\nTallest plant:\n" + this.maxHeight + "\nAvg. Ration of Canopy/Height:\n" + this.avgRatio + "\nTotal number of individuals:\n" + this.numPlants;
     }
 }
