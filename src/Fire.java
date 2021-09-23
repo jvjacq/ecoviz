@@ -10,22 +10,43 @@ public class Fire {
 	private int dimY;
 	private int [][] fireGrid;
 	private int [][] plantGrid;
-    private PlantLayer canopy;
-    private PlantLayer undergrowth;
+    private int[] traversal;
+
 	private BufferedImage fireImage;
     private ArrayList<Integer> permute;	// permuted list of integers in range [0, dimx*dimy)
 
 
-	public Fire (int dimX, int dimY, PlantLayer canopy, PlantLayer undergrowth) {
+	public Fire (int dimX, int dimY) {
         this.dimX=dimX;
         this.dimY=dimY;
-        this.canopy = canopy;
-        this.undergrowth = undergrowth;
 
-        this.plantGrid=createPlantGrid(undergrowth,canopy);   //Every location with a plant is represented with a 1... otherwise 0 if none
+        traversal = new int[dimX*dimY];
+
+        this.plantGrid=createPlantGrid();   //Every location with a plant is represented with a 1... otherwise 0 if none
         fireGrid = new int[dimX][dimY];
         genPermute();   // create randomly permuted list of indices for traversal 
     }
+
+   // public void setDimX(int dimX){this.dimX=dimX;}
+   // public void setDimY(int dimY){this.dimY=dimY;}
+   // public void setCanopy(PlantLayer canopy){this.canopy=canopy;}
+   // public void setUnder(PlantLayer undergrowth){this.undergrowth=undergrowth;}
+
+   public void simulate(int segmentLow, int segmentHigh) {
+    // check each grid point to see if it has fire
+    // if it has fire then check all neighbours
+    // if it can move, then move it, otherwise go to next position
+
+    for (int i = segmentLow;i<segmentHigh;i++){
+        getPermute(i,traversal);
+
+        //Move fire if can:
+        if (isFire(traversal[0],traversal[1]) == true){
+            moveFire(traversal[0],traversal[1]);
+            
+        }
+    }
+}
 
     public boolean isFire(int x, int y){
         boolean firePresent = false;
@@ -44,9 +65,10 @@ public class Fire {
                     }
             }
         }
+        deriveFireImage();
     }
 
-    public int[][] createPlantGrid(PlantLayer under, PlantLayer can){
+    public int[][] createPlantGrid(){
         int[][] plantGrid = new int[dimX][dimY];
         //Using canopy and undergrowth - Populate Grid
         //...
@@ -67,7 +89,7 @@ public class Fire {
         double rand = Math.random() * 100;
         int chance = 20;
         
-        fireGrid[x][y]=2;   //ASH or Burnt (Darker red - For nice aesthetic)
+        fireGrid[x][y]=2;   //ASH cant move anymore
 
         if (plantGrid[x-1][y]==1){  //West ←
             //100% chance of fire spread
@@ -146,8 +168,13 @@ public class Fire {
 
         for (int x = 0; x < dimX; x++){
             for (int y = 0; y < dimY; y++){
-                if (fireGrid[x][y] != 0){
+                if (fireGrid[x][y] == 1){
                     g2d.fillRect(x,y,1,1);
+                } else if(fireGrid[x][y]==2){
+                    g2d.setColor(Color.DARK_GRAY);
+                    g2d.fillRect(x,y,1,1);
+                    g2d.setColor(Color.RED);
+
                 }
             }
         }
