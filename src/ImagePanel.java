@@ -124,10 +124,10 @@ public class ImagePanel extends JPanel{
 		//
 		circles = 0;
 		//
-		dimX = Terrain.getBaseX();
-		dimY = Terrain.getBaseY();
+		int dimX = Terrain.getBaseX();
+		int dimY = Terrain.getBaseY();
 		int scale = 1024/dimX;
-		
+
 		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
 		//BufferedImage img = new BufferedImage((int)dimX/zoomMultiplier,(int)dimY/zoomMultiplier,BufferedImage.TYPE_INT_ARGB);
 		double maxh = -10000.0f;
@@ -200,14 +200,14 @@ public class ImagePanel extends JPanel{
     public void derivePlants(){
 		//int dimx = Math.round(Terrain.getDimX()*scale);
 		//int dimy = Math.round(Terrain.getDimY()*scale);
-		int dimx = Math.round(Terrain.getDimX());
-		int dimy = Math.round(Terrain.getDimY());
+		dimX = Math.round(Terrain.getDimX());
+		dimY = Math.round(Terrain.getDimY());
   
-		BufferedImage img = new BufferedImage(dimx,dimy,BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = img.createGraphics();
   
 		imgGraphics.setComposite(AlphaComposite.Clear);
-		imgGraphics.fillRect(0,0, dimx, dimy);
+		imgGraphics.fillRect(0,0, dimX, dimY);
 		
 		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		//
@@ -245,7 +245,14 @@ public class ImagePanel extends JPanel{
 			
 			double xRelative = MouseInfo.getPointerInfo().getLocation().getX()-getLocationOnScreen().getX();
 			double yRelative = MouseInfo.getPointerInfo().getLocation().getY()-getLocationOnScreen().getY();
-
+			//System.out.println(xRelative + " " + yRelative);
+			double centerx;
+			if(xRelative > dimX/2) centerx = Math.min(Math.abs(xRelative - dimX), dimX/zoomMultiplier/2);
+			else centerx = Math.max(xRelative, dimX/zoomMultiplier/2);
+			double centery;
+			if(yRelative > dimY/2) centery = Math.min(Math.abs(yRelative - dimY), dimY/zoomMultiplier/2);
+			else centery = Math.max(yRelative, dimY/zoomMultiplier/2);
+			System.out.println(centerx + " " + centery);
 			double divident = zoomMultiplier/prevZoomMultiplier;
 
 			xOffset = divident * xOffset + (1-divident)*xRelative;
