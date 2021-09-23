@@ -28,26 +28,30 @@ public class Wind {
         speed = newS;
     }
 
+    public void toggleMetric(){
+      metric = !metric;
+    }
+
     //Accessor methods:
     public double getSpeed(){
-      return (metric ? speedKPH() : speedMPH());
+      return (metric ? getSpeedKPH() : getSpeedMPH());
     }
 
     public double getDirection(){
       return direction;
     }
 
-    public void toggleMetric(){
-      metric = !metric;
-    }
-
-    public double speedKPH(){
+    public double getSpeedKPH(){
       //Assuming speed from 0.0 - 100.0
       return speed/2;
     }
 
-    public double speedMPH(){
+    public double getSpeedMPH(){
       return (speed/2) * CONVERT;
+    }
+
+    public boolean getMetric(){
+      return metric;
     }
 
 }

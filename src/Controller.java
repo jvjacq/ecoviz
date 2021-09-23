@@ -1,8 +1,11 @@
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener{
     private Gui gui;
@@ -11,8 +14,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private PlantLayer undergrowth;
     private PlantLayer canopy;
     private FileController files;
-    private FireController fireController;
     private boolean fireMode;
+    private Fire fire;
+    private Timer timer;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
         this.gui = gui;
@@ -21,15 +25,15 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.undergrowth = undergrowth;
         this.canopy = canopy;
         this.files = new FileController();    
-        fireController = new FireController(Terrain.getDimX(),Terrain.getDimY(),undergrowth,canopy);
 
     }
 
     public void initController(){
+        gui.getRenderBtn().addActionListener(e -> renderFireSim());
         gui.getFireBtn().addActionListener(e -> openFireSim());
         gui.getBackBtn().addActionListener(e -> closeFireSim());
         gui.getLoadBtn().addActionListener(e -> loadFiles());
-        gui.getResetBtn().addActionListener(e -> fireController.getFire().clearGrid());
+        gui.getResetBtn().addActionListener(e ->resetFireSim());
         gui.getMenu1().addActionListener(e -> loadFiles());
         gui.getMenu2().addActionListener(e -> gui.exportView());
         gui.getMenu3().addActionListener(e -> goodbye());
@@ -44,28 +48,52 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         initView();
     }
 
+    public void resetFireSim(){
+        fire.clearGrid();
+        gui.repaint();
+        timer.cancel();
+    }
+
     public void openFireSim(){
         gui.getFireBtn().setVisible(false);
         gui.getBackBtn().setVisible(true);
-        gui.getPauseBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
-        gui.getPlayBtn().setVisible(true);
+        gui.getRenderBtn().setVisible(true);
         fireMode=true;
+
+        //Setup fire:
+        fire = new Fire(Terrain.getDimX(), Terrain.getDimY());
 
     }
 
     public void closeFireSim(){
         gui.getFireBtn().setVisible(true);
         gui.getBackBtn().setVisible(false);
-        gui.getPauseBtn().setVisible(false);
         gui.getResetBtn().setVisible(false);
-        gui.getPlayBtn().setVisible(false);
+        gui.getRenderBtn().setVisible(false);
+        resetFireSim();
         fireMode=false;
+        timer.cancel();
+
     }
 
-    public void runFireSim(){
-        System.out.println("Running Fire Simulation");
-        
+    public void renderFireSim(){
+        int delay = 10;
+        System.out.println("Running the Fire Simulation");
+        timer = new Timer();
+        timer.schedule(new TimerTask(){
+
+            @Override
+            public void run() {
+
+            fire.simulate(0,(Terrain.getDimX()*Terrain.getDimY()) );    //Run simulation on all
+            fire.deriveFireImage();
+            BufferedImage updatedFireImage = fire.getImage();
+            image.setFire(updatedFireImage);
+            image.repaint();
+            }
+            
+        }, 0, delay);
     }
 
     public void initView(){
@@ -185,9 +213,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     @Override
     public void mouseClicked(MouseEvent e) {
         Point click = e.getPoint();
+
         //Fire Placement:
         if (fireMode){
-            fireController.getFire().addFire(click.x, click.y);
+            fire.addFire(click.x, click.y);
+            BufferedImage updatedFireImage = fire.getImage();
+            image.setFire(updatedFireImage);
+            image.repaint();
             System.out.println("Fire Added");
         }else{
             int id = -1;
@@ -200,22 +232,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                     //System.out.println("Plant: " + plant.getX() + " " + plant.getY());
                     break;
                 }
+
             }
-            if(id > -1){
-                String[][] specieslist = Species.getSPECIES();
-                gui.setSpeciesDetails("Common name:\n" + specieslist[id][0] + "\nLatin name:\n" + specieslist[id][1]);
-            }
-            /*int col = image.getCanopy().getRGB(click.x, click.y);
-            int[] speciesColours = Species.getCOLOURS();
-            String[][] specieslist = Species.getSPECIES();
-            for(int idx = 0; idx < speciesColours.length; ++idx){
-                if(speciesColours[idx] == col){
-                    gui.setSpeciesDetails("Common name:\n" + specieslist[idx][0] + "\nLatin name:\n" + specieslist[idx][1]);
-                    break;
-                }
-            }*/
         }
-        
     }
 
     @Override
