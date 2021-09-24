@@ -92,7 +92,7 @@ public class Fire {
             fireGrid[x-1][y]=1; //FIRE
         }
 
-        if (plantGrid[x+1][y]==1 && fireGrid[x][y]!=1){  //East →
+        if (plantGrid[x+1][y]==1 && fireGrid[x][y]!=2){  //East →
             //100% chance of fire spread
             fireGrid[x+1][y]=1; //FIRE
 
@@ -101,7 +101,7 @@ public class Fire {
             fireGrid[x+1][y]=1; //FIRE
         }
 
-        if (plantGrid[x+1][y+1]==1 && fireGrid[x][y]!=1){  //North East 🡥
+        if (plantGrid[x+1][y+1]==1 && fireGrid[x][y]!=2){  //North East 🡥
             //100% chance of fire spread
             fireGrid[x+1][y+1]=1; //FIRE
 
@@ -110,7 +110,7 @@ public class Fire {
             fireGrid[x+1][y+1]=1; //FIRE
         }
 
-        if (plantGrid[x][y+1]==1 && fireGrid[x][y]!=1){  //North ↑
+        if (plantGrid[x][y+1]==1 && fireGrid[x][y]!=2){  //North ↑
             //100% chance of fire spread
             fireGrid[x][y+1]=1; //FIRE
 
@@ -119,7 +119,7 @@ public class Fire {
             fireGrid[x][y+1]=1; //FIRE
         }
 
-        if (plantGrid[x-1][y+1]==1 && fireGrid[x][y]!=1){  //North West 🡤
+        if (plantGrid[x-1][y+1]==1 && fireGrid[x][y]!=2){  //North West 🡤
             //100% chance of fire spread
             fireGrid[x-1][y+1]=1; //FIRE
 
@@ -128,7 +128,7 @@ public class Fire {
             fireGrid[x-1][y+1]=1; //FIRE
         }
 
-        if (plantGrid[x-1][y-1]==1 && fireGrid[x][y]!=1){  //South ↓
+        if (plantGrid[x-1][y-1]==1 && fireGrid[x][y]!=2){  //South ↓
             //100% chance of fire spread
             fireGrid[x-1][y]=1; //FIRE
 
@@ -137,7 +137,7 @@ public class Fire {
             fireGrid[x-1][y-1]=1; //FIRE
         }
 
-        if (plantGrid[x+1][y-1]==1 && fireGrid[x][y]!=1){  //South East 🡦
+        if (plantGrid[x+1][y-1]==1 && fireGrid[x][y]!=2){  //South East 🡦
             //100% chance of fire spread
             fireGrid[x+1][y-1]=1; //FIRE
 
@@ -146,7 +146,7 @@ public class Fire {
             fireGrid[x+1][y-1]=1; //FIRE
         }
 
-        if (plantGrid[x-1][y-1]==1 && fireGrid[x][y]!=1){  //South West 🡧
+        if (plantGrid[x-1][y-1]==1 && fireGrid[x][y]!=2){  //South West 🡧
             //100% chance of fire spread
             fireGrid[x-1][y-1]=1; //FIRE
 
