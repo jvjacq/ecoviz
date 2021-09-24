@@ -26,16 +26,17 @@ public class PlantLayer{
         this.idLocations[y][x][0] = speciesid;
         this.idLocations[y][x][1] = plantid;
         
-        //For FirSim:
-        //Create "hit box" (Currently a square XD)
-        this.plantGrid[y][x]=1; //!! x and y have been switched in certain cases (will cause issues when loading non square data)
-        /*for (int i=-1;i<1;i++){
-          for (int j = -1; j<1; j++){
+        //For FireSim:
+        //Create a simple hit box for each plant (Currently a square) : fiddle with this for better accuracy
+        //this.plantGrid[y][x]=1; //!! x and y have been switched in certain cases (will cause issues when loading non square data)
+
+        for (int i=-2;i<3;i++){
+          for (int j = -2; j<3; j++){
             if (i>=0 && i<Terrain.getDimX() && j>=0 && j<Terrain.getDimY()){
                 this.plantGrid[i][j]=1;
               }
           }
-        }*/
+        }
 
 
 
