@@ -43,6 +43,7 @@ public class ImagePanel extends JPanel{
 	private boolean showCanopy;
 	private boolean showUnderGrowth;
 
+	private int topleftx,toplefty,newDimX, newDimY;
 	//private float scale;
 
 	private int circles;
@@ -90,6 +91,22 @@ public class ImagePanel extends JPanel{
 
 	public BufferedImage getUndergrowth(){
 		return this.undergrowth;
+	}
+
+	public int getTLX(){
+		return this.topleftx;
+	}
+
+	public int getTLY(){
+		return this.toplefty;
+	}
+
+	public int getNewDimX(){
+		return this.newDimX;
+	}
+
+	public int getNewDimY(){
+		return this.newDimY;
 	}
 
 	/*public void setScale(float f){
@@ -242,8 +259,8 @@ public class ImagePanel extends JPanel{
 			yRelative += yOffset;
 			//int newDimX = (int)Math.floor(dimX/zoomMultiplier);
 			//int newDimY = (int)Math.floor(dimY/zoomMultiplier);
-			int newDimX = (int)Math.floor(dimX*scale);
-			int newDimY = (int)Math.floor(dimY*scale);
+			newDimX = (int)Math.floor(dimX*scale);
+			newDimY = (int)Math.floor(dimY*scale);
 			/*double centerx;
 			if(xRelative > dimX/2) centerx = dimX - Math.max(Math.abs(xRelative - dimX), newDimX/2);
 			else centerx = Math.max(xRelative, newDimX/2.0f + xOffset);
@@ -256,8 +273,8 @@ public class ImagePanel extends JPanel{
 			xOffset += Math.round(-1 * (xRelative * scalechange));
 			yOffset += Math.round(-1 * (yRelative * scalechange));
 			//System.out.println(xOffset + " " + yOffset);
-			int topleftx = (int)Math.max(xOffset,0.0f);
-			int toplefty = (int)Math.max(yOffset, 0.0f);
+			topleftx = (int)Math.max(xOffset,0.0f);
+			toplefty = (int)Math.max(yOffset, 0.0f);
 			if(topleftx + newDimX > dimX) topleftx = dimX - newDimX;
 			if(toplefty + newDimY > dimY) toplefty = dimY - newDimY;
 			
