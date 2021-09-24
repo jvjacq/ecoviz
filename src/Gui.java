@@ -122,6 +122,10 @@ public class Gui extends JPanel implements ChangeListener{
         return this.mainPanel;
     }
 
+    public miniMap getMini(){
+        return this.mini;
+    }
+
     public JPanel getEast(){
         return this.pnlEast;
     }
