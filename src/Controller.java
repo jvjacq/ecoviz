@@ -127,8 +127,16 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                     try{
                         files.readElevation(terrain, filenames[0]);
                         numSpecies = files.readSpecies(filenames[1]);
-                        files.readLayer(undergrowth, filenames[2], false);
+                        FileController fileRun = new FileController(filenames[2], undergrowth, false); 
+                        Thread fileThread = new Thread(fileRun);
+                        fileThread.start();
                         files.readLayer(canopy, filenames[3], true); //true = canopy
+                        //files.readLayer(canopy, filenames[3], true);
+                        try{
+                            fileThread.join();
+                        }catch(Exception e){
+                            System.out.println("Premature thread exit.");
+                        }
                         Collections.sort(PlantLayer.getPlantList());
                         System.out.println("All files read in successfully.");
                         refreshView();
