@@ -12,10 +12,24 @@ import java.io.*;
 import java.util.*;
 import java.awt.Color;
 
-public class FileController {
+public class FileController implements Runnable{
 
     private int totalPlants;
     private float scale;
+
+    private String threadFile;
+    private PlantLayer threadLayer;
+    private boolean threadCanopy;
+
+    public FileController(){
+        //
+    }
+
+    public FileController(String filename, PlantLayer layer, boolean canopy){
+        threadFile = filename;
+        threadLayer = layer;
+        threadCanopy = canopy;
+    }
 
     public boolean validateFiles(File[] list, String[] filenames){
         boolean elv = false, spc = false, undergrowth = false, canopy = false;
@@ -90,12 +104,14 @@ public class FileController {
         File file = new File(filename);
         Scanner filein = new Scanner(file);
 
+        scale = 1024/Terrain.getBaseX();
+        
         int numSpecies = filein.nextInt();
+        System.out.println(numSpecies);
         layer.setNumSpecies(numSpecies);
         //set location array based on dimensions
         layer.setLocations(Terrain.getDimX(), Terrain.getDimY());
         Species[] list = PlantLayer.getAllSpecies();
-        
 
         for (int i=0;i<numSpecies;++i){
             //Species average Details:
@@ -185,5 +201,16 @@ public class FileController {
         System.out.println("Species file processed.");
 
         return totalSpecies;
+    }
+
+    @Override
+    public void run() {
+        try{
+            readLayer(this.threadLayer, this.threadFile, this.threadCanopy);
+        }catch(FileNotFoundException e){
+            System.out.println("Thread read failed.");
+        }finally{
+            System.out.println("Thread terminated.");
+        }
     }
 }
