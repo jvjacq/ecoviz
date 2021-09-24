@@ -59,7 +59,7 @@ public class PlantLayer{
       PlantLayer.allSpecies[s.getSpeciesID()] = s;
     }
 
-    public static void addPlant(Plant plant){
+    synchronized public static void addPlant(Plant plant){
       PlantLayer.plantlist.add(plant);
     }
 
