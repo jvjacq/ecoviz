@@ -23,6 +23,14 @@ public class Fire {
         traversal = new int[dimX*dimY];
 
         this.plantGrid=plantGrid;   //Every location with a plant is represented with a 1... otherwise 0 if none
+        
+        /*for (int i=0;i<150;i++){
+            for (int j=0;j<150;j++){
+                System.out.print(plantGrid[i][j]);
+            } 
+            System.out.println();
+        }*/
+
         fireGrid = new int[dimX][dimY];
         genPermute();   // create randomly permuted list of indices for traversal 
     }
@@ -80,80 +88,85 @@ public class Fire {
 
     public void moveFire(int x, int y){
         double rand = Math.random() * 100;
-        double chance = 20;
+        double chance = 20; //Chance of moving if not a plant (i.e. ground/ash)
         
         fireGrid[x][y]=2;   //ASH cant move anymore
+        if (x>0 || y>0 || x<Terrain.getDimX() || y<Terrain.getDimY()){
 
-        if (plantGrid[x-1][y]==1 && fireGrid[x][y]!=2){  //West ←
-            //100% chance of fire spread
-            fireGrid[x-1][y]=1; //FIRE
-        } else if (rand < chance) {
-            //20% chance of fire spread
-            fireGrid[x-1][y]=1; //FIRE
-        }
+            if (plantGrid[x-1][y]==1 && fireGrid[x-1][y]!=2){  //West ←
+                //100% chance of fire spread
+                fireGrid[x-1][y]=1; //FIRE
+            } else if (rand < chance) {
+                //20% chance of fire spread
+                fireGrid[x-1][y]=1; //FIRE
+            }
 
-        if (plantGrid[x+1][y]==1 && fireGrid[x][y]!=2){  //East →
-            //100% chance of fire spread
-            fireGrid[x+1][y]=1; //FIRE
+            if (plantGrid[x+1][y]==1 && fireGrid[x+1][y]!=2){  //East →
+                //100% chance of fire spread
+                fireGrid[x+1][y]=1; //FIRE
 
-        } else if (rand < chance) {
-            //20% chance of fire spread
-            fireGrid[x+1][y]=1; //FIRE
-        }
+            } else if (rand < chance) {
+                //20% chance of fire spread
+                fireGrid[x+1][y]=1; //FIRE
+            }
 
-        if (plantGrid[x+1][y+1]==1 && fireGrid[x][y]!=2){  //North East 🡥
-            //100% chance of fire spread
-            fireGrid[x+1][y+1]=1; //FIRE
+            if (plantGrid[x+1][y+1]==1 && fireGrid[x+1][y+1]!=2){  //North East 🡥
+                //100% chance of fire spread
+                fireGrid[x+1][y+1]=1; //FIRE
 
-        } else if (rand < chance) {
-            //20% chance of fire spread
-            fireGrid[x+1][y+1]=1; //FIRE
-        }
+            } else if (rand < chance) {
+                //20% chance of fire spread
+                fireGrid[x+1][y+1]=1; //FIRE
+            }
 
-        if (plantGrid[x][y+1]==1 && fireGrid[x][y]!=2){  //North ↑
-            //100% chance of fire spread
-            fireGrid[x][y+1]=1; //FIRE
+            if (plantGrid[x][y+1]==1 && fireGrid[x][y+1]!=2){  //North ↑
+                //100% chance of fire spread
+                fireGrid[x][y+1]=1; //FIRE
 
-        } else if (rand < chance) {
-            //20% chance of fire spread
-            fireGrid[x][y+1]=1; //FIRE
-        }
+            } else if (rand < chance) {
+                //20% chance of fire spread
+                fireGrid[x][y+1]=1; //FIRE
+            }
 
-        if (plantGrid[x-1][y+1]==1 && fireGrid[x][y]!=2){  //North West 🡤
-            //100% chance of fire spread
-            fireGrid[x-1][y+1]=1; //FIRE
+            if (plantGrid[x-1][y+1]==1 && fireGrid[x-1][y+1]!=2){  //North West 🡤
+                //100% chance of fire spread
+                fireGrid[x-1][y+1]=1; //FIRE
 
-        } else if (rand < chance) {
-            //20% chance of fire spread
-            fireGrid[x-1][y+1]=1; //FIRE
-        }
+            } else if (rand < chance) {
+                //20% chance of fire spread
+                fireGrid[x-1][y+1]=1; //FIRE
+            }
 
-        if (plantGrid[x-1][y-1]==1 && fireGrid[x][y]!=2){  //South ↓
-            //100% chance of fire spread
-            fireGrid[x-1][y]=1; //FIRE
+            if (plantGrid[x-1][y-1]==1 && fireGrid[x-1][y-1]!=2){  //South ↓
+                //100% chance of fire spread
+                fireGrid[x-1][y-1]=1; //FIRE
 
-        } else if (rand < chance) {
-            //20% chance of fire spread
-            fireGrid[x-1][y-1]=1; //FIRE
-        }
+            } else if (rand < chance) {
+                //20% chance of fire spread
+                fireGrid[x-1][y-1]=1; //FIRE
+            }
 
-        if (plantGrid[x+1][y-1]==1 && fireGrid[x][y]!=2){  //South East 🡦
-            //100% chance of fire spread
-            fireGrid[x+1][y-1]=1; //FIRE
+            if (plantGrid[x+1][y-1]==1 && fireGrid[x+1][y-1]!=2){  //South East 🡦
+                //100% chance of fire spread
+                fireGrid[x+1][y-1]=1; //FIRE
 
-        } else if (rand < chance) {
-            //20% chance of fire spread
-            fireGrid[x+1][y-1]=1; //FIRE
-        }
+            } else if (rand < chance) {
+                //20% chance of fire spread
+                fireGrid[x+1][y-1]=1; //FIRE
+            }
 
-        if (plantGrid[x-1][y-1]==1 && fireGrid[x][y]!=2){  //South West 🡧
-            //100% chance of fire spread
-            fireGrid[x-1][y-1]=1; //FIRE
+            if (plantGrid[x-1][y-1]==1 && fireGrid[x-1][y-1]!=2){  //South West 🡧
+                //100% chance of fire spread
+                fireGrid[x-1][y-1]=1; //FIRE
 
-        } else if (rand < chance) {
-            //20% chance of fire spread
-            fireGrid[x-1][y-1]=1; //FIRE
-        }
+            } else if (rand < chance) {
+                //20% chance of fire spread
+                fireGrid[x-1][y-1]=1; //FIRE
+            }
+
+        }  
+
+        
     }
 
     public BufferedImage getImage(){

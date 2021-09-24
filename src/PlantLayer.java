@@ -25,19 +25,17 @@ public class PlantLayer{
     public void setPlantAtLocation(int x, int y, int speciesid, int plantid){
         this.idLocations[y][x][0] = speciesid;
         this.idLocations[y][x][1] = plantid;
-        
         //For FireSim:
         //Create a simple hit box for each plant (Currently a square) : fiddle with this for better accuracy
-        //this.plantGrid[y][x]=1; //!! x and y have been switched in certain cases (will cause issues when loading non square data)
+        this.plantGrid[y][x]=1; //!! x and y have been switched in certain cases (will cause issues when loading non square data)
 
-        for (int i=-2;i<3;i++){
+       /* for (int i=-2;i<3;i++){
           for (int j = -2; j<3; j++){
-            if (i>=0 && i<Terrain.getDimX() && j>=0 && j<Terrain.getDimY()){
-                this.plantGrid[i][j]=1;
+            if ((x+i)>=0 && (x+i)<Terrain.getDimX() && (y+j)>=0 && (y+j)<Terrain.getDimY()){
+                this.plantGrid[x+i][y+j]=1;
               }
           }
-        }
-
+        }*/
 
 
     }
