@@ -180,6 +180,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         //gui.getMain().setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale())+220,Math.round(Terrain.getDimY()*image.getScale())+100));
         image.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
         addSpeciesFilters();
+        gui.getMini().setZone(0, 0, Terrain.getDimX(), Terrain.getDimY());
         gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX()+220,Terrain.getDimY()+100));
         gui.getMain().pack();
         gui.getMain().setLocationRelativeTo(null);      
@@ -237,7 +238,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             if(multiplier < 1) multiplier = 1;
             image.setZoomMult(multiplier);
 			image.repaint();
-		}        
+		}
+        System.out.println(image.getTLX() + " "+  image.getTLY() + " "+ image.getNewDimX()+ " "+ image.getNewDimY());
+        gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
+        gui.getMini().repaint();       
     }
 
     @Override
