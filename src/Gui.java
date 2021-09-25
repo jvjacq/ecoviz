@@ -311,7 +311,7 @@ public class Gui extends JPanel implements ChangeListener{
             btnFire = new JButton("Simulate Fire");
             btnBack = new JButton("Leave Fire Simulator");
 
-            btnRender = new JButton("Render (Temp Run)");
+            btnRender = new JButton("Run");
             btnRender.setVisible(false);
 
             btnPause = new JButton("Pause");

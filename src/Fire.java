@@ -11,7 +11,6 @@ public class Fire {
 	private int [][] fireGrid;
 	private int [][] plantGrid;
     private int[] traversal;
-
 	private BufferedImage fireImage;
     private ArrayList<Integer> permute;	// permuted list of integers in range [0, dimx*dimy)
 
@@ -23,13 +22,6 @@ public class Fire {
         traversal = new int[dimX*dimY];
 
         this.plantGrid=plantGrid;   //Every location with a plant is represented with a 1... otherwise 0 if none
-        
-        /*for (int i=0;i<150;i++){
-            for (int j=0;j<150;j++){
-                System.out.print(plantGrid[i][j]);
-            } 
-            System.out.println();
-        }*/
 
         fireGrid = new int[dimX][dimY];
         genPermute();   // create randomly permuted list of indices for traversal 
@@ -88,8 +80,7 @@ public class Fire {
 
     public void moveFire(int x, int y){
         double rand = Math.random() * 100;
-        double chance = 20; //Chance of moving if not a plant (i.e. ground/ash)
-        
+        double chance = 15; //Chance of moving if not a plant (i.e. ground/ash) (Lower has better performance)
         fireGrid[x][y]=2;   //ASH cant move anymore
         if (x>0 || y>0 || x<Terrain.getDimX() || y<Terrain.getDimY()){
             try{

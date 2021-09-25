@@ -21,6 +21,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private Fire fire;
     private Timer timer;
     private int delay;
+    private boolean running;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
         this.gui = gui;
@@ -29,13 +30,15 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.undergrowth = undergrowth;
         this.canopy = canopy;
         this.files = new FileController();    
-
+        running = false;
+        delay = 25;//default
     }
 
     public void initController(){
         gui.getRenderBtn().addActionListener(e -> renderFireSim());
         gui.getFireBtn().addActionListener(e -> openFireSim());
         gui.getBackBtn().addActionListener(e -> closeFireSim());
+        gui.getPauseBtn().addActionListener(e -> pauseFireSim());
         gui.getLoadBtn().addActionListener(e -> loadFiles());
         gui.getResetBtn().addActionListener(e ->resetFireSim());
         gui.getMenu1().addActionListener(e -> loadFiles());
@@ -56,18 +59,26 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void resetFireSim(){
         fire.clearGrid();
+        fire.deriveFireImage();
+        BufferedImage updatedFireImage = fire.getImage();
+        image.setFire(updatedFireImage);
         gui.repaint();
-        timer.cancel();
+
+
+        //timer.cancel();
     }
+    
+
 
     public void openFireSim(){
 
         gui.getFireBtn().setVisible(false);
+        gui.getPauseBtn().setVisible(true);
         gui.getBackBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
         gui.getRenderBtn().setVisible(true);
         fireMode=true;
-
+        gui.getPauseBtn().setEnabled(false);
         //Setup fire:
         fire = new Fire(Terrain.getDimX(), Terrain.getDimY(),undergrowth.getPlantGrid());
 
@@ -81,27 +92,48 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         resetFireSim();
         fireMode=false;
         timer.cancel();
+        gui.getRenderBtn().setEnabled(true);
+        gui.getPauseBtn().setEnabled(false);
+
 
     }
+    
+    public void pauseFireSim(){
+        if (running==false){
+            running=true;
+            gui.getPauseBtn().setText("Pause");
+        }else{
+            running=false;
+            gui.getPauseBtn().setText("Play");
 
-    public void renderFireSim(){
-        delay = 25;//default
+        }
+        
+        
+    }
+
+    public void renderFireSim(){    //Single use
+        
         System.out.println("Running the Fire Simulation");
+        gui.getPauseBtn().setEnabled(true);
+        running=true;
         timer = new Timer();
         timer.schedule(new TimerTask(){
 
             @Override
             public void run() {
             
-            delay = gui.getDelay();
+            if (running){
+            //delay = gui.getDelay();
             fire.simulate(0,(Terrain.getDimX()*Terrain.getDimY()));    //Run simulation on all
             fire.deriveFireImage();
             BufferedImage updatedFireImage = fire.getImage();
             image.setFire(updatedFireImage);
             image.repaint();
             }
+            }
             
         }, 0, delay);
+        gui.getRenderBtn().setEnabled(false);
     }
 
     public void initView(){
