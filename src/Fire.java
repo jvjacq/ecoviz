@@ -92,7 +92,7 @@ public class Fire {
         
         fireGrid[x][y]=2;   //ASH cant move anymore
         if (x>0 || y>0 || x<Terrain.getDimX() || y<Terrain.getDimY()){
-
+            try{
             if (plantGrid[x-1][y]==1 && fireGrid[x-1][y]!=2){  //West ←
                 //100% chance of fire spread
                 fireGrid[x-1][y]=1; //FIRE
@@ -163,6 +163,9 @@ public class Fire {
                 //20% chance of fire spread
                 fireGrid[x-1][y-1]=1; //FIRE
             }
+        }catch (Exception e){
+
+        }
 
         }  
 

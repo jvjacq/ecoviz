@@ -146,16 +146,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     private boolean insideCanopy(Point point, Plant plant){
-        //int x = Math.round(point.x/image.getScale());
-        //int y = Math.round(point.y/image.getScale());
         return (Math.pow((point.x - plant.getX()),2) + Math.pow((point.y - plant.getY()),2) ) <= Math.pow(plant.getCanopy(),2);
     }
 
     public void changeSpeciesColour(int id){
         Species[] specieslist = PlantLayer.getAllSpecies();
-        //int[] colours = Species.getCOLOURS();
         Color c = new Color(0,0,0,1.0f);
-        //colours[id] = c.getRGB();
         Color prev = specieslist[id].getColour();
         specieslist[id].setColour(c);
         image.derivePlants();
@@ -166,13 +162,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void refreshView(){
         gui.getLoadFrame().setVisible(false);
         gui.getEast().setPreferredSize(new Dimension(200,Terrain.getDimY()));
-        //image.setScale(1024/Terrain.getDimX());
         image.deriveImg(terrain);
         image.derivePlants();
-        //image.deriveImg(undergrowth, false);
-        //image.deriveImg(canopy, true);
-        //image.setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale()),Math.round(Terrain.getDimY()*image.getScale())));
-        //gui.getMain().setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale())+220,Math.round(Terrain.getDimY()*image.getScale())+100));
         image.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
         addSpeciesFilters();
         gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX()+220,Terrain.getDimY()+100));
