@@ -37,7 +37,7 @@ public class ImagePanel extends JPanel{
 
 	private boolean dragger,released;
 	private double xOffset,yOffset;
-	private int xDiff,yDiff;
+	private double xDiff,yDiff;
 	private Point startPoint;
 
 	private boolean showCanopy;
@@ -117,11 +117,11 @@ public class ImagePanel extends JPanel{
 		this.startPoint = p;
 	}
 
-	public void setXDiff(int x){
+	public void setXDiff(double x){
 		this.xDiff = x;
 	}
 
-	public void setYDiff(int y){
+	public void setYDiff(double y){
 		this.yDiff = y;
 	}
 
@@ -237,10 +237,15 @@ public class ImagePanel extends JPanel{
 			affine.translate(xOffset+xDiff,yOffset+yDiff);
 			affine.scale(zoomMultiplier,zoomMultiplier);
 			graphics2d.transform(affine);*/
-
+			xOffset -= 0.05*xDiff;
+			yOffset -= 0.05*yDiff;
+			if(xOffset < 0) xOffset = 0;
+			if(xOffset > dimX - newDimX) xOffset = dimX-newDimX;
+			if(yOffset < 0) yOffset = 0;
+			if(yOffset > dimY - newDimY) yOffset = dimY-newDimY;
 			if (released){
-				xOffset += xDiff;
-				yOffset += yDiff;
+				//xOffset += xDiff;
+				//yOffset += yDiff;
 				//zoomPlants
 				dragger = false;
 			}
