@@ -60,6 +60,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void openFireSim(){
+
         gui.getFireBtn().setVisible(false);
         gui.getBackBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
@@ -67,7 +68,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         fireMode=true;
 
         //Setup fire:
-        fire = new Fire(Terrain.getDimX(), Terrain.getDimY());
+        fire = new Fire(Terrain.getDimX(), Terrain.getDimY(),undergrowth.getPlantGrid());
 
     }
 
@@ -83,7 +84,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void renderFireSim(){
-        int delay = 10;
+        int delay = 25;
         System.out.println("Running the Fire Simulation");
         timer = new Timer();
         timer.schedule(new TimerTask(){
