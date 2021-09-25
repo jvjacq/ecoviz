@@ -12,9 +12,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-
+import javax.swing.event.*;
 import com.formdev.flatlaf.*;
 
 public class Gui extends JPanel implements ChangeListener{
@@ -29,6 +27,7 @@ public class Gui extends JPanel implements ChangeListener{
     private ImagePanel mainPanel;
     private JButton btnFire;
     private JButton btnBack;
+    private int delay;
 
     //FireSim Controls:
     private JButton btnRender;
@@ -58,6 +57,10 @@ public class Gui extends JPanel implements ChangeListener{
 
     public JFrame getLoadFrame(){
         return this.loadIn;
+    }
+
+    public int getDelay(){
+        return delay;
     }
 
     public JButton getFireBtn(){
@@ -139,6 +142,7 @@ public class Gui extends JPanel implements ChangeListener{
     }
 
     public Gui() {
+        delay=75; //default
         //canopy=c;
         //undergrowth=u;
         //======================================================================
@@ -169,6 +173,7 @@ public class Gui extends JPanel implements ChangeListener{
         //      Frame:
         //======================================================================
         frame = new JFrame("EcoViz");
+
         //frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -178,10 +183,6 @@ public class Gui extends JPanel implements ChangeListener{
         //      West Panel (MAIN PANEL) : 
         //======================================================================
         mainPanel = new ImagePanel();
-            /*mainPanel.deriveImg(terrain);
-            mainPanel.deriveImg(canopy, true);
-            mainPanel.deriveImg(undergrowth, false);
-            mainPanel.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));*/
             mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 
@@ -459,6 +460,27 @@ public class Gui extends JPanel implements ChangeListener{
 
         pointerLbl.setText("Wind Direction: "+Integer.toString(wDirSlider.getValue())+" Degrees");
         lblSpeed.setText("Simulation Speed: x"+Integer.toString(spdSlider.getValue()));
+
+        //delay = 75; // default
+        switch(Integer.toString(spdSlider.getValue())){
+            case "1":
+                delay = 125;
+                break;
+            case "2":
+                delay = 100;
+                break;
+            case "3":
+                delay = 75;
+                break;
+            case "4":
+                delay = 50;
+                break;
+            case "5":
+                delay = 25;
+                break;
+
+        }
+
     }
 
     /*@Override

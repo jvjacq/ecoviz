@@ -20,6 +20,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private int numSpecies;
     private Fire fire;
     private Timer timer;
+    private int delay;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
         this.gui = gui;
@@ -84,15 +85,16 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void renderFireSim(){
-        int delay = 25;
+        delay = 25;//default
         System.out.println("Running the Fire Simulation");
         timer = new Timer();
         timer.schedule(new TimerTask(){
 
             @Override
             public void run() {
-
-            fire.simulate(0,(Terrain.getDimX()*Terrain.getDimY()) );    //Run simulation on all
+            
+            delay = gui.getDelay();
+            fire.simulate(0,(Terrain.getDimX()*Terrain.getDimY()));    //Run simulation on all
             fire.deriveFireImage();
             BufferedImage updatedFireImage = fire.getImage();
             image.setFire(updatedFireImage);
