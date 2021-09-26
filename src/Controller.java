@@ -94,6 +94,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         timer.cancel();
         gui.getRenderBtn().setEnabled(true);
         gui.getPauseBtn().setEnabled(false);
+        image.repaint();
 
 
     }
