@@ -6,6 +6,8 @@
 */
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
@@ -46,6 +48,19 @@ public class Gui extends JPanel implements ChangeListener{
     private JLabel lblSpeed;
     private JPanel pnlFilters;
     private JCheckBox[] filterlist;
+    
+    private String common;
+    private String latin;
+    private String shortest;
+    private String tallest;
+    private String avgRat;
+    private String totNum;
+    private JLabel lblCommon;
+    private JLabel lblLatin;
+    private JLabel lblTall;
+    private JLabel lblShort;
+    private JLabel lblAvg;
+    private JLabel lblNum;
 
     //Filter Section:
     private JLabel lblSearch;
@@ -198,7 +213,7 @@ public class Gui extends JPanel implements ChangeListener{
         pnlEast.setPreferredSize(new Dimension(200,Terrain.getDimY()));
         pnlEast.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         pnlEast.setBorder(BorderFactory.createRaisedBevelBorder());
-        pnlEast.setLayout(new BoxLayout(pnlEast,BoxLayout.PAGE_AXIS));
+        pnlEast.setLayout(new BorderLayout());
 
         fontExample = new JLabel(); 
         Font f = fontExample.getFont();
@@ -243,17 +258,74 @@ public class Gui extends JPanel implements ChangeListener{
 
         ////********************************************************** */
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setPreferredSize(new Dimension(200,250));
+        tabbedPane.setPreferredSize(new Dimension(200,550));
 
         //ImageIcon icon = createImageIcon("");
 
         //Details on Demand:
         JPanel pnlDetails = new JPanel();
+        //pnlDetails.setLayout(new BoxLayout(pnlDetails, BoxLayout.PAGE_AXIS ));
             JLabel lblDetails = new JLabel("Details on Demand");
             lblDetails.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
             //Add components to Details on Demand Panel
             pnlDetails.add(lblDetails);
-            pnlDetails.add(plantDescription);
+            
+            JLabel comTitle = new JLabel("Common Name:");
+            comTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+            JLabel latTitle = new JLabel("Latin Name:");
+            latTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+            JLabel shTitle = new JLabel("Shortest Plant:");
+            shTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+            JLabel taTitle = new JLabel("Latest Plant:");
+            taTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+            JLabel avTitle = new JLabel("Avg. Ration of Canopy/Height:");
+            avTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+            JLabel numTitle = new JLabel("Number of Plants:");
+            numTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+
+            lblCommon = new JLabel();
+            lblLatin = new JLabel();
+            lblAvg = new JLabel();
+            lblShort = new JLabel();
+            lblTall = new JLabel();
+            lblNum = new JLabel();
+
+            JPanel pnlName = new JPanel();
+            pnlName.setBackground(new Color(31, 36, 43));
+            pnlName.setLayout(new BoxLayout(pnlName, BoxLayout.PAGE_AXIS ));
+            Border b1 = BorderFactory.createTitledBorder("Names");
+            pnlName.add(comTitle);
+            pnlName.add(lblCommon);
+            pnlName.add(latTitle);
+            pnlName.add(lblLatin);
+            pnlName.setBorder(b1);
+            
+
+            JPanel pnlHeight = new JPanel();
+            pnlHeight.setBackground(new Color(31, 36, 43));
+            pnlHeight.setLayout(new BoxLayout(pnlHeight, BoxLayout.PAGE_AXIS ));
+            Border b2 = BorderFactory.createTitledBorder("Heights");
+            pnlHeight.add(shTitle);
+            pnlHeight.add(lblShort);
+            pnlHeight.add(taTitle);
+            pnlHeight.add(lblTall);
+            pnlHeight.setBorder(b2);
+
+            JPanel pnlStats = new JPanel();
+            pnlStats.setBackground(new Color(31, 36, 43));
+            pnlStats.setLayout(new BoxLayout(pnlStats, BoxLayout.PAGE_AXIS ));
+            Border b3 = BorderFactory.createTitledBorder("Stats");
+            pnlStats.add(avTitle);
+            pnlStats.add(lblAvg);
+            pnlStats.add(numTitle);
+            pnlStats.add(lblNum);
+            pnlStats.setBorder(b3);
+
+
+            pnlDetails.add(pnlName);
+            pnlDetails.add(pnlHeight);
+            pnlDetails.add(pnlStats);
+            //pnlDetails.add(plantDescription);
 
         tabbedPane.addTab("Details",null,pnlDetails,"Shows Details on Demand");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
@@ -291,14 +363,12 @@ public class Gui extends JPanel implements ChangeListener{
         ////********************************************************** */
 
         //DRAW MINIMAP
-        //mini = new miniMap(mainPanel.getTerrain(), mainPanel.getCanopy(), mainPanel.getUndergrowth());
         mini = new miniMap(mainPanel);
         mini.setPreferredSize(new Dimension(200,200));
         mini.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         mini.setOpaque(false);
 
-        //pnlEast.setBackground(new Color(85,193,219));
-        pnlEast.add(tabbedPane);
+        pnlEast.add(tabbedPane,BorderLayout.NORTH);
         pnlEast.add(mini,BorderLayout.SOUTH);
 
 
@@ -413,7 +483,32 @@ public class Gui extends JPanel implements ChangeListener{
     public void setSpeciesDetails(String s){
         this.plantDescription.setText(s);
     }
-
+    //////
+    public void setCommon(String c){
+        common = c;
+        lblCommon.setText(common);
+    }
+    public void setLatin(String l){
+        latin = l;
+        lblLatin.setText(latin);
+    }
+    public void setShortest(String s){
+        shortest = s;
+        lblShort.setText(shortest+"m");
+    }
+    public void setTallest(String t){
+        tallest = t;
+        lblTall.setText(tallest+"m");
+    }
+    public void setAvg(String a){
+        avgRat=a;
+        lblAvg.setText(avgRat);
+    }
+    public void setNumber(String n){
+        totNum=n;
+        lblNum.setText(totNum);
+    }
+    //////
     public void exportView(){
         JFrame popup = new JFrame();
         String name = JOptionPane.showInputDialog(popup, "Save As:");
@@ -480,25 +575,5 @@ public class Gui extends JPanel implements ChangeListener{
                 break;
 
         }
-
     }
-
-    /*@Override
-    public void itemStateChanged(ItemEvent e) {
-        
-        if (ChkCanopy.isSelected()){ mainPanel.setShowCanopy(true);; }else{mainPanel.setShowCanopy(false);}
-
-        if (ChkUnderGrowth.isSelected()){ mainPanel.setSHowUnderGrowth(true); }else{mainPanel.setSHowUnderGrowth(false);}
-        
-    }*/
-
-    protected JComponent makeTextPanel(String text){//Taken from tabbedPane.java demo (Oracle)
-        JPanel panel = new JPanel(false);
-        JLabel filler = new JLabel(text);
-        filler.setHorizontalAlignment(JLabel.CENTER);
-        panel.setLayout(new GridLayout(1,1));
-        panel.add(filler);
-        return panel;
-    }
-
 }

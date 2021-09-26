@@ -296,13 +296,28 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
             }
             if(id > -1){
-                Species[] specieslist = PlantLayer.getAllSpecies();
-                gui.setSpeciesDetails(specieslist[id].toString());
+                setDesc(id);
+                //gui.setSpeciesDetails(specieslist[id].toString());
+                    
+
             }else{
                 gui.setSpeciesDetails("Select any plant to \n view details!");
                 image.repaint();
             }
         }
+    }
+
+    public void setDesc(int id){
+        Species[] specieslist = PlantLayer.getAllSpecies();
+        gui.setCommon(specieslist[id].getCommon());
+        gui.setLatin(specieslist[id].getLatin());
+        gui.setTallest(Float.toString(specieslist[id].getMaxHeight()));
+        gui.setShortest(Float.toString(specieslist[id].getMinHeight()));
+        gui.setAvg(Float.toString(specieslist[id].getAvgRatio()));
+        gui.setNumber(Integer.toString(specieslist[id].getNumPlants()));
+
+
+
     }
 
     @Override
