@@ -20,6 +20,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private int numSpecies;
     private Fire fire;
     private Timer timer;
+    private int delay;
+    private boolean running;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
         this.gui = gui;
@@ -28,13 +30,15 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.undergrowth = undergrowth;
         this.canopy = canopy;
         this.files = new FileController();    
-
+        running = false;
+        delay = 25;//default
     }
 
     public void initController(){
         gui.getRenderBtn().addActionListener(e -> renderFireSim());
         gui.getFireBtn().addActionListener(e -> openFireSim());
         gui.getBackBtn().addActionListener(e -> closeFireSim());
+        gui.getPauseBtn().addActionListener(e -> pauseFireSim());
         gui.getLoadBtn().addActionListener(e -> loadFiles());
         gui.getResetBtn().addActionListener(e ->resetFireSim());
         gui.getMenu1().addActionListener(e -> loadFiles());
@@ -55,19 +59,28 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void resetFireSim(){
         fire.clearGrid();
+        fire.deriveFireImage();
+        BufferedImage updatedFireImage = fire.getImage();
+        image.setFire(updatedFireImage);
         gui.repaint();
-        timer.cancel();
+
+
+        //timer.cancel();
     }
+    
+
 
     public void openFireSim(){
+
         gui.getFireBtn().setVisible(false);
+        gui.getPauseBtn().setVisible(true);
         gui.getBackBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
         gui.getRenderBtn().setVisible(true);
         fireMode=true;
-
+        gui.getPauseBtn().setEnabled(false);
         //Setup fire:
-        fire = new Fire(Terrain.getDimX(), Terrain.getDimY());
+        fire = new Fire(Terrain.getDimX(), Terrain.getDimY(),undergrowth.getPlantGrid());
 
     }
 
@@ -79,26 +92,49 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         resetFireSim();
         fireMode=false;
         timer.cancel();
+        gui.getRenderBtn().setEnabled(true);
+        gui.getPauseBtn().setEnabled(false);
+        image.repaint();
+
 
     }
+    
+    public void pauseFireSim(){
+        if (running==false){
+            running=true;
+            gui.getPauseBtn().setText("Pause");
+        }else{
+            running=false;
+            gui.getPauseBtn().setText("Play");
 
-    public void renderFireSim(){
-        int delay = 10;
+        }
+        
+        
+    }
+
+    public void renderFireSim(){    //Single use
+        
         System.out.println("Running the Fire Simulation");
+        gui.getPauseBtn().setEnabled(true);
+        running=true;
         timer = new Timer();
         timer.schedule(new TimerTask(){
 
             @Override
             public void run() {
-
-            fire.simulate(0,(Terrain.getDimX()*Terrain.getDimY()) );    //Run simulation on all
+            
+            if (running){
+            //delay = gui.getDelay();
+            fire.simulate(0,(Terrain.getDimX()*Terrain.getDimY()));    //Run simulation on all
             fire.deriveFireImage();
             BufferedImage updatedFireImage = fire.getImage();
             image.setFire(updatedFireImage);
             image.repaint();
             }
+            }
             
         }, 0, delay);
+        gui.getRenderBtn().setEnabled(false);
     }
 
     public void initView(){
@@ -143,16 +179,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     private boolean insideCanopy(Point point, Plant plant){
-        //int x = Math.round(point.x/image.getScale());
-        //int y = Math.round(point.y/image.getScale());
         return (Math.pow((point.x - plant.getX()),2) + Math.pow((point.y - plant.getY()),2) ) <= Math.pow(plant.getCanopy(),2);
     }
 
     public void changeSpeciesColour(int id){
         Species[] specieslist = PlantLayer.getAllSpecies();
-        //int[] colours = Species.getCOLOURS();
         Color c = new Color(0,0,0,1.0f);
-        //colours[id] = c.getRGB();
         Color prev = specieslist[id].getColour();
         specieslist[id].setColour(c);
         image.derivePlants();
@@ -163,13 +195,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void refreshView(){
         gui.getLoadFrame().setVisible(false);
         gui.getEast().setPreferredSize(new Dimension(200,Terrain.getDimY()));
-        //image.setScale(1024/Terrain.getDimX());
         image.deriveImg(terrain);
         image.derivePlants();
-        //image.deriveImg(undergrowth, false);
-        //image.deriveImg(canopy, true);
-        //image.setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale()),Math.round(Terrain.getDimY()*image.getScale())));
-        //gui.getMain().setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale())+220,Math.round(Terrain.getDimY()*image.getScale())+100));
         image.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
         addSpeciesFilters();
         gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX()+220,Terrain.getDimY()+100));
@@ -269,13 +296,28 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
             }
             if(id > -1){
-                Species[] specieslist = PlantLayer.getAllSpecies();
-                gui.setSpeciesDetails(specieslist[id].toString());
+                setDesc(id);
+                //gui.setSpeciesDetails(specieslist[id].toString());
+                    
+
             }else{
                 gui.setSpeciesDetails("Select any plant to \n view details!");
                 image.repaint();
             }
         }
+    }
+
+    public void setDesc(int id){
+        Species[] specieslist = PlantLayer.getAllSpecies();
+        gui.setCommon(specieslist[id].getCommon());
+        gui.setLatin(specieslist[id].getLatin());
+        gui.setTallest(Float.toString(specieslist[id].getMaxHeight()));
+        gui.setShortest(Float.toString(specieslist[id].getMinHeight()));
+        gui.setAvg(Float.toString(specieslist[id].getAvgRatio()));
+        gui.setNumber(Integer.toString(specieslist[id].getNumPlants()));
+
+
+
     }
 
     @Override
