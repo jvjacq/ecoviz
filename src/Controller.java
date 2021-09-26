@@ -163,7 +163,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         //colours[id] = c.getRGB();
         Color prev = specieslist[id].getColour();
         specieslist[id].setColour(c);
-        image.derivePlants();
+        image.deriveImage();
         image.repaint();
         //while(!image.getPainted()){}
         //image.setPainted(false);
@@ -175,7 +175,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getEast().setPreferredSize(new Dimension(200,Terrain.getDimY()));
         //image.setScale(1024/Terrain.getDimX());
         image.deriveImg(terrain);
-        image.derivePlants();
+        image.deriveImage();
         //image.deriveImg(undergrowth, false);
         //image.deriveImg(canopy, true);
         //image.setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale()),Math.round(Terrain.getDimY()*image.getScale())));
@@ -212,7 +212,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 list[idx].setFilter(false); 
             }
         }
-        image.derivePlants();
+        image.deriveImage();
         image.repaint();
         //
         //image.setPainted(false);
@@ -225,7 +225,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         if (gui.getChkUndergrowth().isSelected()) image.setShowUnderGrowth(true); 
         else image.setShowUnderGrowth(false);
-        image.derivePlants();
+        image.deriveImage();
         image.repaint();
         //
         //image.setPainted(false);
@@ -239,20 +239,22 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 		if (e.getWheelRotation() < 0) {	// Zoom in
 			multiplier *=1.1;	//Adjust for smoothness
             image.setZoomMult(multiplier);
+            image.deriveImage();
 			image.repaint();
 		}
 		if (e.getWheelRotation() > 0) {	// Zoom out
 			multiplier /=1.1;	//Adjust for smoothness
             if(multiplier < 1) multiplier = 1;
             image.setZoomMult(multiplier);
+            image.deriveImage();
 			image.repaint();
 		}
-        System.out.println("should be done painting...");
+        //System.out.println("should be done painting...");
         /*while(!image.getPainted()){
             continue;
         }
         image.setPainted(false);*/
-        System.out.println(image.getTLX() + " "+  image.getTLY() + " "+ image.getNewDimX()+ " "+ image.getNewDimY());
+        //System.out.println(image.getTLX() + " "+  image.getTLY() + " "+ image.getNewDimX()+ " "+ image.getNewDimY());
         gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
         //gui.getMini().repaint();
                
@@ -266,6 +268,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 		image.setYDiff(cursor.y - image.getStartY());
 
 		image.setDragger(true);
+        image.deriveImage();
 		image.repaint();
         //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
         //gui.getMini().repaint();
@@ -285,6 +288,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             fire.addFire(click.x, click.y);
             BufferedImage updatedFireImage = fire.getImage();
             image.setFire(updatedFireImage);
+            //image.deriveImage();
             image.repaint();
             System.out.println("Fire Added");
         }else{
@@ -308,7 +312,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 //System.out.println("why");
             }else{
                 gui.setSpeciesDetails("Select any plant to \n view details!");
-                image.derivePlants();
+                image.deriveImage();
                 image.repaint();
             }
         }
@@ -324,6 +328,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     @Override
 	public void mouseReleased(MouseEvent e) {
 		image.setReleased(true);
+        image.deriveImage();
         image.repaint();
 		//image.repaint();
 		
