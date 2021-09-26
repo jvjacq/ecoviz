@@ -12,10 +12,101 @@ import java.io.*;
 import java.util.*;
 import java.awt.Color;
 
-public class FileController {
+public class FileController implements Runnable{
 
     private int totalPlants;
     private float scale;
+
+    private String threadFile;
+    private PlantLayer threadLayer;
+    private boolean threadCanopy;
+    private Color[] colourSpread = {            
+        new Color(61,153,153),
+        new Color(91,229,229),
+        new Color(107,153,61),
+        new Color(160,229,91),
+        new Color(107,61,153),
+        new Color(160,91,229),
+        new Color(153,130,61),
+        new Color(229,195,91),
+        new Color(61,153,84),
+        new Color(91,229,126),
+        new Color(61,84,153),
+        new Color(91,126,229),
+        new Color(153,61,130),
+        new Color(229,91,195),
+        new Color(153,95,61),
+        new Color(229,143,91),
+        new Color(141,153,61),
+        new Color(212,229,91),
+        new Color(72,153,61),
+        new Color(109,229,91),
+        new Color(61,153,118),
+        new Color(91,229,177),
+        new Color(61,118,153),
+        new Color(91,177,229),
+        new Color(72,61,153),
+        new Color(109,91,229),
+        new Color(141,61,153),
+        new Color(212,91,229),
+        new Color(153,61,95),
+        new Color(229,91,143),
+        new Color(153,78,61)};
+        //new Color(193,0,32),
+        //new Color(127,24,13),
+        //new Color(129,112,102),
+        //new Color(206,162,98),
+        //new Color(166,189,215),
+        //new Color(241,58,19),
+    /*private Color[] colourSpread = {            
+        new Color(255,179,0),
+        new Color(128,62,117),
+        new Color(255,104,0),
+        
+        
+        
+        new Color(0,125,125),
+        new Color(246,118,142),
+        new Color(0,83,138),
+        new Color(255,122,92),
+        new Color(83,55,122),
+        new Color(255,142,0),
+        new Color(179,40,81),
+        new Color(244,200,0),
+        
+        new Color(147,170,0),
+        new Color(89,51,21),
+        new Color(255,179,0),
+        new Color(128,62,117),
+        new Color(255,104,0),
+        
+        
+        
+        new Color(0,125,125),
+        new Color(246,118,142),
+        new Color(0,83,138),
+        new Color(255,122,92),
+        new Color(83,55,122),
+        new Color(255,142,0),
+        new Color(179,40,81),
+        new Color(244,200,0),
+        
+        new Color(147,170,0),
+        new Color(89,51,21)
+        };*/
+
+    public FileController(){
+        //
+    }
+
+    public FileController(String filename, PlantLayer layer, boolean canopy){
+        threadFile = filename;
+        threadLayer = layer;
+        threadCanopy = canopy;
+        //new Color(153,61,61),
+        //new Color(229,91,91),
+        
+    }
 
     public boolean validateFiles(File[] list, String[] filenames){
         boolean elv = false, spc = false, undergrowth = false, canopy = false;
@@ -90,12 +181,14 @@ public class FileController {
         File file = new File(filename);
         Scanner filein = new Scanner(file);
 
+        scale = 1024/Terrain.getBaseX();
+        
         int numSpecies = filein.nextInt();
+        System.out.println(numSpecies);
         layer.setNumSpecies(numSpecies);
         //set location array based on dimensions
         layer.setLocations(Terrain.getDimX(), Terrain.getDimY());
         Species[] list = PlantLayer.getAllSpecies();
-        
 
         for (int i=0;i<numSpecies;++i){
             //Species average Details:
@@ -173,7 +266,8 @@ public class FileController {
             line = line.substring(comma+3);
             names[1] = line.substring(0,line.length()-2);
             Random r = new Random();		  
-            Color col = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat(), 0.5f);
+            Color col = colourSpread[id];
+            //new Color(r.nextFloat(), r.nextFloat(), r.nextFloat(), 0.5f);
             Species species = new Species(id, names[0], names[1], col);
             //colourlist[id] = col.getRGB();
             specieslist[id] = species;
@@ -185,5 +279,16 @@ public class FileController {
         System.out.println("Species file processed.");
 
         return totalSpecies;
+    }
+
+    @Override
+    public void run() {
+        try{
+            readLayer(this.threadLayer, this.threadFile, this.threadCanopy);
+        }catch(FileNotFoundException e){
+            System.out.println("Thread read failed.");
+        }finally{
+            System.out.println("Thread terminated.");
+        }
     }
 }

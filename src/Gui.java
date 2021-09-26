@@ -48,6 +48,7 @@ public class Gui extends JPanel implements ChangeListener{
     private JLabel lblSpeed;
     private JPanel pnlFilters;
     private JCheckBox[] filterlist;
+    private JTabbedPane tabbedPane;
     
     private String common;
     private String latin;
@@ -140,6 +141,10 @@ public class Gui extends JPanel implements ChangeListener{
         return this.mainPanel;
     }
 
+    public miniMap getMini(){
+        return this.mini;
+    }
+
     public JPanel getEast(){
         return this.pnlEast;
     }
@@ -150,6 +155,10 @@ public class Gui extends JPanel implements ChangeListener{
 
     public JCheckBox[] getFilterList(){
         return this.filterlist;
+    }
+
+    public JTabbedPane getTabPane(){
+        return this.tabbedPane;
     }
 
     public void setFilterList(JCheckBox[] list){
@@ -259,7 +268,7 @@ public class Gui extends JPanel implements ChangeListener{
 
 
         ////********************************************************** */
-        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane = new JTabbedPane();
         tabbedPane.setPreferredSize(new Dimension(200,550));
 
         //ImageIcon icon = createImageIcon("");
