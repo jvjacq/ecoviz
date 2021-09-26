@@ -245,13 +245,13 @@ public class ImagePanel extends JPanel{
 			if(zoom){
 				graphics2d.drawImage(zoomTerrain, 0, 0, null);
 				graphics2d.drawImage(zoomPlants, 0, 0, null);
-				//graphics2d.drawImage(fire, 0, 0, null);
+				graphics2d.drawImage(fire, 0, 0, null);
 			}else{
 				graphics2d.drawImage(terrain, 0, 0, null);
-				graphics2d.drawImage(canopy, 0, 0, null);	
+				graphics2d.drawImage(canopy, 0, 0, null);
+				graphics2d.drawImage(fire, 0, 0, null);	
 			}
-		}
-		
+		}		
 	}
 
 	public void deriveImage(){
