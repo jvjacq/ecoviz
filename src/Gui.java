@@ -209,6 +209,8 @@ public class Gui extends JPanel implements ChangeListener{
         //======================================================================
         //      East Panel: 
         //======================================================================
+
+
         pnlEast = new JPanel(new BorderLayout());
         pnlEast.setPreferredSize(new Dimension(200,Terrain.getDimY()));
         pnlEast.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -290,6 +292,8 @@ public class Gui extends JPanel implements ChangeListener{
             lblTall = new JLabel();
             lblNum = new JLabel();
 
+            
+
             JPanel pnlName = new JPanel();
             pnlName.setBackground(new Color(31, 36, 43));
             pnlName.setLayout(new BoxLayout(pnlName, BoxLayout.PAGE_AXIS ));
@@ -320,7 +324,6 @@ public class Gui extends JPanel implements ChangeListener{
             pnlStats.add(numTitle);
             pnlStats.add(lblNum);
             pnlStats.setBorder(b3);
-
 
             pnlDetails.add(pnlName);
             pnlDetails.add(pnlHeight);
@@ -361,15 +364,21 @@ public class Gui extends JPanel implements ChangeListener{
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         ////********************************************************** */
-
+           // JLabel stamp = new JLabel();
+          //  ImageIcon path2 = new ImageIcon("resources/stamp.gif");
+          //  stamp.setIcon(path2);
         //DRAW MINIMAP
         mini = new miniMap(mainPanel);
         mini.setPreferredSize(new Dimension(200,200));
         mini.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         mini.setOpaque(false);
 
+        
+
         pnlEast.add(tabbedPane,BorderLayout.NORTH);
         pnlEast.add(mini,BorderLayout.SOUTH);
+        
+
 
 
         //======================================================================
