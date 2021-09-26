@@ -210,7 +210,7 @@ public class ImagePanel extends JPanel{
 		imgGraphics.setComposite(AlphaComposite.Clear);
 		imgGraphics.fillRect(0,0, dimX, dimY);
 		
-		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 		//
 		//imgGraphics.setColor(new Color(0,0,0,1.0f));
 		//imgGraphics.fillOval(0,0,10,10);
@@ -360,6 +360,10 @@ public class ImagePanel extends JPanel{
 		Species[] specieslist = PlantLayer.getAllSpecies();
 		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = img.createGraphics();
+		imgGraphics.setComposite(AlphaComposite.Clear);
+		imgGraphics.fillRect(tlx,tly, newX, newY);
+		
+		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 
 		for(Plant p: PlantLayer.getPlantList()){
 			imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
