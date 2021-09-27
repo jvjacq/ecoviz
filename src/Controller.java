@@ -63,8 +63,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         BufferedImage updatedFireImage = fire.getImage();
         image.setFire(updatedFireImage);
         gui.repaint();
-
-
+        
         //timer.cancel();
     }
     
@@ -89,6 +88,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getBackBtn().setVisible(false);
         gui.getResetBtn().setVisible(false);
         gui.getRenderBtn().setVisible(false);
+        gui.getPauseBtn().setVisible(false);
+
         resetFireSim();
         fireMode=false;
         timer.cancel();

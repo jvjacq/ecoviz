@@ -76,6 +76,7 @@ public class Fire {
             }
         }
         System.out.println("All Fire Cleared/Extinguished");
+        
     }
 
     public void moveFire(int x, int y){

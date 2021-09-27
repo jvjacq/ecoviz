@@ -7,6 +7,7 @@
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import java.awt.FlowLayout;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -214,7 +215,46 @@ public class Gui extends JPanel implements ChangeListener{
         JPanel pnlWest = new JPanel();
             pnlWest.add(mainPanel);
 
-                    
+        //======================================================================
+        //      South Panel:
+        //======================================================================
+        JPanel pnlSouth = new JPanel();
+            pnlSouth.setLayout(new BoxLayout(pnlSouth,BoxLayout.Y_AXIS));
+
+            btnFire = new JButton("Simulate Fire");
+            btnBack = new JButton("Leave Fire Simulator");
+
+            btnRender = new JButton("Run");
+            btnRender.setVisible(false);
+
+            btnPause = new JButton("Pause");
+            btnPause.setVisible(false);
+
+            btnReset = new JButton("Reset");
+            btnReset.setVisible(false);
+
+            //Add Components
+            JLabel stamp = new JLabel();
+            ImageIcon path2 = new ImageIcon("resources/stamp.gif");
+            stamp.setIcon(path2);
+
+            btnBack.setVisible(false);
+            btnBack.setBackground(Color.RED);
+
+            pnlSouth.add(stamp);
+
+            pnlSouth.add(btnFire);
+            pnlSouth.add(btnRender);
+            pnlSouth.add(btnPause);
+            pnlSouth.add(btnReset);
+            pnlSouth.add(btnBack);
+    
+            
+            //pnlSouth.setPreferredSize(new Dimension(100,100));
+            Border bFire = BorderFactory.createTitledBorder("Fire Simulation");
+            pnlSouth.setBackground(new Color(31, 36, 43));
+            pnlSouth.setBorder(bFire);
+        
         //======================================================================
         //      East Panel: 
         //======================================================================
@@ -269,7 +309,7 @@ public class Gui extends JPanel implements ChangeListener{
 
         ////********************************************************** */
         tabbedPane = new JTabbedPane();
-        tabbedPane.setPreferredSize(new Dimension(200,550));
+        tabbedPane.setPreferredSize(new Dimension(200,490));
 
         //ImageIcon icon = createImageIcon("");
 
@@ -300,8 +340,6 @@ public class Gui extends JPanel implements ChangeListener{
             lblShort = new JLabel();
             lblTall = new JLabel();
             lblNum = new JLabel();
-
-            
 
             JPanel pnlName = new JPanel();
             pnlName.setBackground(new Color(31, 36, 43));
@@ -373,9 +411,7 @@ public class Gui extends JPanel implements ChangeListener{
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         ////********************************************************** */
-           // JLabel stamp = new JLabel();
-          //  ImageIcon path2 = new ImageIcon("resources/stamp.gif");
-          //  stamp.setIcon(path2);
+            
         //DRAW MINIMAP
         mini = new miniMap(mainPanel);
         mini.setPreferredSize(new Dimension(200,200));
@@ -385,41 +421,8 @@ public class Gui extends JPanel implements ChangeListener{
         
 
         pnlEast.add(tabbedPane,BorderLayout.NORTH);
+        pnlEast.add(pnlSouth,BorderLayout.CENTER);
         pnlEast.add(mini,BorderLayout.SOUTH);
-        
-
-
-
-        //======================================================================
-        //      South Panel:
-        //======================================================================
-        JPanel pnlSouth = new JPanel();
-            pnlSouth.setLayout(new BoxLayout(pnlSouth,BoxLayout.X_AXIS));
-
-            btnFire = new JButton("Simulate Fire");
-            btnBack = new JButton("Leave Fire Simulator");
-
-            btnRender = new JButton("Run");
-            btnRender.setVisible(false);
-
-            btnPause = new JButton("Pause");
-            btnPause.setVisible(false);
-
-            btnReset = new JButton("Reset");
-            btnReset.setVisible(false);
-
-            //Add Components
-            
-            btnBack.setVisible(false);
-            btnBack.setBackground(Color.RED);
-
-
-            pnlSouth.add(btnFire);
-            pnlSouth.add(btnRender);
-            pnlSouth.add(btnPause);
-            pnlSouth.add(btnReset);
-            pnlSouth.add(btnBack);
-
             
 
 
@@ -470,7 +473,7 @@ public class Gui extends JPanel implements ChangeListener{
     //      Adding all to the Frame (ECOVIZ):
     //======================================================================
         frame.setJMenuBar(mb);
-        frame.getContentPane().add(BorderLayout.SOUTH, pnlSouth);
+        //frame.getContentPane().add(BorderLayout.SOUTH, pnlSouth);
         frame.getContentPane().add(BorderLayout.WEST, pnlWest);
         frame.getContentPane().add(BorderLayout.EAST, pnlEast);
 
