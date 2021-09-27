@@ -23,6 +23,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private int delay;
     private boolean running;
 
+    private TimerTask task;
+
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
         this.gui = gui;
         this.image = gui.getImage();
@@ -92,7 +94,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         resetFireSim();
         fireMode=false;
+        running=false;
+        task.cancel();
         timer.cancel();
+        timer.purge();
         gui.getRenderBtn().setEnabled(true);
         gui.getPauseBtn().setEnabled(false);
         image.repaint();
@@ -119,7 +124,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getPauseBtn().setEnabled(true);
         running=true;
         timer = new Timer();
-        timer.schedule(new TimerTask(){
+        task = new TimerTask(){
 
             @Override
             public void run() {
@@ -132,9 +137,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             image.setFire(updatedFireImage);
             image.repaint();
             }
-            }
-            
-        }, 0, delay);
+            } 
+        };
+        timer.schedule(task, 0, delay);
         gui.getRenderBtn().setEnabled(false);
     }
 
