@@ -81,7 +81,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         fireMode=true;
         gui.getPauseBtn().setEnabled(false);
         //Setup fire:
-        fire = new Fire(Terrain.getDimX(), Terrain.getDimY(),undergrowth.getPlantGrid());
+        fire = new Fire(Terrain.getDimX(), Terrain.getDimY(),undergrowth.getPlantGrid(),canopy.getPlantGrid());
 
     }
 

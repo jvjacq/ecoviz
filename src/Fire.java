@@ -9,19 +9,21 @@ public class Fire {
     private int dimX;
 	private int dimY;
 	private int [][] fireGrid;
-	private int [][] plantGrid;
+	private int [][] underPlants,canopyPlants;
     private int[] traversal;
 	private BufferedImage fireImage;
     private ArrayList<Integer> permute;	// permuted list of integers in range [0, dimx*dimy)
 
 
-	public Fire (int dimX, int dimY, int[][] plantGrid) {
+	public Fire (int dimX, int dimY, int[][] plantGrid1, int[][] plantGrid2) {  //1 - under //2 - canopy
         this.dimX=dimX;
         this.dimY=dimY;
 
         traversal = new int[dimX*dimY];
 
-        this.plantGrid=plantGrid;   //Every location with a plant is represented with a 1... otherwise 0 if none
+        this.underPlants=plantGrid1;
+        this.canopyPlants=plantGrid2;
+
 
         fireGrid = new int[dimX][dimY];
         genPermute();   // create randomly permuted list of indices for traversal 
@@ -85,7 +87,7 @@ public class Fire {
         fireGrid[x][y]=2;   //ASH cant move anymore
         if (x>0 || y>0 || x<Terrain.getDimX() || y<Terrain.getDimY()){
             try{
-            if (plantGrid[x-1][y]==1 && fireGrid[x-1][y]!=2){  //West ←
+            if ((underPlants[x-1][y]==1 || canopyPlants[x-1][y]==1) && fireGrid[x-1][y]!=2){  //West ←
                 //100% chance of fire spread
                 fireGrid[x-1][y]=1; //FIRE
             } else if (rand < chance) {
@@ -93,7 +95,7 @@ public class Fire {
                 fireGrid[x-1][y]=1; //FIRE
             }
 
-            if (plantGrid[x+1][y]==1 && fireGrid[x+1][y]!=2){  //East →
+            if ((underPlants[x+1][y]==1 || canopyPlants[x+1][y]==1) && fireGrid[x+1][y]!=2){  //East →
                 //100% chance of fire spread
                 fireGrid[x+1][y]=1; //FIRE
 
@@ -102,7 +104,7 @@ public class Fire {
                 fireGrid[x+1][y]=1; //FIRE
             }
 
-            if (plantGrid[x+1][y+1]==1 && fireGrid[x+1][y+1]!=2){  //North East 🡥
+            if ((underPlants[x+1][y+1]==1 || canopyPlants[x+1][y+1]==1) && fireGrid[x+1][y+1]!=2){  //North East 🡥
                 //100% chance of fire spread
                 fireGrid[x+1][y+1]=1; //FIRE
 
@@ -111,7 +113,7 @@ public class Fire {
                 fireGrid[x+1][y+1]=1; //FIRE
             }
 
-            if (plantGrid[x][y+1]==1 && fireGrid[x][y+1]!=2){  //North ↑
+            if ((underPlants[x][y+1]==1 || canopyPlants[x][y+1]==1) && fireGrid[x][y+1]!=2){  //North ↑
                 //100% chance of fire spread
                 fireGrid[x][y+1]=1; //FIRE
 
@@ -120,7 +122,7 @@ public class Fire {
                 fireGrid[x][y+1]=1; //FIRE
             }
 
-            if (plantGrid[x-1][y+1]==1 && fireGrid[x-1][y+1]!=2){  //North West 🡤
+            if ((underPlants[x-1][y+1]==1 || canopyPlants[x-1][y+1]==1) && fireGrid[x-1][y+1]!=2){  //North West 🡤
                 //100% chance of fire spread
                 fireGrid[x-1][y+1]=1; //FIRE
 
@@ -129,7 +131,7 @@ public class Fire {
                 fireGrid[x-1][y+1]=1; //FIRE
             }
 
-            if (plantGrid[x-1][y-1]==1 && fireGrid[x-1][y-1]!=2){  //South ↓
+            if ((underPlants[x-1][y-1]==1 || canopyPlants[x-1][y-1]==1) && fireGrid[x-1][y-1]!=2){  //South ↓
                 //100% chance of fire spread
                 fireGrid[x-1][y-1]=1; //FIRE
 
@@ -138,7 +140,7 @@ public class Fire {
                 fireGrid[x-1][y-1]=1; //FIRE
             }
 
-            if (plantGrid[x+1][y-1]==1 && fireGrid[x+1][y-1]!=2){  //South East 🡦
+            if ((underPlants[x+1][y-1]==1 || canopyPlants[x+1][y-1]==1) && fireGrid[x+1][y-1]!=2){  //South East 🡦
                 //100% chance of fire spread
                 fireGrid[x+1][y-1]=1; //FIRE
 
@@ -147,7 +149,7 @@ public class Fire {
                 fireGrid[x+1][y-1]=1; //FIRE
             }
 
-            if (plantGrid[x-1][y-1]==1 && fireGrid[x-1][y-1]!=2){  //South West 🡧
+            if ((underPlants[x-1][y-1]==1 || canopyPlants[x-1][y-1]==1) && fireGrid[x-1][y-1]!=2){  //South West 🡧
                 //100% chance of fire spread
                 fireGrid[x-1][y-1]=1; //FIRE
 
