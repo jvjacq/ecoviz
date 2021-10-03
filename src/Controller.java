@@ -22,7 +22,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private Timer timer;
     private int delay;
     private boolean running;
-
+    private Plant selected;
     private TimerTask task;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
@@ -34,6 +34,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.files = new FileController();    
         running = false;
         delay = 25;//default
+        selected = null;
     }
 
     public void initController(){
@@ -52,6 +53,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getMenu7().addActionListener(e -> gui.changeTheme(3));
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
+        gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
+        //gui.getRadSlider().addChangeListener(/**/);
         image.addMouseListener(this);
         image.addMouseMotionListener(this);
         image.addMouseWheelListener(this);
@@ -320,6 +323,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        gui.getSpeciesToggle().setEnabled(true);
         Point click = e.getPoint();
 
         //Fire Placement:
@@ -334,11 +338,16 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             int id = -1;
             Species[] list = PlantLayer.getAllSpecies();
             for(Plant plant: PlantLayer.getPlantList()){
+                //Check if species is not currently filtered
                 if(list[plant.getSpeciesID()].getFilter()){
                     if(insideCanopy(click, plant)){
                         //Will be lowest plant
+                        selected = plant;
                         id = plant.getSpeciesID();
-                        changeSpeciesColour(id);
+                        image.displayPlant(plant);
+                        image.repaint();
+                        //id = plant.getSpeciesID();
+                        //changeSpeciesColour(id);
                         break;
                     }
                 }
@@ -347,29 +356,55 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             if(id > -1){
                 //Species[] specieslist = PlantLayer.getAllSpecies();
                 //gui.setSpeciesDetails(specieslist[id].toString());
-                setDesc(id);
+                setPlantDesc();
                 //gui.setSpeciesDetails(specieslist[id].toString());
                 gui.getTabPane().setSelectedIndex(0);
                 //System.out.println("why");
             }else{
-                gui.setSpeciesDetails("Select any plant to \n view details!");
+                image.resetDetails();
+                selected = null;
+                gui.getSpeciesToggle().setEnabled(false);
+                //gui.setSpeciesDetails("Select any plant to \n view details!");
                 image.deriveImage();
                 image.repaint();
             }
         }
     }
 
-    public void setDesc(int id){
+    public void speciesDetails(){
+        if(selected != null){
+            int id = selected.getSpeciesID();
+            changeSpeciesColour(id);
+            setSpeciesDesc(id);
+            //image.deriveImage();
+            //image.repaint();
+        }
+    }
+
+    public void setSpeciesDesc(int id){
+        if(gui.getSpeciesToggle().isSelected()){
+                Species[] specieslist = PlantLayer.getAllSpecies();
+                gui.setCommon(specieslist[id].getCommon());
+                gui.setLatin(specieslist[id].getLatin());
+                gui.setTallest(Float.toString(specieslist[id].getMaxHeight()));
+                gui.setShortest(Float.toString(specieslist[id].getMinHeight()));
+                gui.setAvg(Float.toString(specieslist[id].getAvgRatio()));
+                gui.setNumber(Integer.toString(specieslist[id].getNumPlants()));
+        }else{
+            setPlantDesc();
+            image.deriveImage();
+            image.repaint();
+        }
+    }
+
+    public void setPlantDesc(){
         Species[] specieslist = PlantLayer.getAllSpecies();
-        gui.setCommon(specieslist[id].getCommon());
-        gui.setLatin(specieslist[id].getLatin());
-        gui.setTallest(Float.toString(specieslist[id].getMaxHeight()));
-        gui.setShortest(Float.toString(specieslist[id].getMinHeight()));
-        gui.setAvg(Float.toString(specieslist[id].getAvgRatio()));
-        gui.setNumber(Integer.toString(specieslist[id].getNumPlants()));
-
-
-
+        gui.setCommon(specieslist[selected.getSpeciesID()].getCommon());
+        gui.setLatin(specieslist[selected.getSpeciesID()].getLatin());
+        gui.setTallest(Double.toString(selected.getHeight()));
+        gui.setShortest(Double.toString(selected.getCanopy()));
+        gui.setAvg(Double.toString(selected.getHeight()/selected.getCanopy()));
+        gui.setNumber("1");
     }
 
     @Override
