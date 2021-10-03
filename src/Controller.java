@@ -185,8 +185,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                         Collections.sort(PlantLayer.getPlantList());
                         System.out.println("All files read in successfully.");
                         refreshView();
-                        image.repaint();
-                        gui.getMini().repaint();
+                        //image.repaint();
+                        //gui.getMini().repaint();
                     }catch(FileNotFoundException e){
                         System.out.println("Could not complete file input.");
                     }
