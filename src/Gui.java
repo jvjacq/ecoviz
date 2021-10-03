@@ -66,6 +66,10 @@ public class Gui extends JPanel implements ChangeListener{
     private JLabel lblAvg;
     private JLabel lblNum;
 
+    private JLabel shTitle;
+    private JLabel taTitle;
+    private JLabel avTitle;
+
     //Filter Section:
     private JLabel lblSearch;
     private JTextField search;
@@ -170,6 +174,18 @@ public class Gui extends JPanel implements ChangeListener{
 
     public JCheckBox getSpeciesToggle(){
         return this.speciesToggle;
+    }
+
+    public JLabel getShortTitle(){
+        return this.shTitle;
+    }
+
+    public JLabel getTallTitle(){
+        return this.taTitle;
+    }
+
+    public JLabel getAvTitle(){
+        return this.avTitle;
     }
 
     public void setFilterList(JCheckBox[] list){
@@ -338,11 +354,12 @@ public class Gui extends JPanel implements ChangeListener{
             comTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
             JLabel latTitle = new JLabel("Latin Name:");
             latTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JLabel shTitle = new JLabel("Shortest Plant:");
+            //private variables
+            shTitle = new JLabel("Canopy radius:");
             shTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JLabel taTitle = new JLabel("Latest Plant:");
+            taTitle = new JLabel("Height:");
             taTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JLabel avTitle = new JLabel("Radius-Height ratio:");
+            avTitle = new JLabel("Radius-Height ratio:");
             avTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
             JLabel numTitle = new JLabel("No. of Plants:");
             numTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
@@ -357,7 +374,7 @@ public class Gui extends JPanel implements ChangeListener{
             JPanel pnlName = new JPanel();
             pnlName.setBackground(new Color(31, 36, 43));
             pnlName.setLayout(new BoxLayout(pnlName, BoxLayout.PAGE_AXIS ));
-            Border b1 = BorderFactory.createTitledBorder("Names");
+            Border b1 = BorderFactory.createTitledBorder("Species");
             pnlName.add(comTitle);
             pnlName.add(lblCommon);
             pnlName.add(latTitle);
@@ -368,7 +385,7 @@ public class Gui extends JPanel implements ChangeListener{
             JPanel pnlHeight = new JPanel();
             pnlHeight.setBackground(new Color(31, 36, 43));
             pnlHeight.setLayout(new BoxLayout(pnlHeight, BoxLayout.PAGE_AXIS ));
-            Border b2 = BorderFactory.createTitledBorder("Heights");
+            Border b2 = BorderFactory.createTitledBorder("Measurements");  //private
             pnlHeight.add(shTitle);
             pnlHeight.add(lblShort);
             pnlHeight.add(taTitle);
@@ -378,7 +395,7 @@ public class Gui extends JPanel implements ChangeListener{
             JPanel pnlStats = new JPanel();
             pnlStats.setBackground(new Color(31, 36, 43));
             pnlStats.setLayout(new BoxLayout(pnlStats, BoxLayout.PAGE_AXIS ));
-            Border b3 = BorderFactory.createTitledBorder("Stats");
+            Border b3 = BorderFactory.createTitledBorder("Stats"); //private
             pnlStats.add(avTitle);
             pnlStats.add(lblAvg);
             pnlStats.add(numTitle);
@@ -389,7 +406,7 @@ public class Gui extends JPanel implements ChangeListener{
             pnlDetails.add(pnlHeight);
             pnlDetails.add(pnlStats);
 
-            speciesToggle = new JCheckBox("Species details");
+            speciesToggle = new JCheckBox("Full species details");
             speciesToggle.setEnabled(false);
             speciesToggle.setSelected(false);
             pnlDetails.add(speciesToggle);
