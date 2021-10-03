@@ -26,7 +26,7 @@ public class ImagePanel extends JPanel{
 	private BufferedImage terrain;
 	private BufferedImage canopy;
 	private BufferedImage undergrowth;
-	private BufferedImage fire;
+	private BufferedImage fire,burnt;
 	//
 	private BufferedImage zoomTerrain;
 	private BufferedImage zoomPlants;
@@ -81,6 +81,10 @@ public class ImagePanel extends JPanel{
 
 	public void setFire(BufferedImage fire){
 		this.fire = fire;
+	}
+
+	public void setBurnt(BufferedImage burnt){
+		this.burnt = burnt;
 	}
 
 	public BufferedImage getTerrain(){
@@ -246,10 +250,12 @@ public class ImagePanel extends JPanel{
 				graphics2d.drawImage(zoomTerrain, 0, 0, null);
 				graphics2d.drawImage(zoomPlants, 0, 0, null);
 				graphics2d.drawImage(fire, 0, 0, null);
+				graphics2d.drawImage(burnt, 0, 0, null);	
 			}else{
 				graphics2d.drawImage(terrain, 0, 0, null);
 				graphics2d.drawImage(canopy, 0, 0, null);
 				graphics2d.drawImage(fire, 0, 0, null);	
+				graphics2d.drawImage(burnt, 0, 0, null);	
 			}
 		}		
 	}
