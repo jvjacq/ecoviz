@@ -24,6 +24,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean running;
     private Plant selected;
     private TimerTask task;
+    private boolean deaf;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy){
         this.gui = gui;
@@ -35,6 +36,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         running = false;
         selected = null;
         delay = 100;//default
+        deaf = false;
     }
 
     public void initController(){
@@ -205,6 +207,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }else{
             System.out.println("Cancelled by the user.");
         }
+        //System.out.println(FileController.getMaxHeight() + " " + FileController.getMaxRadius());
     }
 
     private boolean insideCanopy(Point point, Plant plant){
@@ -234,12 +237,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.deriveImage();      
         image.resetDetails();
         resetDesc();
-        //image.repaint();
-        //gui.getMini().repaint();
-        //image.deriveImg(undergrowth, false);
-        //image.deriveImg(canopy, true);
-        //image.setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale()),Math.round(Terrain.getDimY()*image.getScale())));
-        //gui.getMain().setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale())+220,Math.round(Terrain.getDimY()*image.getScale())+100));
+        this.deaf = true;
+        gui.getHiHeight().setValue(Math.ceil(FileController.getMaxHeight()));
+        gui.getHiRadius().setValue(Math.ceil(FileController.getMaxRadius()));
+        gui.getLoHeight().setValue(0.00f);
+        gui.getLoRadius().setValue(0.00f);
+        image.setFilterLimits(0.00f, (float)Math.ceil(FileController.getMaxHeight()), 0.00f, (float)Math.ceil(FileController.getMaxRadius()));
+        this.deaf = false;
         image.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
         addSpeciesFilters();
         resetLayerFilters();
@@ -297,9 +301,35 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void filterHeightCanopy(){
-        image.setFilterLimits((float)gui.getLoHeight().getValue(), (float)gui.getHiHeight().getValue(), (float)gui.getLoRadius().getValue(), (float)gui.getHiRadius().getValue());
+        if(deaf) return;
+        deaf = true;
+        float loHeight = Float.valueOf(gui.getLoHeight().getText());
+        float hiHeight = Float.valueOf(gui.getHiHeight().getText());
+        float loRadius = Float.valueOf(gui.getLoRadius().getText());
+        float hiRadius = Float.valueOf(gui.getHiRadius().getText());
+        if((loHeight > hiHeight) || (loHeight < 0)){
+            loHeight = 0.00f;
+            gui.getLoHeight().setValue(loHeight);
+        }
+        if((loRadius > hiRadius) || (loRadius < 0)){
+            loRadius = 0.00f;
+            gui.getLoRadius().setValue(loRadius);
+        }
+        if(hiHeight > Math.ceil(FileController.getMaxHeight())){
+            hiHeight = (float)Math.ceil(FileController.getMaxHeight());
+            gui.getHiHeight().setValue(hiHeight);         
+        }
+        if(hiRadius > Math.ceil(FileController.getMaxRadius())){
+            hiRadius =  (float)Math.ceil(FileController.getMaxRadius());
+            gui.getHiRadius().setValue(hiRadius);         
+        }
+        //Need to add check for negative max 
+        System.out.println(loHeight + " " + hiHeight + " " + loRadius + " " + hiRadius);
+        image.setFilterLimits(loHeight,hiHeight,loRadius,hiRadius);
+        deaf = false;
         image.deriveImage();
         image.repaint();
+        
     }
 
     @Override
