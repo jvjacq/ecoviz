@@ -28,6 +28,8 @@ public class ImagePanel extends JPanel{
 	private BufferedImage undergrowth;
 	private BufferedImage fire;
 	//
+	private BufferedImage details;
+	//
 	private BufferedImage zoomTerrain;
 	private BufferedImage zoomPlants;
 
@@ -251,6 +253,7 @@ public class ImagePanel extends JPanel{
 				graphics2d.drawImage(canopy, 0, 0, null);
 				graphics2d.drawImage(fire, 0, 0, null);	
 			}
+			if(details != null) graphics2d.drawImage(details,0,0,null);
 		}		
 	}
 
@@ -390,6 +393,26 @@ public class ImagePanel extends JPanel{
 			}
 		}
 		return false;
+	}
+
+	public void displayPlant(Plant plant){
+		details = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+		Graphics2D imgGraphics = details.createGraphics();
+		//imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		imgGraphics.setComposite(AlphaComposite.Clear);
+		imgGraphics.fillRect(0,0, dimX, dimY);
+		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		imgGraphics.setColor(Color.BLACK);
+		int x = plant.getX();
+		int y = plant.getY();
+		double rad = plant.getCanopy();
+		int newx = (int)Math.round((x-rad)*zoomMultiplier- topleftx*zoomMultiplier) ;
+		int newy = (int)Math.round((y-rad)*zoomMultiplier- toplefty*zoomMultiplier) ;
+		imgGraphics.fillOval(newx,newy,(int)Math.round(rad*2*zoomMultiplier),(int)Math.round(rad*2*zoomMultiplier));
+	}
+
+	public void resetDetails(){
+		details = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
 	}
 
 	public void exportImage(String nm){
