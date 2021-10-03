@@ -13,10 +13,13 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.event.*;
 import com.formdev.flatlaf.*;
+//import com.jidesoft.swing.*;
 
 public class Gui extends JPanel implements ChangeListener{
 
@@ -25,8 +28,8 @@ public class Gui extends JPanel implements ChangeListener{
     private JFrame frame;
     private JFrame loadIn;
     private JMenuItem i1,i2,i3,a1,a2,a3,a4;
-    private JLabel pointerLbl;
-    private JSlider wDirSlider,spdSlider;
+    private JLabel pointerLbl,pointerLb2;
+    private JSlider wDirSlider,wSpdSlider,spdSlider;
     private ImagePanel mainPanel;
     private JButton btnFire;
     private JButton btnBack;
@@ -45,11 +48,13 @@ public class Gui extends JPanel implements ChangeListener{
     private JTextArea plantDescription;
     private JLabel config;
     private miniMap mini;
-    private JCheckBox ChkUnderGrowth,ChkCanopy;
+    private JCheckBox ChkUnderGrowth,ChkCanopy,ChkMetric;
     private JLabel lblSpeed;
-    private JPanel pnlFilters;
+    private JPanel pnlFilters,pnlConfig;
     private JCheckBox[] filterlist;
     private JTabbedPane tabbedPane;
+    private JCheckBox speciesToggle;
+    private JSlider radSlider;
     
     private String common;
     private String latin;
@@ -63,6 +68,10 @@ public class Gui extends JPanel implements ChangeListener{
     private JLabel lblShort;
     private JLabel lblAvg;
     private JLabel lblNum;
+
+    private JLabel shTitle;
+    private JLabel taTitle;
+    private JLabel avTitle;
 
     //Filter Section:
     private JLabel lblSearch;
@@ -134,6 +143,10 @@ public class Gui extends JPanel implements ChangeListener{
         return this.ChkUnderGrowth;
     }
 
+    public JCheckBox getChkMetric(){
+        return this.ChkMetric;
+    }
+
     public JCheckBox getChkCanopy(){
         return this.ChkCanopy;
     }
@@ -162,8 +175,32 @@ public class Gui extends JPanel implements ChangeListener{
         return this.tabbedPane;
     }
 
+    public JSlider getRadSlider(){
+        return this.radSlider;
+    }
+
+    public JCheckBox getSpeciesToggle(){
+        return this.speciesToggle;
+    }
+
+    public JLabel getShortTitle(){
+        return this.shTitle;
+    }
+
+    public JLabel getTallTitle(){
+        return this.taTitle;
+    }
+
+    public JLabel getAvTitle(){
+        return this.avTitle;
+    }
+
     public void setFilterList(JCheckBox[] list){
         this.filterlist = list;
+    }
+
+    public void setChkMetric(){
+        this.ChkMetric.setSelected(true);
     }
 
     public Gui() {
@@ -282,12 +319,18 @@ public class Gui extends JPanel implements ChangeListener{
 
 
             //fSelection.setBackground(new Color(85,193,219));
-
+//###
         //SLIDER FOR WIND DIRECTION:
         wDirSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
         wDirSlider.addChangeListener(this);
         pointerLbl = new JLabel("Wind Direction: 0 Degrees");
 
+        //SLIDER FOR WIND SPEED:
+        wSpdSlider = new JSlider(JSlider.HORIZONTAL, 0, 371, 0); //Wind limit in KPH
+        pointerLb2 = new JLabel("Wind Speed: 0 KPH");
+        wSpdSlider.addChangeListener(this);
+        
+//###
         spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
         spdSlider.setMaximum(5);
         spdSlider.setMinimum(1);
@@ -305,7 +348,8 @@ public class Gui extends JPanel implements ChangeListener{
         //ChkCanopy.addItemListener(this);
         ChkCanopy.setBounds(150,150,50,50);
 
-
+        ChkMetric = new JCheckBox("Metric Units", true);
+        ChkMetric.setBounds(150,150,50,50);
 
         ////********************************************************** */
         tabbedPane = new JTabbedPane();
@@ -313,38 +357,42 @@ public class Gui extends JPanel implements ChangeListener{
 
         //ImageIcon icon = createImageIcon("");
 
+        //=================================================================
         //Details on Demand:
+        //=================================================================
         JPanel pnlDetails = new JPanel();
         //pnlDetails.setLayout(new BoxLayout(pnlDetails, BoxLayout.PAGE_AXIS ));
-            JLabel lblDetails = new JLabel("Details on Demand");
-            lblDetails.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+        pnlDetails.setLayout(new GridLayout(0,1));
+            //JLabel lblDetails = new JLabel("Details on Demand");
+            //lblDetails.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
             //Add components to Details on Demand Panel
-            pnlDetails.add(lblDetails);
+            //pnlDetails.add(lblDetails);
             
             JLabel comTitle = new JLabel("Common Name:");
             comTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
             JLabel latTitle = new JLabel("Latin Name:");
             latTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JLabel shTitle = new JLabel("Shortest Plant:");
+            //private variables
+            shTitle = new JLabel("Canopy radius:");
             shTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JLabel taTitle = new JLabel("Latest Plant:");
+            taTitle = new JLabel("Height:");
             taTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JLabel avTitle = new JLabel("Avg. Ration of Canopy/Height:");
+            avTitle = new JLabel("Radius-Height ratio:");
             avTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JLabel numTitle = new JLabel("Number of Plants:");
+            JLabel numTitle = new JLabel("No. of Plants:");
             numTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
 
-            lblCommon = new JLabel();
-            lblLatin = new JLabel();
-            lblAvg = new JLabel();
-            lblShort = new JLabel();
-            lblTall = new JLabel();
-            lblNum = new JLabel();
+            lblCommon = new JLabel("\n");
+            lblLatin = new JLabel("\n");
+            lblAvg = new JLabel("\n");
+            lblShort = new JLabel("\n");
+            lblTall = new JLabel("\n");
+            lblNum = new JLabel("\n");
 
             JPanel pnlName = new JPanel();
             pnlName.setBackground(new Color(31, 36, 43));
             pnlName.setLayout(new BoxLayout(pnlName, BoxLayout.PAGE_AXIS ));
-            Border b1 = BorderFactory.createTitledBorder("Names");
+            Border b1 = BorderFactory.createTitledBorder("Species");
             pnlName.add(comTitle);
             pnlName.add(lblCommon);
             pnlName.add(latTitle);
@@ -355,7 +403,7 @@ public class Gui extends JPanel implements ChangeListener{
             JPanel pnlHeight = new JPanel();
             pnlHeight.setBackground(new Color(31, 36, 43));
             pnlHeight.setLayout(new BoxLayout(pnlHeight, BoxLayout.PAGE_AXIS ));
-            Border b2 = BorderFactory.createTitledBorder("Heights");
+            Border b2 = BorderFactory.createTitledBorder("Measurements");  //private
             pnlHeight.add(shTitle);
             pnlHeight.add(lblShort);
             pnlHeight.add(taTitle);
@@ -365,7 +413,7 @@ public class Gui extends JPanel implements ChangeListener{
             JPanel pnlStats = new JPanel();
             pnlStats.setBackground(new Color(31, 36, 43));
             pnlStats.setLayout(new BoxLayout(pnlStats, BoxLayout.PAGE_AXIS ));
-            Border b3 = BorderFactory.createTitledBorder("Stats");
+            Border b3 = BorderFactory.createTitledBorder("Stats"); //private
             pnlStats.add(avTitle);
             pnlStats.add(lblAvg);
             pnlStats.add(numTitle);
@@ -375,22 +423,29 @@ public class Gui extends JPanel implements ChangeListener{
             pnlDetails.add(pnlName);
             pnlDetails.add(pnlHeight);
             pnlDetails.add(pnlStats);
+
+            speciesToggle = new JCheckBox("Full species details");
+            speciesToggle.setEnabled(false);
+            speciesToggle.setSelected(false);
+            pnlDetails.add(speciesToggle);
             //pnlDetails.add(plantDescription);
 
         tabbedPane.addTab("Details",null,pnlDetails,"Shows Details on Demand");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
         //Configurations:
-        JPanel pnlConfig = new JPanel();
+        pnlConfig = new JPanel();
             JLabel lblConfig = new JLabel("Configurations");
             lblConfig.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
             //Add components to Config Panel
             pnlConfig.add(lblConfig);
             pnlConfig.add(pointerLbl);
             pnlConfig.add(wDirSlider);
+            pnlConfig.add(pointerLb2);
+            pnlConfig.add(wSpdSlider);
             pnlConfig.add(lblSpeed);
             pnlConfig.add(spdSlider);
-
+            pnlConfig.add(ChkMetric);
 
         tabbedPane.addTab("Config",null,pnlConfig, "Change Simulation Settings");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
@@ -407,7 +462,7 @@ public class Gui extends JPanel implements ChangeListener{
             pnlFilters.add(ChkUnderGrowth);
             pnlFilters.add(ChkCanopy);
 
-        tabbedPane.addTab("Filter",null,pnlFilters,"Edit Filters");
+        tabbedPane.addTab("Species",null,pnlFilters,"Filter by species");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         ////********************************************************** */
@@ -501,6 +556,20 @@ public class Gui extends JPanel implements ChangeListener{
         }
     }
 
+    public void changeMetric(){
+        if (getChkMetric().isSelected()){
+            wSpdSlider.setMaximum(371);
+            wSpdSlider.setValue((int)(1.60934*wSpdSlider.getValue()));
+            pointerLb2.setText("Wind Speed: "+Integer.toString(wSpdSlider.getValue())+" KPH");
+        }else{
+            wSpdSlider.setValue((int)(wSpdSlider.getValue()/1.60934));
+            wSpdSlider.setMaximum(231);
+            pointerLb2.setText("Wind Speed: "+Integer.toString(wSpdSlider.getValue())+" MPH");
+        }
+        wSpdSlider.addChangeListener(this);
+        pnlConfig.revalidate();
+    }
+
     public void setSpeciesDetails(String s){
         this.plantDescription.setText(s);
     }
@@ -575,6 +644,8 @@ public class Gui extends JPanel implements ChangeListener{
     public void stateChanged(ChangeEvent e) {
 
         pointerLbl.setText("Wind Direction: "+Integer.toString(wDirSlider.getValue())+" Degrees");
+        if (getChkMetric().isSelected()) pointerLb2.setText("Wind Speed: "+Integer.toString(wSpdSlider.getValue())+" KPH");
+        else pointerLb2.setText("Wind Speed: "+Integer.toString(wSpdSlider.getValue())+" MPH");
         lblSpeed.setText("Simulation Speed: x"+Integer.toString(spdSlider.getValue()));
 
         //delay = 75; // default

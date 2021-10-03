@@ -26,7 +26,9 @@ public class ImagePanel extends JPanel{
 	private BufferedImage terrain;
 	private BufferedImage canopy;
 	private BufferedImage undergrowth;
-	private BufferedImage fire;
+	private BufferedImage fire,burnt;
+	//
+	private BufferedImage details;
 	//
 	private BufferedImage zoomTerrain;
 	private BufferedImage zoomPlants;
@@ -81,6 +83,10 @@ public class ImagePanel extends JPanel{
 
 	public void setFire(BufferedImage fire){
 		this.fire = fire;
+	}
+
+	public void setBurnt(BufferedImage burnt){
+		this.burnt = burnt;
 	}
 
 	public BufferedImage getTerrain(){
@@ -147,8 +153,24 @@ public class ImagePanel extends JPanel{
 		this.zoomMultiplier = multiplier;
 	}
 
+	public void setPrevZoomMult(double multiplier){
+		this.prevZoomMultiplier = multiplier;
+	}
+
 	public void setPainted(boolean b){
 		this.painted = b;
+	}
+
+	public void reset(){
+		this.zoomMultiplier = 1;
+		this.prevZoomMultiplier = 1;
+		this.showCanopy=true;
+		this.showUnderGrowth=true;
+		this.circles = 0;
+		this.xOffset = 0;
+		this.yOffset = 0;
+		this.topleftx = 0;
+		this.toplefty = 0;
 	}
 
 	
@@ -246,11 +268,14 @@ public class ImagePanel extends JPanel{
 				graphics2d.drawImage(zoomTerrain, 0, 0, null);
 				graphics2d.drawImage(zoomPlants, 0, 0, null);
 				graphics2d.drawImage(fire, 0, 0, null);
+				graphics2d.drawImage(burnt, 0, 0, null);	
 			}else{
 				graphics2d.drawImage(terrain, 0, 0, null);
 				graphics2d.drawImage(canopy, 0, 0, null);
 				graphics2d.drawImage(fire, 0, 0, null);	
+				graphics2d.drawImage(burnt, 0, 0, null);	
 			}
+			if(details != null) graphics2d.drawImage(details,0,0,null);
 		}		
 	}
 
@@ -392,6 +417,26 @@ public class ImagePanel extends JPanel{
 		return false;
 	}
 
+	public void displayPlant(Plant plant){
+		details = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+		Graphics2D imgGraphics = details.createGraphics();
+		//imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		imgGraphics.setComposite(AlphaComposite.Clear);
+		imgGraphics.fillRect(0,0, dimX, dimY);
+		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		imgGraphics.setColor(Color.BLACK);
+		int x = plant.getX();
+		int y = plant.getY();
+		double rad = plant.getCanopy();
+		int newx = (int)Math.round((x-rad)*zoomMultiplier- topleftx*zoomMultiplier) ;
+		int newy = (int)Math.round((y-rad)*zoomMultiplier- toplefty*zoomMultiplier) ;
+		imgGraphics.fillOval(newx,newy,(int)Math.round(rad*2*zoomMultiplier),(int)Math.round(rad*2*zoomMultiplier));
+	}
+
+	public void resetDetails(){
+		details = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+	}
+
 	public void exportImage(String nm){
 		BufferedImage img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = img.createGraphics();
@@ -405,11 +450,9 @@ public class ImagePanel extends JPanel{
 
 	public void setShowCanopy(boolean b){
 		showCanopy=b;
-		repaint();
 	}
 	public void setShowUnderGrowth(boolean b){
 		showUnderGrowth=b;
-		repaint();
 	}
 
 }
