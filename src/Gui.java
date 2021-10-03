@@ -15,9 +15,12 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.event.*;
+import javax.swing.text.NumberFormatter;
+
 import com.formdev.flatlaf.*;
 //import com.jidesoft.swing.*;
 
@@ -490,14 +493,17 @@ public class Gui extends JPanel implements ChangeListener{
         JPanel heightFilters = new JPanel();
         heightFilters.setLayout(new GridLayout(0,2));
         heightFilters.setSize(new Dimension(200, 50));
-        NumberFormat format = DecimalFormat.getInstance();
+        NumberFormat format = DecimalFormat.getInstance(Locale.UK);
         format.setMinimumFractionDigits(2);
         format.setMaximumFractionDigits(2);
+        NumberFormatter nf = new NumberFormatter(format);
+        nf.setOverwriteMode(true);
+        nf.setAllowsInvalid(false);
 
-        tHiHeight = new JFormattedTextField(format);
+        tHiHeight = new JFormattedTextField(nf);
         tHiHeight.setValue(0.00f);
         JLabel lblHiHeight = new JLabel("Max Height:");
-        tLoHeight = new JFormattedTextField(format);
+        tLoHeight = new JFormattedTextField(nf);
         tLoHeight.setValue(0.00f);
         JLabel lblLoHeight = new JLabel("Min Height:");
 
@@ -506,10 +512,10 @@ public class Gui extends JPanel implements ChangeListener{
         canopyFilters.setLayout(new GridLayout(0,2));
         canopyFilters.setSize(new Dimension(200, 50));
 
-        tHiRadius = new JFormattedTextField(format);
+        tHiRadius = new JFormattedTextField(nf);
         tHiRadius.setValue(0.00f);
         JLabel lblHiRadius = new JLabel("Max Radius:");
-        tLoRadius = new JFormattedTextField(format);
+        tLoRadius = new JFormattedTextField(nf);
         tLoRadius.setValue(0.00f);
         JLabel lblLoRadius = new JLabel("Min Radius:");
 
