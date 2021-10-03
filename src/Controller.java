@@ -54,6 +54,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
+        gui.getHiHeight().addPropertyChangeListener(e -> filterHeightCanopy());
+        gui.getLoHeight().addPropertyChangeListener(e -> filterHeightCanopy());
+        gui.getHiRadius().addPropertyChangeListener(e -> filterHeightCanopy());
+        gui.getLoRadius().addPropertyChangeListener(e -> filterHeightCanopy());
         //gui.getRadSlider().addChangeListener(/**/);
         gui.getChkMetric().addItemListener(e -> changeUnits());
         image.addMouseListener(this);
@@ -290,6 +294,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void changeUnits(){
         gui.changeMetric(); 
+    }
+
+    public void filterHeightCanopy(){
+        image.setFilterLimits((float)gui.getLoHeight().getValue(), (float)gui.getHiHeight().getValue(), (float)gui.getLoRadius().getValue(), (float)gui.getHiRadius().getValue());
+        image.deriveImage();
+        image.repaint();
     }
 
     @Override
