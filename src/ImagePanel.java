@@ -405,11 +405,9 @@ public class ImagePanel extends JPanel{
 
 	public void setShowCanopy(boolean b){
 		showCanopy=b;
-		repaint();
 	}
 	public void setShowUnderGrowth(boolean b){
 		showUnderGrowth=b;
-		repaint();
 	}
 
 }
