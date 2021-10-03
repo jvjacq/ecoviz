@@ -49,6 +49,7 @@ public class ImagePanel extends JPanel{
 	private boolean painted;
 	//private float scale;
 
+	private float maxHeight, minHeight, maxRadius, minRadius;
 	private int circles;
 
 	public ImagePanel(){
@@ -241,9 +242,16 @@ public class ImagePanel extends JPanel{
 		//int[] colourlist = Species.getCOLOURS();
 		//System.out.println(this.showCanopy + " " + this.showUnderGrowth);
 		for(Plant p: PlantLayer.getPlantList()){
+			if((p.getHeight() > maxHeight) || (p.getHeight() < minHeight)){
+				p.setHeightFlag(false);
+			}else p.setHeightFlag(true);
+			if((p.getCanopy() > maxRadius) || (p.getCanopy() < minRadius)){
+				p.setCanopyFlag(false);
+			}else p.setCanopyFlag(true);
+			if(!p.getHeightFlag() || !p.getCanopyFlag()) continue;
 			//imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
 			imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
-			//++circles;
+			++circles;
 			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
 			//System.out.println("Plant before print: " + p.getX() + " " + p.getY());
 			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) | (this.showUnderGrowth && !p.getLayer()))){
@@ -253,7 +261,7 @@ public class ImagePanel extends JPanel{
 		canopy = img;
 		this.zoomPlants = img;
 		//
-		//System.out.println(circles);      
+		System.out.println(circles);      
 	}
 
 	//========================================================================
@@ -391,12 +399,19 @@ public class ImagePanel extends JPanel{
 		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 
 		for(Plant p: PlantLayer.getPlantList()){
-			imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
+			if((p.getHeight() > maxHeight) && (p.getHeight() < minHeight)){
+				p.setHeightFlag(false);
+			}else p.setHeightFlag(true);
+			if((p.getCanopy() > maxRadius) && (p.getCanopy() < minRadius)){
+				p.setCanopyFlag(false);
+			}else p.setCanopyFlag(true);
+			if(!p.getHeightFlag() || !p.getCanopyFlag()) continue;
 			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) | (this.showUnderGrowth && !p.getLayer()))){
 				int x = p.getX();
 				int y = p.getY();
 				double rad = p.getCanopy();
 				if(plantInRect(x,y,rad,tlx,tly,newX,newY)){
+					imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
 					int newx = (int)Math.round((x-rad)*zoomMultiplier- tlx*zoomMultiplier) ;
 					int newy = (int)Math.round((y-rad)*zoomMultiplier- tly*zoomMultiplier) ;
 					imgGraphics.fillOval(newx,newy,(int)Math.round(rad*2*zoomMultiplier),(int)Math.round(rad*2*zoomMultiplier));
@@ -453,6 +468,13 @@ public class ImagePanel extends JPanel{
 	}
 	public void setShowUnderGrowth(boolean b){
 		showUnderGrowth=b;
+	}
+
+	public void setFilterLimits(float minH, float maxH, float minR, float maxR){
+		this.minHeight = minH;
+		this.maxHeight = maxH;
+		this.minRadius = minR;
+		this.maxRadius = maxR;
 	}
 
 }
