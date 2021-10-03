@@ -13,10 +13,13 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.event.*;
 import com.formdev.flatlaf.*;
+//import com.jidesoft.swing.*;
 
 public class Gui extends JPanel implements ChangeListener{
 
@@ -442,7 +445,7 @@ public class Gui extends JPanel implements ChangeListener{
             pnlFilters.add(ChkUnderGrowth);
             pnlFilters.add(ChkCanopy);
 
-        tabbedPane.addTab("Filter",null,pnlFilters,"Edit Filters");
+        tabbedPane.addTab("Species",null,pnlFilters,"Filter by species");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         ////********************************************************** */
