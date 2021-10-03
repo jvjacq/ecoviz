@@ -33,8 +33,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.canopy = canopy;
         this.files = new FileController();    
         running = false;
-        delay = 25;//default
         selected = null;
+        delay = 100;//default
     }
 
     public void initController(){
@@ -55,6 +55,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
         //gui.getRadSlider().addChangeListener(/**/);
+        gui.getChkMetric().addItemListener(e -> changeUnits());
         image.addMouseListener(this);
         image.addMouseMotionListener(this);
         image.addMouseWheelListener(this);
@@ -67,6 +68,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         fire.deriveFireImage();
         BufferedImage updatedFireImage = fire.getImage();
         image.setFire(updatedFireImage);
+
+        BufferedImage updatedBurntImage = fire.getImage();
+        image.setBurnt(updatedBurntImage);
         gui.repaint();
         
         //timer.cancel();
@@ -84,7 +88,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         fireMode=true;
         gui.getPauseBtn().setEnabled(false);
         //Setup fire:
-        fire = new Fire(Terrain.getDimX(), Terrain.getDimY(),undergrowth.getPlantGrid());
+        fire = new Fire(Terrain.getDimX(), Terrain.getDimY(),undergrowth.getLocations(),canopy.getLocations());
 
     }
 
@@ -117,8 +121,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             gui.getPauseBtn().setText("Play");
 
         }
-        
-        
     }
 
     public void renderFireSim(){    //Single use
@@ -138,6 +140,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             fire.deriveFireImage();
             BufferedImage updatedFireImage = fire.getImage();
             image.setFire(updatedFireImage);
+
+            BufferedImage updatedBurnImage = fire.getBurntImage();
+            image.setBurnt(updatedBurnImage);
+
             image.repaint();
             }
             } 
@@ -282,6 +288,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getChkUndergrowth().setSelected(true);
     }
 
+    public void changeUnits(){
+        gui.changeMetric(); 
+    }
+
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         
@@ -328,7 +338,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         if (fireMode){
             fire.addFire(click.x, click.y);
             BufferedImage updatedFireImage = fire.getImage();
+            BufferedImage burntImage = fire.getBurntImage();
+
             image.setFire(updatedFireImage);
+            image.setBurnt(burntImage);
             //image.deriveImage();
             image.repaint();
             System.out.println("Fire Added");

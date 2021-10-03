@@ -28,8 +28,8 @@ public class Gui extends JPanel implements ChangeListener{
     private JFrame frame;
     private JFrame loadIn;
     private JMenuItem i1,i2,i3,a1,a2,a3,a4;
-    private JLabel pointerLbl;
-    private JSlider wDirSlider,spdSlider;
+    private JLabel pointerLbl,pointerLb2;
+    private JSlider wDirSlider,wSpdSlider,spdSlider;
     private ImagePanel mainPanel;
     private JButton btnFire;
     private JButton btnBack;
@@ -48,9 +48,9 @@ public class Gui extends JPanel implements ChangeListener{
     private JTextArea plantDescription;
     private JLabel config;
     private miniMap mini;
-    private JCheckBox ChkUnderGrowth,ChkCanopy;
+    private JCheckBox ChkUnderGrowth,ChkCanopy,ChkMetric;
     private JLabel lblSpeed;
-    private JPanel pnlFilters;
+    private JPanel pnlFilters,pnlConfig;
     private JCheckBox[] filterlist;
     private JTabbedPane tabbedPane;
     private JCheckBox speciesToggle;
@@ -143,6 +143,10 @@ public class Gui extends JPanel implements ChangeListener{
         return this.ChkUnderGrowth;
     }
 
+    public JCheckBox getChkMetric(){
+        return this.ChkMetric;
+    }
+
     public JCheckBox getChkCanopy(){
         return this.ChkCanopy;
     }
@@ -193,6 +197,10 @@ public class Gui extends JPanel implements ChangeListener{
 
     public void setFilterList(JCheckBox[] list){
         this.filterlist = list;
+    }
+
+    public void setChkMetric(){
+        this.ChkMetric.setSelected(true);
     }
 
     public Gui() {
@@ -311,12 +319,18 @@ public class Gui extends JPanel implements ChangeListener{
 
 
             //fSelection.setBackground(new Color(85,193,219));
-
+//###
         //SLIDER FOR WIND DIRECTION:
         wDirSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
         wDirSlider.addChangeListener(this);
         pointerLbl = new JLabel("Wind Direction: 0 Degrees");
 
+        //SLIDER FOR WIND SPEED:
+        wSpdSlider = new JSlider(JSlider.HORIZONTAL, 0, 371, 0); //Wind limit in KPH
+        pointerLb2 = new JLabel("Wind Speed: 0 KPH");
+        wSpdSlider.addChangeListener(this);
+        
+//###
         spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
         spdSlider.setMaximum(5);
         spdSlider.setMinimum(1);
@@ -334,7 +348,8 @@ public class Gui extends JPanel implements ChangeListener{
         //ChkCanopy.addItemListener(this);
         ChkCanopy.setBounds(150,150,50,50);
 
-
+        ChkMetric = new JCheckBox("Metric Units", true);
+        ChkMetric.setBounds(150,150,50,50);
 
         ////********************************************************** */
         tabbedPane = new JTabbedPane();
@@ -419,16 +434,18 @@ public class Gui extends JPanel implements ChangeListener{
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
         //Configurations:
-        JPanel pnlConfig = new JPanel();
+        pnlConfig = new JPanel();
             JLabel lblConfig = new JLabel("Configurations");
             lblConfig.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
             //Add components to Config Panel
             pnlConfig.add(lblConfig);
             pnlConfig.add(pointerLbl);
             pnlConfig.add(wDirSlider);
+            pnlConfig.add(pointerLb2);
+            pnlConfig.add(wSpdSlider);
             pnlConfig.add(lblSpeed);
             pnlConfig.add(spdSlider);
-
+            pnlConfig.add(ChkMetric);
 
         tabbedPane.addTab("Config",null,pnlConfig, "Change Simulation Settings");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
@@ -586,6 +603,20 @@ public class Gui extends JPanel implements ChangeListener{
         }
     }
 
+    public void changeMetric(){
+        if (getChkMetric().isSelected()){
+            wSpdSlider.setMaximum(371);
+            wSpdSlider.setValue((int)(1.60934*wSpdSlider.getValue()));
+            pointerLb2.setText("Wind Speed: "+Integer.toString(wSpdSlider.getValue())+" KPH");
+        }else{
+            wSpdSlider.setValue((int)(wSpdSlider.getValue()/1.60934));
+            wSpdSlider.setMaximum(231);
+            pointerLb2.setText("Wind Speed: "+Integer.toString(wSpdSlider.getValue())+" MPH");
+        }
+        wSpdSlider.addChangeListener(this);
+        pnlConfig.revalidate();
+    }
+
     public void setSpeciesDetails(String s){
         this.plantDescription.setText(s);
     }
@@ -660,6 +691,8 @@ public class Gui extends JPanel implements ChangeListener{
     public void stateChanged(ChangeEvent e) {
 
         pointerLbl.setText("Wind Direction: "+Integer.toString(wDirSlider.getValue())+" Degrees");
+        if (getChkMetric().isSelected()) pointerLb2.setText("Wind Speed: "+Integer.toString(wSpdSlider.getValue())+" KPH");
+        else pointerLb2.setText("Wind Speed: "+Integer.toString(wSpdSlider.getValue())+" MPH");
         lblSpeed.setText("Simulation Speed: x"+Integer.toString(spdSlider.getValue()));
 
         //delay = 75; // default
