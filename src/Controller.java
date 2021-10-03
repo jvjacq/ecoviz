@@ -185,6 +185,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                         Collections.sort(PlantLayer.getPlantList());
                         System.out.println("All files read in successfully.");
                         refreshView();
+                        image.repaint();
+                        gui.getMini().repaint();
                     }catch(FileNotFoundException e){
                         System.out.println("Could not complete file input.");
                     }
@@ -217,14 +219,21 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getLoadFrame().setVisible(false);
         gui.getEast().setPreferredSize(new Dimension(200,Terrain.getDimY()));
         image.deriveImg(terrain);
-        image.deriveImage();
+        //image.setZoom(true);
+        image.reset();
+        image.deriveImage();      
+        image.resetDetails();
+        resetDesc();
+        //image.repaint();
+        //gui.getMini().repaint();
         //image.deriveImg(undergrowth, false);
         //image.deriveImg(canopy, true);
         //image.setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale()),Math.round(Terrain.getDimY()*image.getScale())));
         //gui.getMain().setPreferredSize(new Dimension(Math.round(Terrain.getDimX()*image.getScale())+220,Math.round(Terrain.getDimY()*image.getScale())+100));
         image.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
         addSpeciesFilters();
-        gui.setSpeciesDetails("Select any plant to \n view details!");
+        resetLayerFilters();
+        //gui.setSpeciesDetails("Select any plant to \n view details!");
         gui.getMini().setZone(0, 0, Terrain.getDimX(), Terrain.getDimY());
         gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX()+220,Terrain.getDimY()+100));
         gui.getMain().pack();
@@ -273,6 +282,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         //image.setPainted(false);
     }
 
+    public void resetLayerFilters(){
+        gui.getChkCanopy().setSelected(true);
+        gui.getChkUndergrowth().setSelected(true);
+    }
+
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         
@@ -281,16 +295,16 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 		if (e.getWheelRotation() < 0) {	// Zoom in
 			multiplier *=1.1;	//Adjust for smoothness
             image.setZoomMult(multiplier);
-            image.deriveImage();
-			image.repaint();
 		}
 		if (e.getWheelRotation() > 0) {	// Zoom out
 			multiplier /=1.1;	//Adjust for smoothness
             if(multiplier < 1) multiplier = 1;
             image.setZoomMult(multiplier);
-            image.deriveImage();
-			image.repaint();
+            
 		}
+        image.deriveImage();
+        if(selected != null) image.displayPlant(selected);
+        image.repaint();
         //System.out.println("should be done painting...");
         /*while(!image.getPainted()){
             continue;
@@ -309,8 +323,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 		image.setXDiff(cursor.x - image.getStartX());
 		image.setYDiff(cursor.y - image.getStartY());
 
-		image.setDragger(true);
+		image.setDragger(true);        
         image.deriveImage();
+        if(selected != null) image.displayPlant(selected);
 		image.repaint();
         //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
         //gui.getMini().repaint();
@@ -335,6 +350,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             image.repaint();
             System.out.println("Fire Added");
         }else{
+            gui.getSpeciesToggle().setSelected(false);
             int id = -1;
             Species[] list = PlantLayer.getAllSpecies();
             for(Plant plant: PlantLayer.getPlantList()){
@@ -344,7 +360,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                         //Will be lowest plant
                         selected = plant;
                         id = plant.getSpeciesID();
-                        image.displayPlant(plant);
+                        image.displayPlant(selected);
                         image.repaint();
                         //id = plant.getSpeciesID();
                         //changeSpeciesColour(id);
@@ -362,6 +378,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 //System.out.println("why");
             }else{
                 image.resetDetails();
+                resetDesc();
                 selected = null;
                 gui.getSpeciesToggle().setEnabled(false);
                 //gui.setSpeciesDetails("Select any plant to \n view details!");
@@ -405,6 +422,15 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.setShortest(Double.toString(selected.getCanopy()));
         gui.setAvg(Double.toString(selected.getHeight()/selected.getCanopy()));
         gui.setNumber("1");
+    }
+
+    public void resetDesc(){
+        gui.setCommon("No plant selected. \nClick on a plant to view details");
+        gui.setLatin("No plant selected. \nClick on a plant to view details");
+        gui.setTallest("0.0");
+        gui.setShortest("0.0");
+        gui.setAvg("0.0");
+        gui.setNumber("0");    
     }
 
     @Override
