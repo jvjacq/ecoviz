@@ -50,6 +50,7 @@ public class Gui extends JPanel implements ChangeListener{
     private JPanel pnlFilters;
     private JCheckBox[] filterlist;
     private JTabbedPane tabbedPane;
+    private JCheckBox speciesToggle;
     
     private String common;
     private String latin;
@@ -160,6 +161,10 @@ public class Gui extends JPanel implements ChangeListener{
 
     public JTabbedPane getTabPane(){
         return this.tabbedPane;
+    }
+
+    public JCheckBox getSpeciesToggle(){
+        return this.speciesToggle;
     }
 
     public void setFilterList(JCheckBox[] list){
@@ -313,13 +318,16 @@ public class Gui extends JPanel implements ChangeListener{
 
         //ImageIcon icon = createImageIcon("");
 
+        //=================================================================
         //Details on Demand:
+        //=================================================================
         JPanel pnlDetails = new JPanel();
         //pnlDetails.setLayout(new BoxLayout(pnlDetails, BoxLayout.PAGE_AXIS ));
-            JLabel lblDetails = new JLabel("Details on Demand");
-            lblDetails.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+        pnlDetails.setLayout(new GridLayout(0,1));
+            //JLabel lblDetails = new JLabel("Details on Demand");
+            //lblDetails.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
             //Add components to Details on Demand Panel
-            pnlDetails.add(lblDetails);
+            //pnlDetails.add(lblDetails);
             
             JLabel comTitle = new JLabel("Common Name:");
             comTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
@@ -329,17 +337,17 @@ public class Gui extends JPanel implements ChangeListener{
             shTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
             JLabel taTitle = new JLabel("Latest Plant:");
             taTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JLabel avTitle = new JLabel("Avg. Ration of Canopy/Height:");
+            JLabel avTitle = new JLabel("Radius-Height ratio:");
             avTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-            JLabel numTitle = new JLabel("Number of Plants:");
+            JLabel numTitle = new JLabel("No. of Plants:");
             numTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
 
-            lblCommon = new JLabel();
-            lblLatin = new JLabel();
-            lblAvg = new JLabel();
-            lblShort = new JLabel();
-            lblTall = new JLabel();
-            lblNum = new JLabel();
+            lblCommon = new JLabel("\n");
+            lblLatin = new JLabel("\n");
+            lblAvg = new JLabel("\n");
+            lblShort = new JLabel("\n");
+            lblTall = new JLabel("\n");
+            lblNum = new JLabel("\n");
 
             JPanel pnlName = new JPanel();
             pnlName.setBackground(new Color(31, 36, 43));
@@ -375,6 +383,9 @@ public class Gui extends JPanel implements ChangeListener{
             pnlDetails.add(pnlName);
             pnlDetails.add(pnlHeight);
             pnlDetails.add(pnlStats);
+
+            speciesToggle = new JCheckBox("Species details");
+            pnlDetails.add(speciesToggle);
             //pnlDetails.add(plantDescription);
 
         tabbedPane.addTab("Details",null,pnlDetails,"Shows Details on Demand");
