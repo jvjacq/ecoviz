@@ -231,12 +231,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void refreshView(){
         gui.getLoadFrame().setVisible(false);
         gui.getEast().setPreferredSize(new Dimension(200,Terrain.getDimY()));
-        image.deriveImg(terrain);
-        //image.setZoom(true);
-        image.reset();
-        image.deriveImage();      
-        image.resetDetails();
-        resetDesc();
         this.deaf = true;
         gui.getHiHeight().setValue(Math.ceil(FileController.getMaxHeight()));
         gui.getHiRadius().setValue(Math.ceil(FileController.getMaxRadius()));
@@ -244,6 +238,14 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getLoRadius().setValue(0.00f);
         image.setFilterLimits(0.00f, (float)Math.ceil(FileController.getMaxHeight()), 0.00f, (float)Math.ceil(FileController.getMaxRadius()));
         this.deaf = false;
+        
+        image.deriveImg(terrain);
+        //image.setZoom(true);
+        image.reset();
+        image.deriveImage();      
+        image.resetDetails();
+        resetDesc();
+        
         image.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
         addSpeciesFilters();
         resetLayerFilters();
