@@ -99,7 +99,7 @@ public class FileController implements Runnable{
         return FileController.MAXHeight;
     }
 
-    public static float getMaxRadus(){
+    public static float getMaxRadius(){
         return FileController.MAXRadius;
     }
 
