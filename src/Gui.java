@@ -72,7 +72,7 @@ public class Gui extends JPanel implements ChangeListener{
     private JLabel shTitle;
     private JLabel taTitle;
     private JLabel avTitle;
-
+    JFormattedTextField tHiHeight, tLoHeight, tHiRadius, tLoRadius;
     //Filter Section:
     private JLabel lblSearch;
     private JTextField search;
@@ -195,6 +195,23 @@ public class Gui extends JPanel implements ChangeListener{
         return this.avTitle;
     }
 
+    public JFormattedTextField getHiHeight(){
+        return this.tHiHeight;
+    }
+
+    public JFormattedTextField getLoHeight(){
+        return this.tLoHeight;
+    }
+
+    public JFormattedTextField getHiRadius(){
+        return this.tHiRadius;
+    }
+
+    public JFormattedTextField getLoRadius(){
+        return this.tLoRadius;
+    }
+
+    //Mutator methods
     public void setFilterList(JCheckBox[] list){
         this.filterlist = list;
     }
@@ -477,10 +494,10 @@ public class Gui extends JPanel implements ChangeListener{
         format.setMinimumFractionDigits(2);
         format.setMaximumFractionDigits(2);
 
-        JFormattedTextField tHiHeight = new JFormattedTextField(format);
+        tHiHeight = new JFormattedTextField(format);
         tHiHeight.setValue(0.00f);
         JLabel lblHiHeight = new JLabel("Max Height:");
-        JFormattedTextField tLoHeight = new JFormattedTextField(format);
+        tLoHeight = new JFormattedTextField(format);
         tLoHeight.setValue(0.00f);
         JLabel lblLoHeight = new JLabel("Min Height:");
 
@@ -489,10 +506,10 @@ public class Gui extends JPanel implements ChangeListener{
         canopyFilters.setLayout(new GridLayout(0,2));
         canopyFilters.setSize(new Dimension(200, 50));
 
-        JFormattedTextField tHiRadius = new JFormattedTextField(format);
+        tHiRadius = new JFormattedTextField(format);
         tHiRadius.setValue(0.00f);
         JLabel lblHiRadius = new JLabel("Max Radius:");
-        JFormattedTextField tLoRadius = new JFormattedTextField(format);
+        tLoRadius = new JFormattedTextField(format);
         tLoRadius.setValue(0.00f);
         JLabel lblLoRadius = new JLabel("Min Radius:");
 
@@ -536,11 +553,8 @@ public class Gui extends JPanel implements ChangeListener{
         JMenu m1 = new JMenu("File");
 
             i1 = new JMenuItem("Load Files");
-                //i1.addActionListener(this);
             i2 = new JMenuItem("Export as PNG");
-                //i2.addActionListener(this);
             i3 = new JMenuItem("Exit");
-                //i3.addActionListener(this);
 
                 m1.add(i1);
                 m1.add(i2);
@@ -554,16 +568,9 @@ public class Gui extends JPanel implements ChangeListener{
         a3 = new JMenuItem("Cosmo");
         a4 = new JMenuItem("Forest");
         m3.add(a1);
-        //a1.addActionListener(this);
-
         m3.add(a2);
-        //a2.addActionListener(this);
-
         m3.add(a3);
-        //a3.addActionListener(this);
-
         m3.add(a4);
-        //a4.addActionListener(this);
 
 
 
