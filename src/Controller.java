@@ -52,6 +52,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getMenu7().addActionListener(e -> gui.changeTheme(3));
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
+        gui.getChkMetric().addItemListener(e -> changeUnits());
         image.addMouseListener(this);
         image.addMouseMotionListener(this);
         image.addMouseWheelListener(this);
@@ -114,8 +115,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             gui.getPauseBtn().setText("Play");
 
         }
-        
-        
     }
 
     public void renderFireSim(){    //Single use
@@ -268,6 +267,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.repaint();
         //
         //image.setPainted(false);
+    }
+
+    public void changeUnits(){
+        gui.changeMetric(); 
     }
 
     @Override
