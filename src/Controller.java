@@ -430,8 +430,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
 	public void mouseReleased(MouseEvent e) {
-		image.setReleased(true);
+		image.setReleased(true);        
         image.deriveImage();
+        if(selected != null) image.displayPlant(selected);
         image.repaint();		
 	}
 
