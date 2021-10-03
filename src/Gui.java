@@ -448,6 +448,53 @@ public class Gui extends JPanel implements ChangeListener{
         tabbedPane.addTab("Species",null,pnlFilters,"Filter by species");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
+
+        JPanel pnlFilter2 = new JPanel();
+        pnlFilter2.setLayout(new GridLayout(5,1));
+        JLabel lblFilter2 = new JLabel("Filter by Height/Canopy:");
+        //Height filter
+        JPanel heightFilters = new JPanel();
+        heightFilters.setLayout(new GridLayout(0,2));
+        heightFilters.setSize(new Dimension(200, 50));
+        NumberFormat format = DecimalFormat.getInstance();
+        format.setMinimumFractionDigits(2);
+        format.setMaximumFractionDigits(2);
+
+        JFormattedTextField tHiHeight = new JFormattedTextField(format);
+        tHiHeight.setValue(0.00f);
+        JLabel lblHiHeight = new JLabel("Max Height:");
+        JFormattedTextField tLoHeight = new JFormattedTextField(format);
+        tLoHeight.setValue(0.00f);
+        JLabel lblLoHeight = new JLabel("Min Height:");
+
+        //Canopy filter
+        JPanel canopyFilters = new JPanel();
+        canopyFilters.setLayout(new GridLayout(0,2));
+        canopyFilters.setSize(new Dimension(200, 50));
+
+        JFormattedTextField tHiRadius = new JFormattedTextField(format);
+        tHiRadius.setValue(0.00f);
+        JLabel lblHiRadius = new JLabel("Max Radius:");
+        JFormattedTextField tLoRadius = new JFormattedTextField(format);
+        tLoRadius.setValue(0.00f);
+        JLabel lblLoRadius = new JLabel("Min Radius:");
+
+        heightFilters.add(lblLoHeight);
+        heightFilters.add(lblHiHeight);
+        heightFilters.add(tLoHeight);
+        heightFilters.add(tHiHeight);
+
+        canopyFilters.add(lblLoRadius);
+        canopyFilters.add(lblHiRadius);
+        canopyFilters.add(tLoRadius);
+        canopyFilters.add(tHiRadius);
+
+        pnlFilter2.add(lblFilter2);
+        pnlFilter2.add(heightFilters);
+        pnlFilter2.add(canopyFilters);
+
+        tabbedPane.addTab("Filter",null,pnlFilter2,"Visualisation filters");
+        tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
         ////********************************************************** */
             
         //DRAW MINIMAP
