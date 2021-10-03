@@ -391,6 +391,7 @@ public class Gui extends JPanel implements ChangeListener{
 
             speciesToggle = new JCheckBox("Species details");
             speciesToggle.setEnabled(false);
+            speciesToggle.setSelected(false);
             pnlDetails.add(speciesToggle);
             //pnlDetails.add(plantDescription);
 
