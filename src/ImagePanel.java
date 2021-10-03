@@ -149,8 +149,24 @@ public class ImagePanel extends JPanel{
 		this.zoomMultiplier = multiplier;
 	}
 
+	public void setPrevZoomMult(double multiplier){
+		this.prevZoomMultiplier = multiplier;
+	}
+
 	public void setPainted(boolean b){
 		this.painted = b;
+	}
+
+	public void reset(){
+		this.zoomMultiplier = 1;
+		this.prevZoomMultiplier = 1;
+		this.showCanopy=true;
+		this.showUnderGrowth=true;
+		this.circles = 0;
+		this.xOffset = 0;
+		this.yOffset = 0;
+		this.topleftx = 0;
+		this.toplefty = 0;
 	}
 
 	
