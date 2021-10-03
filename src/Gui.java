@@ -51,6 +51,7 @@ public class Gui extends JPanel implements ChangeListener{
     private JCheckBox[] filterlist;
     private JTabbedPane tabbedPane;
     private JCheckBox speciesToggle;
+    private JSlider radSlider;
     
     private String common;
     private String latin;
@@ -161,6 +162,10 @@ public class Gui extends JPanel implements ChangeListener{
 
     public JTabbedPane getTabPane(){
         return this.tabbedPane;
+    }
+
+    public JSlider getRadSlider(){
+        return this.radSlider;
     }
 
     public JCheckBox getSpeciesToggle(){
