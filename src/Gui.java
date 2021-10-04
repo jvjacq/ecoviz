@@ -29,7 +29,7 @@ public class Gui extends JPanel{
     private JFrame frame;
     private JFrame loadIn;
     private JMenuItem i1,i2,i3,a1,a2,a3,a4;
-    private JLabel pointerLbl,pointerLb2;
+    private JLabel wDirLbl,wSpdLbl;
     private JSlider wDirSlider,wSpdSlider,spdSlider;
     private ImagePanel mainPanel;
     private JButton btnFire;
@@ -209,7 +209,7 @@ public class Gui extends JPanel{
         return this.wDirSlider.getValue();
     }
     public void setWindDirLbl(String label){
-        this.pointerLbl.setText(label);
+        this.wDirLbl.setText(label);
     }
 
     public void setCompassPath(String path){
@@ -226,7 +226,7 @@ public class Gui extends JPanel{
         return this.wSpdSlider.getValue();
     }
     public void setWindSpdLbl(String label){
-        this.pointerLb2.setText(label);
+        this.wSpdLbl.setText(label);
     }
     public void setWindSpdMax(int max){
         this.wSpdSlider.setMaximum(max);
@@ -372,11 +372,11 @@ public class Gui extends JPanel{
         wDirSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
         wDirSlider.setMaximum(8);
         wDirSlider.setMinimum(1);
-        pointerLbl = new JLabel("Wind Direction: North");
+        wDirLbl = new JLabel("Wind Direction: North");
 
         //SLIDER FOR WIND SPEED:
         wSpdSlider = new JSlider(JSlider.HORIZONTAL, 0, 160, 0); //Wind limit in KPH
-        pointerLb2 = new JLabel("Wind Speed: 0 KPH");
+        wSpdLbl = new JLabel("Wind Speed: 0 KPH");
         
 //###
         spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
@@ -490,9 +490,9 @@ public class Gui extends JPanel{
             lblConfig.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
             //Add components to Config Panel
             pnlConfig.add(lblConfig);
-            pnlConfig.add(pointerLbl);
+            pnlConfig.add(wDirLbl);
             pnlConfig.add(wDirSlider);
-            pnlConfig.add(pointerLb2);
+            pnlConfig.add(wSpdLbl);
             pnlConfig.add(wSpdSlider);
             pnlConfig.add(lblSpeed);
             pnlConfig.add(spdSlider);
