@@ -367,6 +367,7 @@ public class ImagePanel extends JPanel{
 	}
 
 	public BufferedImage zoomPlants(int tlx, int tly, int newX, int newY){
+		//System.out.println(this.minHeight + " " + this.maxHeight + " " + this.minRadius + " " + this.maxRadius);
 		setPlantsInView(this.plantsInView.length);
 		Species[] specieslist = PlantLayer.getAllSpecies();
 		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
@@ -377,14 +378,16 @@ public class ImagePanel extends JPanel{
 		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 
 		for(Plant p: PlantLayer.getPlantList()){
-			if((p.getHeight() > maxHeight) && (p.getHeight() < minHeight)){
+			if((p.getHeight() > maxHeight) || (p.getHeight() < minHeight)){
 				p.setHeightFlag(false);
 			}else p.setHeightFlag(true);
-			if((p.getCanopy() > maxRadius) && (p.getCanopy() < minRadius)){
+			if((p.getCanopy() > maxRadius) || (p.getCanopy() < minRadius)){
 				p.setCanopyFlag(false);
 			}else p.setCanopyFlag(true);
-			if(!p.getHeightFlag() || !p.getCanopyFlag()) continue;
-
+			if(!p.getHeightFlag() || !p.getCanopyFlag()){
+				//System.out.println("1");
+				continue;
+			}
 			if(insideSelected(p)){
 				p.setFilter(true);
 			}else p.setFilter(false);
