@@ -239,16 +239,19 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.setFilterLimits(0.00f, (float)Math.ceil(FileController.getMaxHeight()), 0.00f, (float)Math.ceil(FileController.getMaxRadius()));
         this.deaf = false;
         
+        image.setPlantsInView(files.getTotalSpecies());
         image.deriveImg(terrain);
         //image.setZoom(true);
         image.reset();
-        image.deriveImage();      
+        image.deriveImage();
+        addSpeciesFilters();
+        resetLayerFilters();
+        updateFilterSpeciesCounts();      
         image.resetDetails();
         resetDesc();
         
         image.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
-        addSpeciesFilters();
-        resetLayerFilters();
+        
         gui.getMini().setZone(0, 0, Terrain.getDimX(), Terrain.getDimY());
         gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX()+220,Terrain.getDimY()+100));
         gui.getMain().pack();
@@ -279,6 +282,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             }
         }
         image.deriveImage();
+        updateFilterSpeciesCounts();
         image.repaint();
 
     }
@@ -290,6 +294,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         if (gui.getChkUndergrowth().isSelected()) image.setShowUnderGrowth(true); 
         else image.setShowUnderGrowth(false);
         image.deriveImage();
+        updateFilterSpeciesCounts();
         image.repaint();
     }
 
@@ -330,8 +335,19 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.setFilterLimits(loHeight,hiHeight,loRadius,hiRadius);
         deaf = false;
         image.deriveImage();
+        updateFilterSpeciesCounts();
         image.repaint();
         
+    }
+
+    public void updateFilterSpeciesCounts(){
+        int[] speciesCounts = image.getPlantsInView();
+        for(int i = 0; i < gui.getFilterList().length; ++i){
+            String current = gui.getFilterList()[i].getText();
+            int bracket = current.indexOf("(");
+            if(bracket != -1) current = current.substring(0,bracket-1);
+            gui.getFilterList()[i].setText(current + " (" + speciesCounts[i] + ")");
+        }
     }
 
     @Override
@@ -350,6 +366,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             
 		}
         image.deriveImage();
+        updateFilterSpeciesCounts();
         if(selected != null) image.displayPlant(selected);
         image.repaint();
         gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
@@ -365,6 +382,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
 		image.setDragger(true);        
         image.deriveImage();
+        updateFilterSpeciesCounts();
         if(selected != null) image.displayPlant(selected);
 		image.repaint();
         gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
@@ -487,6 +505,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 	public void mouseReleased(MouseEvent e) {
 		image.setReleased(true);        
         image.deriveImage();
+        updateFilterSpeciesCounts();
         if(selected != null) image.displayPlant(selected);
         image.repaint();		
 	}
