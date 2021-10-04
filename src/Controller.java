@@ -59,10 +59,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getMenu1().addActionListener(e -> loadFiles());
         gui.getMenu2().addActionListener(e -> gui.exportView());
         gui.getMenu3().addActionListener(e -> goodbye());
-        gui.getMenu4().addActionListener(e -> gui.changeTheme(0));
-        gui.getMenu5().addActionListener(e -> gui.changeTheme(1));
-        gui.getMenu6().addActionListener(e -> gui.changeTheme(2));
-        gui.getMenu7().addActionListener(e -> gui.changeTheme(3));
+        gui.getMenu4().addActionListener(e -> setGUItheme(0));
+        gui.getMenu5().addActionListener(e -> setGUItheme(1));
+        //gui.getMenu6().addActionListener(e -> gui.changeTheme(2));
+        //gui.getMenu7().addActionListener(e -> gui.changeTheme(3));
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
@@ -78,6 +78,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.addMouseWheelListener(this);
         // gui.changeTheme(0); //###
         initView();
+    }
+
+    public void setGUItheme(int theme){
+        deaf = true;
+        gui.changeTheme(theme);
+        deaf = false;
     }
 
     public void resetFireSim() {
