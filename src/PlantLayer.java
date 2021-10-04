@@ -12,7 +12,6 @@ public class PlantLayer{
     private int numSpecies; //per layer
     private boolean filter;
 
-    int [][] plantGrid; //For FireSim
     
     public PlantLayer(){
       this.filter = true;
@@ -28,7 +27,6 @@ public class PlantLayer{
         this.idLocations[y][x][1] = plantid;
         //For FireSim:
         //Create a simple hit box for each plant (Currently a square) : fiddle with this for better accuracy
-        this.plantGrid[y][x]=1; //!! x and y have been switched in certain cases (will cause issues when loading non square data)
     }
 
     /*public void setSpeciesList(Species[] list){
@@ -45,9 +43,6 @@ public class PlantLayer{
 
     public void setLocations(int dimx, int dimy){
       idLocations = new int[dimx][dimy][2];
-
-      //For FireSim:
-      this.plantGrid= new int[dimx][dimy];
     }
 
     public void removePlant(int dimx, int dimy) {
@@ -72,9 +67,6 @@ public class PlantLayer{
     }
 
     // Accessor Methods
-    public int[][] getPlantGrid(){
-      return plantGrid;
-    }
 
     public int[][][] getLocations(){
         return this.idLocations;
