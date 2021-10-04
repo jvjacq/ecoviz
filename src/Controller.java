@@ -529,13 +529,15 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 Plant plant = PlantLayer.getPlantList().get(p);
                 // Check if species is not currently filtered
                 if (list[plant.getSpeciesID()].getFilter() && plant.getFilter() && plant.getCanopyFlag() && plant.getHeightFlag()) {
-                    if (insideCanopy(click, plant)) {
-                        // Will be lowest plant
-                        selected = plant;
-                        id = plant.getSpeciesID();
-                        image.displayPlant(selected, getViewRadius());
-                        image.repaint();
-                        break;
+                    if((image.getShowCanopy() && plant.getLayer()) || (image.getShowUndergrowth() && !plant.getLayer())){ 
+                        if (insideCanopy(click, plant)) {
+                            // Will be lowest plant
+                            selected = plant;
+                            id = plant.getSpeciesID();
+                            image.displayPlant(selected, getViewRadius());
+                            image.repaint();
+                            break;
+                        }
                     }
                 }
 
