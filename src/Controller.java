@@ -269,9 +269,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void refreshView() {
         gui.getLoadFrame().setVisible(false);
-        gui.getEast().setPreferredSize(new Dimension(200,Terrain.getDimY()));
+        gui.getEast().setPreferredSize(new Dimension(230,Terrain.getDimY()));
         this.deaf = true;
-        gui.getRadSlider().setValue(0);
+        gui.getRadSlider().setValue(1024);
         gui.getChkSelectRadius().setEnabled(false);
         gui.getHiHeight().setValue(Math.ceil(FileController.getMaxHeight()));
         gui.getHiRadius().setValue(Math.ceil(FileController.getMaxRadius()));
@@ -284,6 +284,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.deriveImg(terrain);
         // image.setZoom(true);
         image.reset();
+        image.calculateView();
         image.deriveImage();
         addSpeciesFilters();
         resetLayerFilters();
@@ -293,7 +294,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         
         image.setPreferredSize(new Dimension(Terrain.getDimX(),Terrain.getDimY()));
         gui.getMini().setZone(0, 0, Terrain.getDimX(), Terrain.getDimY());
-        gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX() + 220, Terrain.getDimY() + 100));
+        gui.getMain().setPreferredSize(new Dimension(Terrain.getDimX() + 250, Terrain.getDimY() + 100));
         gui.getMain().pack();
         gui.getMain().setLocationRelativeTo(null);
         gui.getMain().setVisible(true);
@@ -413,27 +414,31 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             gui.getRadSlider().setEnabled(true);
         }else{
             gui.getRadSlider().setEnabled(false);
-            gui.getRadSlider().setValue(0);
+            gui.getRadSlider().setValue(1024);
         }
         deaf = false;
+        image.displayPlant(selected, getViewRadius());
+        image.repaint();
     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-
-        image.setZoom(true);
+   
         double multiplier = image.getZoomMult();
         if (e.getWheelRotation() < 0) { // Zoom in
             multiplier *= 1.1; // Adjust for smoothness
             image.setZoomMult(multiplier);
         }
         if (e.getWheelRotation() > 0) { // Zoom out
+            if(image.getZoomMult() == 1.0) return;
             multiplier /= 1.1; // Adjust for smoothness
             if (multiplier < 1)
                 multiplier = 1;
             image.setZoomMult(multiplier);
 
         }
+        image.setZoom(true);
+        image.calculateView();
         image.deriveImage();
         updateFilterSpeciesCounts();
         if(selected != null) image.displayPlant(selected, getViewRadius());
@@ -450,6 +455,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.setYDiff(cursor.y - image.getStartY());
 
         image.setDragger(true);
+        image.calculateView();
         image.deriveImage();
         updateFilterSpeciesCounts();
         if(selected != null) image.displayPlant(selected, getViewRadius());
@@ -508,7 +514,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 gui.getSpeciesToggle().setEnabled(false);
                 gui.getChkSelectRadius().setEnabled(false);
                 deaf = true;
-                gui.getRadSlider().setValue(0);
+                gui.getRadSlider().setValue(1024);
                 deaf = false;
                 // gui.setSpeciesDetails("Select any plant to \n view details!");
                 image.deriveImage();
@@ -561,8 +567,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getShortTitle().setText("Canopy radius:");
         gui.getTallTitle().setText("Height:");
         gui.getAvTitle().setText("Radius-Height ratio:");
-        gui.setCommon("No plant selected. \nClick on a plant to view details");
-        gui.setLatin("No plant selected. \nClick on a plant to view details");
+        gui.setCommon("No plant selected. \nSelect one");
+        gui.setLatin("No plant selected. \nSelect one");
         gui.setTallest("0.0");
         gui.setShortest("0.0");
         gui.setAvg("0.0");
@@ -583,6 +589,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     @Override
     public void mouseReleased(MouseEvent e) {
         image.setReleased(true);
+        image.calculateView();
         image.deriveImage();
         updateFilterSpeciesCounts();
         if(selected != null) image.displayPlant(selected, getViewRadius());
