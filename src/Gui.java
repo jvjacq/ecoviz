@@ -407,7 +407,7 @@ public class Gui extends JPanel{
 
         //SLIDER FOR WIND SPEED:
         wSpdSlider = new JSlider(JSlider.HORIZONTAL, 0, 160, 0); //Wind limit in KPH
-        pointerLb2 = new JLabel("Wind Speed: 0 KPH");
+        wSpdLbl = new JLabel("Wind Speed: 0 KPH");
 
         // ###
         spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
