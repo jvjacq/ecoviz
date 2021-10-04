@@ -7,8 +7,6 @@
 * Status: In progress
 * MVC - Model
 */
-
-
 public class Plant implements Comparable<Plant>{
     
     private int speciesid;
@@ -20,6 +18,7 @@ public class Plant implements Comparable<Plant>{
     private boolean filter;
     private boolean layer;
     private boolean fHeight, fCanopy;
+    private boolean inFirebreak;
 
     public Plant(int sid, int pid, int x, int y, float height, float rad, boolean canopy){
         this.speciesid = sid;
@@ -28,10 +27,11 @@ public class Plant implements Comparable<Plant>{
         this.posy = y;
         this.height = height;
         this.canopyRadius = rad;
-        layer = canopy; //True for canopy false for under
+        this.layer = canopy; //True for canopy false for under
         this.filter = true;
         this.fHeight = true;
         this.fCanopy = true;
+        this.inFirebreak = false;
     }
 
     //Accessor methods
@@ -75,6 +75,10 @@ public class Plant implements Comparable<Plant>{
         return this.fCanopy;
     }
 
+    public boolean isInFireBreak(){
+        return this.inFirebreak;
+    }
+
     //Mutator methods
     public void setFilter(boolean b){
         this.filter = b;
@@ -98,6 +102,10 @@ public class Plant implements Comparable<Plant>{
 
     public void setCanopyFlag(boolean b){
         this.fCanopy = b;
+    }
+
+    public void setFirebreak(boolean b){
+        this.inFirebreak = b;
     }
 
     @Override
