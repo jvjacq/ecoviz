@@ -60,6 +60,7 @@ public class ImagePanel extends JPanel{
 		this.circles = 0;
 		this.xOffset = 0;
 		this.yOffset = 0;
+		this.selectRad = -1;
 		this.painted = false;
 	}
 	/*public float getScale(){
@@ -183,6 +184,7 @@ public class ImagePanel extends JPanel{
 		this.yOffset = 0;
 		this.topleftx = 0;
 		this.toplefty = 0;
+		this.selectRad = -1;
 	}
 
 	
@@ -261,12 +263,16 @@ public class ImagePanel extends JPanel{
 				p.setCanopyFlag(false);
 			}else p.setCanopyFlag(true);
 			if(!p.getHeightFlag() || !p.getCanopyFlag()) continue;
-			//imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
-			imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
-			++circles;
+			
+			if(insideSelected(p)){
+				p.setFilter(true);
+			}else p.setFilter(false);
+			//imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));						
 			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
 			//System.out.println("Plant before print: " + p.getX() + " " + p.getY());
 			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) | (this.showUnderGrowth && !p.getLayer()))){
+				++circles;
+				imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
 				plantsInView[p.getSpeciesID()] += 1;
 				imgGraphics.fillOval(p.getX()-(int)p.getCanopy(),p.getY()-(int)p.getCanopy(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
 			}
@@ -388,6 +394,11 @@ public class ImagePanel extends JPanel{
 				p.setCanopyFlag(false);
 			}else p.setCanopyFlag(true);
 			if(!p.getHeightFlag() || !p.getCanopyFlag()) continue;
+
+			if(insideSelected(p)){
+				p.setFilter(true);
+			}else p.setFilter(false);
+
 			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) | (this.showUnderGrowth && !p.getLayer()))){
 				int x = p.getX();
 				int y = p.getY();
@@ -429,10 +440,17 @@ public class ImagePanel extends JPanel{
 		int newx = (int)Math.round((x-rad)*zoomMultiplier- topleftx*zoomMultiplier) ;
 		int newy = (int)Math.round((y-rad)*zoomMultiplier- toplefty*zoomMultiplier) ;
 		imgGraphics.fillOval(newx,newy,(int)Math.round(rad*2*zoomMultiplier),(int)Math.round(rad*2*zoomMultiplier));
-		//this.selectRad = radius;
+		this.selectRad = radius;
+		this.selectX = x;
+		this.selectY = y;
 		if(radius != -1){
 			imgGraphics.drawOval((int)Math.round((x-radius-topleftx)*zoomMultiplier), (int)Math.round((y-radius-toplefty)*zoomMultiplier), (int)Math.round(radius*2*zoomMultiplier), (int)Math.round(radius*2*zoomMultiplier));
 		}
+	}
+
+	public boolean insideSelected(Plant p){
+		if(selectRad == -1) return true;
+		return (Math.pow((p.getX() - selectX),2) + Math.pow((p.getY()-selectY),2) <= Math.pow(selectRad,2));
 	}
 
 	public void resetDetails(){
