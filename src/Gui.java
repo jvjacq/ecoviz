@@ -492,7 +492,7 @@ public class Gui extends JPanel implements ChangeListener {
         JLabel lblFilters = new JLabel("Filters");
         lblFilters.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
         // Add components to Filter Panel
-        //pnlFilters.add(lblFilters);
+        pnlFilters.add(lblFilters);
         //pnlFilters.add(lblSearch);
         //pnlFilters.add(search);
         pnlFilters.add(ChkUnderGrowth);
@@ -549,7 +549,7 @@ public class Gui extends JPanel implements ChangeListener {
 
         radSlider = new JSlider(0, 1024);
         radSlider.setEnabled(false);
-        radSlider.setValue(0);
+        radSlider.setValue(1024);
         Hashtable<Integer, JLabel> table = new Hashtable<Integer, JLabel>();
         table.put(0,new JLabel("0"));
         table.put(1024,new JLabel("1024"));
