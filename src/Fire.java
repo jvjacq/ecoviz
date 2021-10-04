@@ -217,7 +217,7 @@ public class Fire {
         fireGrid[x][y] = 2; // ASH cant move anymore
         if (x > 0 || y > 0 || x < Terrain.getDimX() || y < Terrain.getDimY()) {
             try {
-                if (plantGrid[y - 1][x] == 1 && fireGrid[x - 1][y] != 2) { // West
+                if (plantGrid[y - 1][x] == 1 && fireGrid[x - 1][y] != 2) { 
                     // 100% chance of fire spread
                     plantGrid[x - 1][y] = 2; // FIRE
                     fireGrid[x - 1][y] = 1; // FIRE
@@ -227,7 +227,7 @@ public class Fire {
                     fireGrid[x - 1][y] = 1; // FIRE
                 }
 
-                if (plantGrid[x + 1][y] == 1 && fireGrid[x + 1][y] != 2) { // East
+                if (plantGrid[x + 1][y] == 1 && fireGrid[x + 1][y] != 2) { 
                     // 100% chance of fire spread
                     plantGrid[x + 1][y] = 2;
                     fireGrid[x + 1][y] = 1;
@@ -237,7 +237,7 @@ public class Fire {
                     fireGrid[x + 1][y] = 1;
                 }
 
-                if (plantGrid[x + 1][y + 1] == 1 && fireGrid[x + 1][y + 1] != 2) { // North East
+                if (plantGrid[x + 1][y + 1] == 1 && fireGrid[x + 1][y + 1] != 2) { 
                     // 100% chance of fire spread
                     plantGrid[x + 1][y + 1] = 2;
                     fireGrid[x + 1][y + 1] = 1;
@@ -247,8 +247,7 @@ public class Fire {
                     fireGrid[x + 1][y + 1] = 1;
                 }
 
-                if (plantGrid[x][y + 1] == 1 && fireGrid[x][y + 1] != 2) { // North
-                    // 100% chance of fire spread
+                if (plantGrid[x][y + 1] == 1 && fireGrid[x][y + 1] != 2) { 
                     plantGrid[x][y + 1] = 2;
                     fireGrid[x][y + 1] = 1; // FIRE
 
@@ -257,7 +256,7 @@ public class Fire {
                     fireGrid[x][y + 1] = 1; // FIRE
                 }
 
-                if (plantGrid[x - 1][y + 1] == 1 && fireGrid[x - 1][y + 1] != 2) { // North West
+                if (plantGrid[x - 1][y + 1] == 1 && fireGrid[x - 1][y + 1] != 2) { 
                     // 100% chance of fire spread
                     plantGrid[x - 1][y + 1] = 2;
                     fireGrid[x - 1][y + 1] = 1; // FIRE
@@ -267,7 +266,7 @@ public class Fire {
                     fireGrid[x - 1][y + 1] = 1; // FIRE
                 }
 
-                if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) { // South
+                if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) { 
                     // 100% chance of fire spread
                     plantGrid[x - 1][y - 1] = 2;
                     fireGrid[x - 1][y - 1] = 1; // FIRE
@@ -277,7 +276,7 @@ public class Fire {
                     fireGrid[x - 1][y - 1] = 1; // FIRE
                 }
 
-                if (plantGrid[x + 1][y - 1] == 1 && fireGrid[x + 1][y - 1] != 2) { // South East
+                if (plantGrid[x + 1][y - 1] == 1 && fireGrid[x + 1][y - 1] != 2) {
                     // 100% chance of fire spread
                     plantGrid[x + 1][y - 1] = 2;
                     fireGrid[x + 1][y - 1] = 1; // FIRE
@@ -287,7 +286,7 @@ public class Fire {
                     fireGrid[x + 1][y - 1] = 1; // FIRE
                 }
 
-                if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) { // South West 🡧
+                if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) {
                     // 100% chance of fire spread
                     plantGrid[x - 1][y - 1] = 2;
                     fireGrid[x - 1][y - 1] = 1; // FIRE
