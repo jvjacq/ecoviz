@@ -73,6 +73,7 @@ public class Gui extends JPanel{
     private JLabel lblShort;
     private JLabel lblAvg;
     private JLabel lblNum;
+    private JPanel pnlSouth;
 
     //Filter Section:
     private JLabel shTitle;
@@ -347,7 +348,7 @@ public class Gui extends JPanel{
         // ======================================================================
         // South Panel:
         // ======================================================================
-        JPanel pnlSouth = new JPanel();
+        pnlSouth = new JPanel();
         pnlSouth.setLayout(new GridLayout(0, 1));
 
         btnFire = new JButton("Simulate Fire");
@@ -533,7 +534,7 @@ public class Gui extends JPanel{
         JLabel lblConfig = new JLabel("Configurations");
         lblConfig.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
         // Add components to Config Panel
-        pnlConfig.add(lblConfig);
+        //pnlConfig.add(lblConfig);
         pnlConfig.add(wDirLbl);
         pnlConfig.add(wDirSlider);
         pnlConfig.add(wSpdLbl);
@@ -750,6 +751,10 @@ public class Gui extends JPanel{
 
     public void changeTheme(int theme) {
         LookAndFeel obj = new FlatDarculaLaf();
+        pnlSouth.setBackground(new Color(175, 186, 204));
+        pnlSouth.setOpaque(false);
+
+
         String message = "";
         switch (theme) {
 
@@ -759,6 +764,9 @@ public class Gui extends JPanel{
             case 1:
                 obj = new FlatLightLaf();
                 message = "Light Mode Enabled";
+                pnlSouth.setBackground(new Color(175, 186, 204));
+                pnlSouth.setOpaque(true);
+
                 break;
             case 2:
                 // obj = new FlatDarculaLaf();

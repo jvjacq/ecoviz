@@ -34,9 +34,9 @@ public class Fire {
         this.canopyPlants = plantGrid2;
 
         // Global Variables
-        chance = 20; // Chance of fire moving on ground
+        chance = 25; // Chance of fire moving on ground
         specieslist = PlantLayer.getAllSpecies();
-        ashColor = new Color(74, 59, 59);
+        ashColor = new Color(235, 137, 52);
         burntColor = new Color(194, 34, 2);
         igniteColor = new Color(252, 169, 25);
         showPath = true;
