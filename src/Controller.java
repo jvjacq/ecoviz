@@ -159,7 +159,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                     try {
                         Thread.sleep(delay);
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
@@ -259,6 +258,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         Species[] specieslist = PlantLayer.getAllSpecies();
         Color c = new Color(0, 0, 0, 1.0f);
         Color prev = specieslist[id].getColour();
+        //specieslist[id].setPrevColour(prev);
         specieslist[id].setColour(c);
         image.deriveImage();
         image.repaint();
