@@ -292,7 +292,7 @@ public class FileController implements Runnable{
             names[0] = line.substring(0, comma);
             line = line.substring(comma+3);
             names[1] = line.substring(0,line.length()-2);
-            Random r = new Random();		  
+            //Random r = new Random();		  
             Color col = colourSpread[id];
             //new Color(r.nextFloat(), r.nextFloat(), r.nextFloat(), 0.5f);
             Species species = new Species(id, names[0], names[1], col);
