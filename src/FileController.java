@@ -17,6 +17,7 @@ public class FileController implements Runnable{
     private int totalPlants;
     private float scale;
     private static float MAXHeight, MAXRadius;
+    private int totalSpecies;
 
     private String threadFile;
     private PlantLayer threadLayer;
@@ -101,6 +102,10 @@ public class FileController implements Runnable{
 
     public static float getMaxRadius(){
         return FileController.MAXRadius;
+    }
+
+    public int getTotalSpecies(){
+        return this.totalSpecies;
     }
 
     synchronized public static void compareAndSetMaxHeight(float f){
@@ -265,7 +270,7 @@ public class FileController implements Runnable{
         File file = new File(filename);
         Scanner filein = new Scanner(file);
 
-        int totalSpecies = 0;
+        totalSpecies = 0;
         while(filein.hasNextLine()){
             ++totalSpecies;
             filein.nextLine();
