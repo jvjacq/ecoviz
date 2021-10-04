@@ -41,16 +41,6 @@ public class Species {
         this.filter = true;
     }
 
-    /*public Species(int id, float minH, float maxH, float avg, int num){
-        this.speciesid = id;
-        this.minHeight = minH;
-        this.maxHeight = maxH;
-        this.avgRatio = avg;
-        this.numPlants = num;
-        //this.commonName = Species.SPECIES[id][0];
-        //this.latinName = Species.SPECIES[id][1];
-    }*/
-
     //Mutator Methods:
 
     public void setCommon(String name){
