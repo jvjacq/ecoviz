@@ -13,16 +13,13 @@ import java.util.ArrayList;
 public class Fire {
     private int dimX;
     private int dimY;
-    private int[][] fireGrid;
-    private int[][] plantGrid;
-    private int[][] burntPlants;
+    private int[][] fireGrid,plantGrid,burntPlants;
     private int[][][] underPlants, canopyPlants;
     private int[] traversal;
     private BufferedImage fireImage, burntImage;
     private ArrayList<Integer> permute; // permuted list of integers in range [0, dimx*dimy)
     private boolean showPath;
     private boolean showBurnt;
-
     private Species[] specieslist;
     private Color ashColor, burntColor, igniteColor;
     private double chance;
@@ -55,6 +52,7 @@ public class Fire {
         genGrid();
     }
 
+    // Populates a grid of the trees on the map
     public void genGrid() {
         for (int x = 0; x < dimX; x++) {
             for (int y = 0; y < dimY; y++) {
@@ -315,7 +313,7 @@ public class Fire {
                         g2d.setColor(igniteColor);
                         g2d.fillRect(x, y, 1, 1);
                     } else if (fireGrid[x][y] == 2 && plantGrid[x][y] == 0) {
-                        g2d.setColor(ashColor); 
+                        g2d.setColor(ashColor);
                         g2d.fillRect(x, y, 1, 1);
                     }
                 }

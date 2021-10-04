@@ -93,7 +93,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             fire.setShowPath(true);
         } else {
             fire.setShowPath(false);
-
         }
     }
 
@@ -102,7 +101,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             fire.setShowBurnt(true);
         } else {
             fire.setShowBurnt(false);
-
         }
     }
 
@@ -143,8 +141,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.repaint();
         gui.getStamp().setIcon(pauseImg);
         running = false;
-
-
     }
 
     public void pauseFireSim() {
