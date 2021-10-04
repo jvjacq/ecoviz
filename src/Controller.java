@@ -19,11 +19,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean fireMode;
     private int numSpecies;
     private Fire fire;
-    private Timer timer;
+    private Timer timer,timerDerive;
     private int delay;
     private boolean running;
     private Plant selected;
-    private TimerTask task;
+    private TimerTask task,task2;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -34,7 +34,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.files = new FileController();
         running = false;
         selected = null;
-        delay = 50;// default - Update Speed
+        delay = 25;// default - Update Speed
     }
 
     public void initController() {
@@ -73,8 +73,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         BufferedImage updatedBurntImage = fire.getImage();
         image.setBurnt(updatedBurntImage);
         gui.repaint();
-
-        // timer.cancel();
     }
 
     public void showPath() {
@@ -115,8 +113,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         fireMode = false;
         running = false;
         task.cancel();
+        task2.cancel();
         timer.cancel();
+        timerDerive.cancel();
         timer.purge();
+        timerDerive.purge();
         gui.getRenderBtn().setEnabled(true);
         gui.getPauseBtn().setEnabled(false);
         image.repaint();
@@ -140,6 +141,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getPauseBtn().setEnabled(true);
         running = true;
         timer = new Timer();
+        timerDerive = new Timer();
+
         task = new TimerTask() {
 
             @Override
@@ -148,18 +151,42 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 if (running) {
                     // delay = gui.getDelay();
                     fire.simulate(0, (Terrain.getDimX() * Terrain.getDimY())); // Run simulation on all
-                    fire.deriveFireImage();
-                    BufferedImage updatedFireImage = fire.getImage();
-                    image.setFire(updatedFireImage);
-
-                    BufferedImage updatedBurnImage = fire.getBurntImage();
-                    image.setBurnt(updatedBurnImage);
-
-                    image.repaint();
+                    try {
+                        Thread.sleep(delay);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
             }
         };
-        timer.schedule(task, 0, delay);
+
+        task2 = new TimerTask() {
+
+            @Override
+            public void run() {
+
+                if (running) {
+                    fire.deriveFireImage();
+
+                    BufferedImage updatedFireImage = fire.getImage();
+                    BufferedImage updatedBurnImage = fire.getBurntImage();
+
+                    image.setFire(updatedFireImage);
+                    image.setBurnt(updatedBurnImage);
+
+                    image.repaint();
+                    
+                }
+            }
+        };
+
+
+        timer.schedule(task, 0, 1);
+        timerDerive.schedule(task2,0,1);
+
+
+
         gui.getRenderBtn().setEnabled(false);
     }
 
@@ -454,6 +481,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.setShortest("0.0");
         gui.setAvg("0.0");
         gui.setNumber("0");
+    }
+
+    public void setDelay(int d){
+        delay = d;
     }
 
     @Override
