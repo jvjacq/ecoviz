@@ -43,7 +43,7 @@ public class Gui extends JPanel implements ChangeListener {
     private JButton btnRender;
     private JButton btnPause;
     private JButton btnReset;
-    private JCheckBox chkPath;
+    private JCheckBox chkPath,chkBurnt;
 
     PlantLayer canopy, undergrowth;
 
@@ -78,10 +78,15 @@ public class Gui extends JPanel implements ChangeListener {
     private JLabel taTitle;
     private JLabel avTitle;
     JFormattedTextField tHiHeight, tLoHeight, tHiRadius, tLoRadius;
+    private JLabel stamp;
     //Filter Section:
 
     private JLabel lblSearch;
     private JTextField search;
+
+    public JLabel getStamp(){
+        return stamp;
+    }
 
     public JFrame getMain() {
         return this.frame;
@@ -153,6 +158,9 @@ public class Gui extends JPanel implements ChangeListener {
 
     public JCheckBox getChkShowPath() {
         return this.chkPath;
+    }
+    public JCheckBox getChkShowBurnt() {
+        return this.chkBurnt;
     }
 
     public JCheckBox getChkUndergrowth() {
@@ -303,9 +311,11 @@ public class Gui extends JPanel implements ChangeListener {
         
 
         // Add Components
-        JLabel stamp = new JLabel();
+        stamp = new JLabel();
         ImageIcon path2 = new ImageIcon("resources/stamp.gif");
         stamp.setIcon(path2);
+
+        
 
         btnBack.setVisible(false);
         btnBack.setBackground(Color.RED);
@@ -452,6 +462,7 @@ public class Gui extends JPanel implements ChangeListener {
         pnlDetails.add(pnlStats);
 
         chkPath = new JCheckBox("Show Path of Fire",true);
+        chkBurnt = new JCheckBox("Show Burnt Trees",true);
         
         speciesToggle = new JCheckBox("Full species details");
         speciesToggle.setEnabled(false);
@@ -476,6 +487,7 @@ public class Gui extends JPanel implements ChangeListener {
         pnlConfig.add(spdSlider);
         pnlConfig.add(ChkMetric);
         pnlConfig.add(chkPath);
+        pnlConfig.add(chkBurnt);
 
         tabbedPane.addTab("Config", null, pnlConfig, "Change Simulation Settings");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);

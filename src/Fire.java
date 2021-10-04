@@ -21,6 +21,8 @@ public class Fire {
     private BufferedImage fireImage, burntImage;
     private ArrayList<Integer> permute; // permuted list of integers in range [0, dimx*dimy)
     private boolean showPath;
+    private boolean showBurnt;
+
     private Species[] specieslist;
     private Color ashColor, burntColor, igniteColor;
     private double chance;
@@ -37,10 +39,11 @@ public class Fire {
         // Global Variables
         chance = 20; // Chance of fire moving on ground
         specieslist = PlantLayer.getAllSpecies();
-        ashColor = new Color(222, 137, 9);
+        ashColor = new Color(74, 59, 59);
         burntColor = new Color(194, 34, 2);
         igniteColor = new Color(252, 169, 25);
         showPath = true;
+        showBurnt = true;
         traversal = new int[dimX * dimY];
         fireGrid = new int[dimX][dimY];
         plantGrid = new int[dimX][dimY];
@@ -151,8 +154,8 @@ public class Fire {
             for (int y = 0; y < dimY; y++) {
                 fireGrid[x][y] = 0;
                 burntPlants[x][y] = 0;
-                if (plantGrid[x][y]==2){
-                    plantGrid[x][y]=1;
+                if (plantGrid[x][y] == 2) {
+                    plantGrid[x][y] = 1;
                 }
             }
         }
@@ -276,7 +279,7 @@ public class Fire {
                     fireGrid[x - 1][y - 1] = 1; // FIRE
                 }
 
-                if (plantGrid[x + 1][y - 1] ==1 && fireGrid[x + 1][y - 1] != 2) { // South East
+                if (plantGrid[x + 1][y - 1] == 1 && fireGrid[x + 1][y - 1] != 2) { // South East
                     // 100% chance of fire spread
                     plantGrid[x + 1][y - 1] = 2;
                     fireGrid[x + 1][y - 1] = 1; // FIRE
@@ -311,8 +314,8 @@ public class Fire {
                     if (fireGrid[x][y] == 1) {
                         g2d.setColor(igniteColor);
                         g2d.fillRect(x, y, 1, 1);
-                    } else if (fireGrid[x][y] == 2 && plantGrid[x][y]==0) {
-                        g2d.setColor(ashColor); // Usually dark grey
+                    } else if (fireGrid[x][y] == 2 && plantGrid[x][y] == 0) {
+                        g2d.setColor(ashColor); 
                         g2d.fillRect(x, y, 1, 1);
                     }
                 }
@@ -323,10 +326,12 @@ public class Fire {
         Graphics2D g2d_burnt = burntImage.createGraphics();
         g2d_burnt.setColor(burntColor);
 
-        for (int x = 0; x < dimX; x++) {
-            for (int y = 0; y < dimY; y++) {
-                if (plantGrid[x][y] == 2) {
-                    g2d_burnt.fillRect(x, y, 1, 1);
+        if (showBurnt) {
+            for (int x = 0; x < dimX; x++) {
+                for (int y = 0; y < dimY; y++) {
+                    if (plantGrid[x][y] == 2) {
+                        g2d_burnt.fillRect(x, y, 1, 1);
+                    }
                 }
             }
         }
@@ -370,5 +375,9 @@ public class Fire {
     public void setShowPath(Boolean b) {
         showPath = b;
 
+    }
+
+    public void setShowBurnt(Boolean b) {
+        showBurnt = b;
     }
 }

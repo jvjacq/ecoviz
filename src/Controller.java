@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 
 public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener {
@@ -25,6 +26,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private Plant selected;
     private boolean deaf;
     private TimerTask task,task2;
+    private ImageIcon pauseImg,runImg;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -37,6 +39,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         selected = null;
         deaf = false;
         delay = 25;// default - Update Speed
+        runImg = new ImageIcon("resources/Running.gif");
+        pauseImg = new ImageIcon("resources/stamp.gif");
+
     }
 
     public void initController() {
@@ -44,6 +49,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getFireBtn().addActionListener(e -> openFireSim());
         gui.getBackBtn().addActionListener(e -> closeFireSim());
         gui.getChkShowPath().addActionListener(e -> showPath());
+        gui.getChkShowBurnt().addActionListener(e -> showBurnt());
         gui.getPauseBtn().addActionListener(e -> pauseFireSim());
         gui.getLoadBtn().addActionListener(e -> loadFiles());
         gui.getResetBtn().addActionListener(e -> resetFireSim());
@@ -84,11 +90,18 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void showPath() {
         if (gui.getChkShowPath().isSelected()){
-            System.out.println("Showing Path");
             fire.setShowPath(true);
         } else {
-            System.out.println("Hiding Path");
             fire.setShowPath(false);
+
+        }
+    }
+
+    public void showBurnt() {
+        if (gui.getChkShowBurnt().isSelected()){
+            fire.setShowBurnt(true);
+        } else {
+            fire.setShowBurnt(false);
 
         }
     }
@@ -137,9 +150,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         if (running == false) {
             running = true;
             gui.getPauseBtn().setText("Pause");
+            gui.getStamp().setIcon(runImg);
         } else {
             running = false;
             gui.getPauseBtn().setText("Play");
+            gui.getStamp().setIcon(pauseImg);
+
 
         }
     }
@@ -149,6 +165,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         System.out.println("Running the Fire Simulation");
         gui.getPauseBtn().setEnabled(true);
         running = true;
+        gui.getStamp().setIcon(runImg);
+
         timer = new Timer();
         timerDerive = new Timer();
 
