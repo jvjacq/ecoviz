@@ -61,7 +61,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getLoHeight().addPropertyChangeListener(e -> filterHeightCanopy());
         gui.getHiRadius().addPropertyChangeListener(e -> filterHeightCanopy());
         gui.getLoRadius().addPropertyChangeListener(e -> filterHeightCanopy());
-        //gui.getRadSlider().addChangeListener(/**/);
+        gui.getRadSlider().addChangeListener(e -> filterByRadius());
+        gui.getChkSelectRadius().addItemListener(e -> toggleRadiusSlider());
         gui.getChkMetric().addItemListener(e -> changeUnits());
         image.addMouseListener(this);
         image.addMouseMotionListener(this);
@@ -270,6 +271,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getLoadFrame().setVisible(false);
         gui.getEast().setPreferredSize(new Dimension(200,Terrain.getDimY()));
         this.deaf = true;
+        gui.getRadSlider().setValue(0);
+        gui.getChkSelectRadius().setEnabled(false);
         gui.getHiHeight().setValue(Math.ceil(FileController.getMaxHeight()));
         gui.getHiRadius().setValue(Math.ceil(FileController.getMaxRadius()));
         gui.getLoHeight().setValue(0.00f);
@@ -391,6 +394,30 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }
     }
 
+    public void filterByRadius(){
+        if(deaf) return;
+        image.displayPlant(selected, getViewRadius());
+        image.deriveImage();
+        updateFilterSpeciesCounts();
+        image.repaint();
+    }
+
+    public int getViewRadius(){
+        if(gui.getChkSelectRadius().isSelected()) return gui.getRadSlider().getValue();
+        return -1;
+    }
+
+    public void toggleRadiusSlider(){
+        deaf = true;
+        if(gui.getChkSelectRadius().isSelected()){
+            gui.getRadSlider().setEnabled(true);
+        }else{
+            gui.getRadSlider().setEnabled(false);
+            gui.getRadSlider().setValue(0);
+        }
+        deaf = false;
+    }
+
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
 
@@ -409,7 +436,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }
         image.deriveImage();
         updateFilterSpeciesCounts();
-        if(selected != null) image.displayPlant(selected);
+        if(selected != null) image.displayPlant(selected, getViewRadius());
         image.repaint();
         gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
 
@@ -425,7 +452,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.setDragger(true);
         image.deriveImage();
         updateFilterSpeciesCounts();
-        if(selected != null) image.displayPlant(selected);
+        if(selected != null) image.displayPlant(selected, getViewRadius());
 		image.repaint();
         gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
 
@@ -459,7 +486,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                         // Will be lowest plant
                         selected = plant;
                         id = plant.getSpeciesID();
-                        image.displayPlant(selected);
+                        image.displayPlant(selected, getViewRadius());
                         image.repaint();
                         break;
                     }
@@ -472,12 +499,17 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 setPlantDesc();
                 // gui.setSpeciesDetails(specieslist[id].toString());
                 gui.getTabPane().setSelectedIndex(0);
+                gui.getChkSelectRadius().setEnabled(true);
                 // System.out.println("why");
             } else {
                 image.resetDetails();
                 resetDesc();
                 selected = null;
                 gui.getSpeciesToggle().setEnabled(false);
+                gui.getChkSelectRadius().setEnabled(false);
+                deaf = true;
+                gui.getRadSlider().setValue(0);
+                deaf = false;
                 // gui.setSpeciesDetails("Select any plant to \n view details!");
                 image.deriveImage();
                 image.repaint();
@@ -553,7 +585,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.setReleased(true);
         image.deriveImage();
         updateFilterSpeciesCounts();
-        if(selected != null) image.displayPlant(selected);
+        if(selected != null) image.displayPlant(selected, getViewRadius());
         image.repaint();		
 	}
 
