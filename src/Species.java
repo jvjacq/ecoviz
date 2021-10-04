@@ -11,9 +11,6 @@
 import java.awt.Color;
 
 public class Species {
-
-    //private static String[][] SPECIES;
-    //private static int[] COLOURS;
     private String commonName;
     private String latinName;
     private int speciesid;
@@ -91,16 +88,7 @@ public class Species {
         this.filter = b;
     }
 
-    /*public static void setSpeciesList(String[][] list){
-        Species.SPECIES = list;
-    }
-
-    public static void setColourList(int[] list){
-        Species.COLOURS = list;
-    }*/
-
     // Accessor Methods:
-
     public String getCommon(){
         return this.commonName;
     }
@@ -147,19 +135,5 @@ public class Species {
 
     public boolean getFilter(){
         return this.filter;
-    }
-
-    /*public static String[][] getSPECIES(){
-        return Species.SPECIES;
-    }
-
-    public static int[] getCOLOURS(){
-        return Species.COLOURS;
-    }*/
-
-    @Override
-    public String toString() {
-        //Way to access tallest/shortest?
-        return "Common name:\n" + this.commonName + "\nLatin name:\n" + this.latinName + "\nShortest plant:\n" + this.minHeight + "\nTallest plant:\n" + this.maxHeight + "\nAvg. Ration of Canopy/Height:\n" + this.avgRatio + "\nTotal number of individuals:\n" + this.numPlants;
     }
 }
