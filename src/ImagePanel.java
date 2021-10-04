@@ -120,10 +120,15 @@ public class ImagePanel extends JPanel{
 		return this.plantsInView;
 	}
 
-	/*public void setScale(float f){
-		this.scale = f;
-	}*/
+	public boolean getShowCanopy(){
+		return this.showCanopy;
+	}
 
+	public boolean getShowUndergrowth(){
+		return this.showUnderGrowth;
+	}
+
+	//Mutator methods
 	public void setStartPoint(Point p){
 		this.startPoint = p;
 	}
@@ -259,7 +264,7 @@ public class ImagePanel extends JPanel{
 			//imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));						
 			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
 			//System.out.println("Plant before print: " + p.getX() + " " + p.getY());
-			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) | (this.showUnderGrowth && !p.getLayer()))){
+			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) || (this.showUnderGrowth && !p.getLayer()))){
 				++circles;
 				imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
 				plantsInView[p.getSpeciesID()] += 1;
@@ -392,7 +397,7 @@ public class ImagePanel extends JPanel{
 				p.setFilter(true);
 			}else p.setFilter(false);
 
-			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) | (this.showUnderGrowth && !p.getLayer()))){
+			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) || (this.showUnderGrowth && !p.getLayer()))){
 				int x = p.getX();
 				int y = p.getY();
 				double rad = p.getCanopy();
