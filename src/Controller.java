@@ -23,7 +23,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private int delay;
     private boolean running;
     private Plant selected;
-    private TimerTask task;
     private boolean deaf;
     private TimerTask task,task2;
 
