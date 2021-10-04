@@ -296,5 +296,9 @@ public class Fire {
 
     public void setShowPath(Boolean b){
         showPath = b;
+        //System.out.println(b);
+        if (showPath==true){//System.out.println("Showing Fire Path");
+    } else {//System.out.println("Hiding Fire Path");
+}
     }
 }
