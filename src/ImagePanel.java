@@ -44,9 +44,6 @@ public class ImagePanel extends JPanel{
 	private boolean showUnderGrowth;
 
 	private int topleftx,toplefty,newDimX, newDimY;
-	private boolean painted;
-	//private float scale;
-
 	private float maxHeight, minHeight, maxRadius, minRadius;
 	private int circles;
 	private int[] plantsInView;
@@ -61,11 +58,7 @@ public class ImagePanel extends JPanel{
 		this.xOffset = 0;
 		this.yOffset = 0;
 		this.selectRad = -1;
-		this.painted = false;
 	}
-	/*public float getScale(){
-		return this.scale;
-	}*/
 
 	public int getStartX(){
 		return this.startPoint.x;
@@ -161,10 +154,6 @@ public class ImagePanel extends JPanel{
 
 	public void setPrevZoomMult(double multiplier){
 		this.prevZoomMultiplier = multiplier;
-	}
-
-	public void setPainted(boolean b){
-		this.painted = b;
 	}
 
 	public void setPlantsInView(int size){
