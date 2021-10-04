@@ -34,7 +34,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.files = new FileController();
         running = false;
         selected = null;
-        delay = 100;// default
+        delay = 50;// default - Update Speed
     }
 
     public void initController() {
@@ -89,13 +89,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void openFireSim() {
-
+        gui.getTabPane().setSelectedIndex(1);
         gui.getFireBtn().setVisible(false);
         gui.getPauseBtn().setVisible(true);
         gui.getBackBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
         gui.getRenderBtn().setVisible(true);
-        gui.getChkShowPath().setVisible(true);
         fireMode = true;
         gui.getPauseBtn().setEnabled(false);
         // Setup fire:
@@ -104,12 +103,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeFireSim() {
+        gui.getTabPane().setSelectedIndex(0);
+
         gui.getFireBtn().setVisible(true);
         gui.getBackBtn().setVisible(false);
         gui.getResetBtn().setVisible(false);
         gui.getRenderBtn().setVisible(false);
         gui.getPauseBtn().setVisible(false);
-        gui.getChkShowPath().setVisible(false);
 
         resetFireSim();
         fireMode = false;

@@ -264,7 +264,7 @@ public class Gui extends JPanel implements ChangeListener {
         // South Panel:
         // ======================================================================
         JPanel pnlSouth = new JPanel();
-        pnlSouth.setLayout(new BoxLayout(pnlSouth, BoxLayout.Y_AXIS));
+        pnlSouth.setLayout(new GridLayout(0, 1));
 
         btnFire = new JButton("Simulate Fire");
         btnBack = new JButton("Leave Fire Simulator");
@@ -278,8 +278,7 @@ public class Gui extends JPanel implements ChangeListener {
         btnReset = new JButton("Reset");
         btnReset.setVisible(false);
 
-        chkPath = new JCheckBox("Show Path of Fire",true);
-        chkPath.setVisible(false);
+        
 
         // Add Components
         JLabel stamp = new JLabel();
@@ -296,7 +295,8 @@ public class Gui extends JPanel implements ChangeListener {
         pnlSouth.add(btnPause);
         pnlSouth.add(btnReset);
         pnlSouth.add(btnBack);
-        pnlSouth.add(chkPath);
+
+        
 
         // pnlSouth.setPreferredSize(new Dimension(100,100));
         Border bFire = BorderFactory.createTitledBorder("Fire Simulation");
@@ -429,6 +429,9 @@ public class Gui extends JPanel implements ChangeListener {
         pnlDetails.add(pnlHeight);
         pnlDetails.add(pnlStats);
 
+        chkPath = new JCheckBox("Show Path of Fire",true);
+        
+
         speciesToggle = new JCheckBox("Full species details");
         speciesToggle.setEnabled(false);
         speciesToggle.setSelected(false);
@@ -451,6 +454,7 @@ public class Gui extends JPanel implements ChangeListener {
         pnlConfig.add(lblSpeed);
         pnlConfig.add(spdSlider);
         pnlConfig.add(ChkMetric);
+        pnlConfig.add(chkPath);
 
         tabbedPane.addTab("Config", null, pnlConfig, "Change Simulation Settings");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
