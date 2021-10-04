@@ -4,7 +4,6 @@
 * Status: In progress
 */
 
-
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.awt.Graphics2D;

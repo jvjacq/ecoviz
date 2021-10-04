@@ -34,7 +34,7 @@ public class Fire {
         this.canopyPlants = plantGrid2;
 
         //Global Variables
-        chance = 30; //Chance of fire moving on ground
+        chance = 15; //Chance of fire moving on ground
         specieslist = PlantLayer.getAllSpecies();
         ashColor = new Color(87, 87, 87);
         burntColor = new Color(219, 37, 0);
@@ -98,9 +98,9 @@ public class Fire {
     public void fillTree(int x, int y) {
         fireGrid[x][y] = 1;
 
-        if (underPlants[x][y][1] > 0) {
-            int specId = underPlants[x][y][0]; // Species ID
-            int plantID = underPlants[x][y][1]; // Plant ID
+        if (underPlants[y][x][1] > 0) {
+            int specId = underPlants[y][x][0]; // Species ID
+            int plantID = underPlants[y][x][1]; // Plant ID
 
             Plant[] uPlants = specieslist[specId].getCanopyPlants();
             double rad = uPlants[plantID].getCanopy();
@@ -121,9 +121,9 @@ public class Fire {
             }
         }
 
-        if (canopyPlants[x][y][1] > 0) {
-            int specId = canopyPlants[x][y][0]; // Species ID
-            int plantID = canopyPlants[x][y][1]; // Plant ID
+        if (canopyPlants[y][x][1] > 0) {
+            int specId = canopyPlants[y][x][0]; // Species ID
+            int plantID = canopyPlants[y][x][1]; // Plant ID
 
             Plant[] cPlants = specieslist[specId].getCanopyPlants();
             double rad = cPlants[plantID].getCanopy();
@@ -151,7 +151,7 @@ public class Fire {
         fireGrid[x][y] = 2; // ASH cant move anymore
         if (x > 0 || y > 0 || x < Terrain.getDimX() || y < Terrain.getDimY()) {
             try {
-                if ((underPlants[x - 1][y][1] > 0 || canopyPlants[x - 1][y][1] > 0) 
+                if ((underPlants[y - 1][x][1] > 0 || canopyPlants[y - 1][x][1] > 0) 
                         && fireGrid[x - 1][y] != 2) { // West
                     // 100% chance of fire spread
                     fillTree(x - 1, y);
@@ -161,7 +161,7 @@ public class Fire {
                     fireGrid[x - 1][y] = 1; // FIRE
                 }
 
-                if ((underPlants[x + 1][y][1] > 0 || canopyPlants[x + 1][y][1] > 0) 
+                if ((underPlants[y + 1][x][1] > 0 || canopyPlants[y + 1][x][1] > 0) 
                         && fireGrid[x + 1][y] != 2) { // East
                     // 100% chance of fire spread
                     fillTree(x + 1, y);
@@ -170,7 +170,7 @@ public class Fire {
                     fireGrid[x + 1][y] = 1;
                 }
 
-                if ((underPlants[x + 1][y + 1][1] > 0 || canopyPlants[x + 1][y + 1][1] > 0)
+                if ((underPlants[y + 1][x + 1][1] > 0 || canopyPlants[y + 1][x + 1][1] > 0)
                         && fireGrid[x + 1][y + 1] != 2) { // North East
                     // 100% chance of fire spread
                     fillTree(x + 1, y + 1);
@@ -179,7 +179,7 @@ public class Fire {
                     fireGrid[x + 1][y + 1] = 1;
                 }
 
-                if ((underPlants[x][y + 1][1] > 0 || canopyPlants[x][y + 1][1] > 0) 
+                if ((underPlants[y][x + 1][1] > 0 || canopyPlants[y][x + 1][1] > 0) 
                         && fireGrid[x][y + 1] != 2) { // North
                     // 100% chance of fire spread
                     fillTree(x, y + 1);
@@ -188,7 +188,7 @@ public class Fire {
                     fireGrid[x][y + 1] = 1; // FIRE
                 }
 
-                if ((underPlants[x - 1][y + 1][1] > 0 || canopyPlants[x - 1][y + 1][1] > 0)
+                if ((underPlants[y - 1][x + 1][1] > 0 || canopyPlants[y - 1][x + 1][1] > 0)
                         && fireGrid[x - 1][y + 1] != 2) { // North West
                     // 100% chance of fire spread
                     fillTree(x - 1, y + 1);
@@ -197,7 +197,7 @@ public class Fire {
                     fireGrid[x - 1][y + 1] = 1; // FIRE
                 }
 
-                if ((underPlants[x - 1][y - 1][1] > 0 || canopyPlants[x - 1][y - 1][1] > 0)
+                if ((underPlants[y - 1][x - 1][1] > 0 || canopyPlants[y - 1][x - 1][1] > 0)
                         && fireGrid[x - 1][y - 1] != 2) { // South
                     // 100% chance of fire spread
                     fillTree(x - 1, y - 1);
@@ -206,7 +206,7 @@ public class Fire {
                     fireGrid[x - 1][y - 1] = 1; // FIRE
                 }
 
-                if ((underPlants[x + 1][y - 1][1] > 0 || canopyPlants[x + 1][y - 1][1] > 0)
+                if ((underPlants[y + 1][x - 1][1] > 0 || canopyPlants[y + 1][x - 1][1] > 0)
                         && fireGrid[x + 1][y - 1] != 2) { // South East
                     // 100% chance of fire spread
                     fillTree(x + 1, y - 1);
@@ -215,7 +215,7 @@ public class Fire {
                     fireGrid[x + 1][y - 1] = 1; // FIRE
                 }
 
-                if ((underPlants[x - 1][y - 1][1] > 0 || canopyPlants[x - 1][y - 1][1] > 0)
+                if ((underPlants[y - 1][x - 1][1] > 0 || canopyPlants[y - 1][x - 1][1] > 0)
                         && fireGrid[x - 1][y - 1] != 2) { // South West 🡧
                     // 100% chance of fire spread
                     fillTree(x - 1, y - 1);
@@ -296,9 +296,6 @@ public class Fire {
 
     public void setShowPath(Boolean b){
         showPath = b;
-        //System.out.println(b);
-        if (showPath==true){//System.out.println("Showing Fire Path");
-    } else {//System.out.println("Hiding Fire Path");
-}
+
     }
 }
