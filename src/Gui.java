@@ -7,7 +7,6 @@
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.image.BufferedImage;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
@@ -18,7 +17,6 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.event.*;
 import javax.swing.text.NumberFormatter;
 
 import com.formdev.flatlaf.*;
@@ -292,7 +290,7 @@ public class Gui extends JPanel{
         this.lblSpeed.setText(label);
     }
 
-    public JSlider[] getChangeListeners(){
+    public JSlider[] getSliderList(){
         JSlider[] sliderList = new JSlider[3];
         sliderList[0] = wDirSlider;
         sliderList[1] = wSpdSlider;
