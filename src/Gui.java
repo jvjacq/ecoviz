@@ -7,8 +7,6 @@
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.FlowLayout;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
@@ -494,9 +492,9 @@ public class Gui extends JPanel implements ChangeListener {
         JLabel lblFilters = new JLabel("Filters");
         lblFilters.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
         // Add components to Filter Panel
-        pnlFilters.add(lblFilters);
-        pnlFilters.add(lblSearch);
-        pnlFilters.add(search);
+        //pnlFilters.add(lblFilters);
+        //pnlFilters.add(lblSearch);
+        //pnlFilters.add(search);
         pnlFilters.add(ChkUnderGrowth);
         pnlFilters.add(ChkCanopy);
 
