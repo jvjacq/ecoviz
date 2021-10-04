@@ -446,7 +446,7 @@ public class ImagePanel extends JPanel{
 		return false;
 	}
 
-	public void displayPlant(Plant plant){
+	public void displayPlant(Plant plant, int radius){
 		details = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = details.createGraphics();
 		//imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
@@ -460,6 +460,9 @@ public class ImagePanel extends JPanel{
 		int newx = (int)Math.round((x-rad)*zoomMultiplier- topleftx*zoomMultiplier) ;
 		int newy = (int)Math.round((y-rad)*zoomMultiplier- toplefty*zoomMultiplier) ;
 		imgGraphics.fillOval(newx,newy,(int)Math.round(rad*2*zoomMultiplier),(int)Math.round(rad*2*zoomMultiplier));
+		if(radius != -1){
+			imgGraphics.drawOval((int)Math.round((x-radius-topleftx)*zoomMultiplier), (int)Math.round((y-radius-toplefty)*zoomMultiplier), (int)Math.round(radius*2*zoomMultiplier), (int)Math.round(radius*2*zoomMultiplier));
+		}
 	}
 
 	public void resetDetails(){
