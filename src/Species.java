@@ -33,6 +33,7 @@ public class Species {
         this.commonName = common;
         this.latinName = latin;
         this.colour = colour;
+        this.prevColour = colour;
         this.minHeight = -1;
         this.maxHeight = -1;
         this.avgRatio = 0;
