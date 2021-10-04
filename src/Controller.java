@@ -459,7 +459,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-   
+        if(fireMode) return;
+        //
         double multiplier = image.getZoomMult();
         if (e.getWheelRotation() < 0) { // Zoom in
             multiplier *= 1.1; // Adjust for smoothness
@@ -485,18 +486,21 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        if(fireMode){
+            //Firebreak
+        }else{
+            Point cursor = e.getLocationOnScreen();
+            image.setXDiff(cursor.x - image.getStartX());
+            image.setYDiff(cursor.y - image.getStartY());
 
-        Point cursor = e.getLocationOnScreen();
-        image.setXDiff(cursor.x - image.getStartX());
-        image.setYDiff(cursor.y - image.getStartY());
-
-        image.setDragger(true);
-        image.calculateView();
-        image.deriveImage();
-        updateFilterSpeciesCounts();
-        if(selected != null) image.displayPlant(selected, getViewRadius());
-		image.repaint();
-        gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
+            image.setDragger(true);
+            image.calculateView();
+            image.deriveImage();
+            updateFilterSpeciesCounts();
+            if(selected != null) image.displayPlant(selected, getViewRadius());
+            image.repaint();
+            gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
+        }
 
     }
 
