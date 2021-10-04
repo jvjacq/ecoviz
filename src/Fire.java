@@ -35,11 +35,11 @@ public class Fire {
         this.canopyPlants = plantGrid2;
 
         // Global Variables
-        chance = 10; // Chance of fire moving on ground
+        chance = 20; // Chance of fire moving on ground
         specieslist = PlantLayer.getAllSpecies();
-        ashColor = new Color(87, 87, 87);
-        burntColor = new Color(219, 37, 0);
-        igniteColor = Color.RED;
+        ashColor = new Color(222, 137, 9);
+        burntColor = new Color(194, 34, 2);
+        igniteColor = new Color(252, 169, 25);
         showPath = true;
         traversal = new int[dimX * dimY];
         fireGrid = new int[dimX][dimY];
@@ -151,6 +151,9 @@ public class Fire {
             for (int y = 0; y < dimY; y++) {
                 fireGrid[x][y] = 0;
                 burntPlants[x][y] = 0;
+                if (plantGrid[x][y]==2){
+                    plantGrid[x][y]=1;
+                }
             }
         }
         System.out.println("Reset Simulation");
@@ -213,71 +216,81 @@ public class Fire {
         fireGrid[x][y] = 2; // ASH cant move anymore
         if (x > 0 || y > 0 || x < Terrain.getDimX() || y < Terrain.getDimY()) {
             try {
-                if ((underPlants[y - 1][x][1] > 0 || canopyPlants[y - 1][x][1] > 0) && fireGrid[x - 1][y] != 2) { // West
+                if (plantGrid[y - 1][x] == 1 && fireGrid[x - 1][y] != 2) { // West
                     // 100% chance of fire spread
-                    fillTree(x - 1, y);
-                    // fireGrid[x-1][y]=1; //FIRE
+                    plantGrid[x - 1][y] = 2; // FIRE
+                    fireGrid[x - 1][y] = 1; // FIRE
+
                 } else if (rand < chance && fireGrid[x - 1][y] != 2) {
                     // 20% chance of fire spread
                     fireGrid[x - 1][y] = 1; // FIRE
                 }
 
-                if ((underPlants[y + 1][x][1] > 0 || canopyPlants[y + 1][x][1] > 0) && fireGrid[x + 1][y] != 2) { // East
+                if (plantGrid[x + 1][y] == 1 && fireGrid[x + 1][y] != 2) { // East
                     // 100% chance of fire spread
-                    fillTree(x + 1, y);
+                    plantGrid[x + 1][y] = 2;
+                    fireGrid[x + 1][y] = 1;
+
                 } else if (rand < chance && fireGrid[x + 1][y] != 2) {
                     // 20% chance of fire spread
                     fireGrid[x + 1][y] = 1;
                 }
 
-                if ((underPlants[y + 1][x + 1][1] > 0 || canopyPlants[y + 1][x + 1][1] > 0)
-                        && fireGrid[x + 1][y + 1] != 2) { // North East
+                if (plantGrid[x + 1][y + 1] == 1 && fireGrid[x + 1][y + 1] != 2) { // North East
                     // 100% chance of fire spread
-                    fillTree(x + 1, y + 1);
+                    plantGrid[x + 1][y + 1] = 2;
+                    fireGrid[x + 1][y + 1] = 1;
+
                 } else if (rand < chance && fireGrid[x + 1][y + 1] != 2) {
                     // 20% chance of fire spread
                     fireGrid[x + 1][y + 1] = 1;
                 }
 
-                if ((underPlants[y][x + 1][1] > 0 || canopyPlants[y][x + 1][1] > 0) && fireGrid[x][y + 1] != 2) { // North
+                if (plantGrid[x][y + 1] == 1 && fireGrid[x][y + 1] != 2) { // North
                     // 100% chance of fire spread
-                    fillTree(x, y + 1);
+                    plantGrid[x][y + 1] = 2;
+                    fireGrid[x][y + 1] = 1; // FIRE
+
                 } else if (rand < chance && fireGrid[x][y + 1] != 2) {
                     // 20% chance of fire spread
                     fireGrid[x][y + 1] = 1; // FIRE
                 }
 
-                if ((underPlants[y - 1][x + 1][1] > 0 || canopyPlants[y - 1][x + 1][1] > 0)
-                        && fireGrid[x - 1][y + 1] != 2) { // North West
+                if (plantGrid[x - 1][y + 1] == 1 && fireGrid[x - 1][y + 1] != 2) { // North West
                     // 100% chance of fire spread
-                    fillTree(x - 1, y + 1);
+                    plantGrid[x - 1][y + 1] = 2;
+                    fireGrid[x - 1][y + 1] = 1; // FIRE
+
                 } else if (rand < chance && fireGrid[x - 1][y + 1] != 2) {
                     // 20% chance of fire spread
                     fireGrid[x - 1][y + 1] = 1; // FIRE
                 }
 
-                if ((underPlants[y - 1][x - 1][1] > 0 || canopyPlants[y - 1][x - 1][1] > 0)
-                        && fireGrid[x - 1][y - 1] != 2) { // South
+                if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) { // South
                     // 100% chance of fire spread
-                    fillTree(x - 1, y - 1);
+                    plantGrid[x - 1][y - 1] = 2;
+                    fireGrid[x - 1][y - 1] = 1; // FIRE
+
                 } else if (rand < chance && fireGrid[x - 1][y - 1] != 2) {
                     // 20% chance of fire spread
                     fireGrid[x - 1][y - 1] = 1; // FIRE
                 }
 
-                if ((underPlants[y + 1][x - 1][1] > 0 || canopyPlants[y + 1][x - 1][1] > 0)
-                        && fireGrid[x + 1][y - 1] != 2) { // South East
+                if (plantGrid[x + 1][y - 1] ==1 && fireGrid[x + 1][y - 1] != 2) { // South East
                     // 100% chance of fire spread
-                    fillTree(x + 1, y - 1);
+                    plantGrid[x + 1][y - 1] = 2;
+                    fireGrid[x + 1][y - 1] = 1; // FIRE
+
                 } else if (rand < chance && fireGrid[x + 1][y - 1] != 2) {
                     // 20% chance of fire spread
                     fireGrid[x + 1][y - 1] = 1; // FIRE
                 }
 
-                if ((underPlants[y - 1][x - 1][1] > 0 || canopyPlants[y - 1][x - 1][1] > 0)
-                        && fireGrid[x - 1][y - 1] != 2) { // South West 🡧
+                if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) { // South West 🡧
                     // 100% chance of fire spread
-                    fillTree(x - 1, y - 1);
+                    plantGrid[x - 1][y - 1] = 2;
+                    fireGrid[x - 1][y - 1] = 1; // FIRE
+
                 } else if (rand < chance && fireGrid[x - 1][y - 1] != 2) {
                     // 20% chance of fire spread
                     fireGrid[x - 1][y - 1] = 1; // FIRE
@@ -298,11 +311,10 @@ public class Fire {
                     if (fireGrid[x][y] == 1) {
                         g2d.setColor(igniteColor);
                         g2d.fillRect(x, y, 1, 1);
-                    } else if (fireGrid[x][y] == 2) {
+                    } else if (fireGrid[x][y] == 2 && plantGrid[x][y]==0) {
                         g2d.setColor(ashColor); // Usually dark grey
                         g2d.fillRect(x, y, 1, 1);
                     }
-
                 }
             }
         }
@@ -313,7 +325,7 @@ public class Fire {
 
         for (int x = 0; x < dimX; x++) {
             for (int y = 0; y < dimY; y++) {
-                if (burntPlants[x][y] == 1) {
+                if (plantGrid[x][y] == 2) {
                     g2d_burnt.fillRect(x, y, 1, 1);
                 }
             }

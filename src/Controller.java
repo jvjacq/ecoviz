@@ -71,6 +71,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void resetFireSim() {
+        pauseFireSim();
         fire.clearGrid();
         fire.deriveFireImage();
         BufferedImage updatedFireImage = fire.getImage();
@@ -116,16 +117,19 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         resetFireSim();
         fireMode = false;
-        running = false;
-        task.cancel();
-        task2.cancel();
-        timer.cancel();
-        timerDerive.cancel();
-        timer.purge();
-        timerDerive.purge();
+        if (running){
+            task.cancel();
+            task2.cancel();
+            timer.cancel();
+            timerDerive.cancel();
+            timer.purge();
+            timerDerive.purge();
+        }
         gui.getRenderBtn().setEnabled(true);
         gui.getPauseBtn().setEnabled(false);
         image.repaint();
+        running = false;
+
 
     }
 
