@@ -24,6 +24,7 @@ public class Species {
     private Plant[] canopy;
     private Plant[] undergrowth;
     private Color colour;
+    private Color prevColour;
     private boolean filter;
 
 
@@ -91,6 +92,10 @@ public class Species {
         this.colour = col;
     }
 
+    public void setPrevColour(Color col){
+        this.prevColour = col;
+    }
+
     public void setFilter(boolean b){
         this.filter = b;
     }
@@ -143,6 +148,10 @@ public class Species {
 
     public Color getColour(){
         return this.colour;
+    }
+
+    public Color getPrevColour(){
+        return this.prevColour;
     }
 
     public boolean getFilter(){

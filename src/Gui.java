@@ -7,14 +7,14 @@
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.FlowLayout;
-
+import java.awt.image.BufferedImage;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Hashtable;
 import java.util.Locale;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -24,14 +24,14 @@ import javax.swing.text.NumberFormatter;
 import com.formdev.flatlaf.*;
 //import com.jidesoft.swing.*;
 
-public class Gui extends JPanel implements ChangeListener {
+public class Gui extends JPanel{
 
     private JButton load;
     private JFileChooser fChooser;
     private JFrame frame;
     private JFrame loadIn;
-    private JMenuItem i1, i2, i3, a1, a2, a3, a4;
-    private JLabel pointerLbl, pointerLb2;
+    private JMenuItem i1,i2,i3,a1,a2,a3,a4;
+    private JLabel wDirLbl, wSpdLbl;
     private JSlider wDirSlider, wSpdSlider, spdSlider;
 
     private ImagePanel mainPanel;
@@ -53,13 +53,13 @@ public class Gui extends JPanel implements ChangeListener {
     private JTextArea plantDescription;
     private JLabel config;
     private miniMap mini;
-    private JCheckBox ChkUnderGrowth, ChkCanopy, ChkMetric;
-    private JLabel lblSpeed;
-    private JPanel pnlFilters, pnlConfig;
+    private JCheckBox ChkUnderGrowth,ChkCanopy,ChkMetric;
+    private JLabel lblSpeed, compass;
+    private ImageIcon path3;
+    private JPanel pnlFilters,pnlConfig;
     private JCheckBox[] filterlist;
     private JTabbedPane tabbedPane;
     private JCheckBox speciesToggle;
-    private JSlider radSlider;
 
     private String common;
     private String latin;
@@ -74,13 +74,17 @@ public class Gui extends JPanel implements ChangeListener {
     private JLabel lblAvg;
     private JLabel lblNum;
 
+    //Filter Section:
     private JLabel shTitle;
     private JLabel taTitle;
     private JLabel avTitle;
-    JFormattedTextField tHiHeight, tLoHeight, tHiRadius, tLoRadius;
     private JLabel stamp;
     //Filter Section:
-
+    private JFormattedTextField tHiHeight, tLoHeight, tHiRadius, tLoRadius;
+    private JSlider radSlider;
+    private JCheckBox chkSelectRadius;
+    //private JSlider sdrViewRadius; 
+    
     private JLabel lblSearch;
     private JTextField search;
 
@@ -235,13 +239,62 @@ public class Gui extends JPanel implements ChangeListener {
         return this.tLoRadius;
     }
 
+    public JCheckBox getChkSelectRadius(){
+        return this.chkSelectRadius;
+    }
+
     //Mutator methods
     public void setFilterList(JCheckBox[] list){
         this.filterlist = list;
     }
-
+    
     public void setChkMetric() {
         this.ChkMetric.setSelected(true);
+    }
+
+    public int getWindDir(){
+        return this.wDirSlider.getValue();
+    }
+    public void setWindDirLbl(String label){
+        this.wDirLbl.setText(label);
+    }
+
+    public void setCompassPath(String path){
+        this.path3 = new ImageIcon(path);
+    }
+    public ImageIcon getCompassPath(){
+        return this.path3;
+    }
+    public void setCompassIcon(){
+        this.compass.setIcon(getCompassPath());
+    }
+
+    public int getWindSpd(){
+        return this.wSpdSlider.getValue();
+    }
+    public void setWindSpdLbl(String label){
+        this.wSpdLbl.setText(label);
+    }
+    public void setWindSpdMax(int max){
+        this.wSpdSlider.setMaximum(max);
+    }
+    public void setWindSpd(int speed){
+        this.wSpdSlider.setValue(speed);
+    }
+
+    public int getSimSpeed(){
+        return this.spdSlider.getValue();
+    }
+    public void setSpeedLbl(String label){
+        this.lblSpeed.setText(label);
+    }
+
+    public JSlider[] getChangeListeners(){
+        JSlider[] sliderList = new JSlider[3];
+        sliderList[0] = wDirSlider;
+        sliderList[1] = wSpdSlider;
+        sliderList[2] = spdSlider;
+        return sliderList;
     }
 
     public Gui() {
@@ -308,8 +361,6 @@ public class Gui extends JPanel implements ChangeListener {
         btnReset = new JButton("Reset");
         btnReset.setVisible(false);
 
-        
-
         // Add Components
         stamp = new JLabel();
         ImageIcon path2 = new ImageIcon("resources/stamp.gif");
@@ -360,19 +411,18 @@ public class Gui extends JPanel implements ChangeListener {
         // ###
         // SLIDER FOR WIND DIRECTION:
         wDirSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
-        wDirSlider.addChangeListener(this);
-        pointerLbl = new JLabel("Wind Direction: 0 Degrees");
+        wDirSlider.setMaximum(8);
+        wDirSlider.setMinimum(1);
+        wDirLbl = new JLabel("Wind Direction: North");
 
-        // SLIDER FOR WIND SPEED:
-        wSpdSlider = new JSlider(JSlider.HORIZONTAL, 0, 371, 0); // Wind limit in KPH
+        //SLIDER FOR WIND SPEED:
+        wSpdSlider = new JSlider(JSlider.HORIZONTAL, 0, 160, 0); //Wind limit in KPH
         pointerLb2 = new JLabel("Wind Speed: 0 KPH");
-        wSpdSlider.addChangeListener(this);
 
         // ###
         spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
         spdSlider.setMaximum(5);
         spdSlider.setMinimum(1);
-        spdSlider.addChangeListener(this);
         lblSpeed = new JLabel("Simulation Speed: x1");
 
         search = new JTextField(20);
@@ -473,19 +523,24 @@ public class Gui extends JPanel implements ChangeListener {
         tabbedPane.addTab("Details", null, pnlDetails, "Shows Details on Demand");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-        // Configurations:
+        //Configurations:
+        compass = new JLabel();
+        path3 = new ImageIcon("resources/North.png");
+        compass.setIcon(path3);
+        //
         pnlConfig = new JPanel();
         JLabel lblConfig = new JLabel("Configurations");
         lblConfig.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
         // Add components to Config Panel
         pnlConfig.add(lblConfig);
-        pnlConfig.add(pointerLbl);
+        pnlConfig.add(wDirLbl);
         pnlConfig.add(wDirSlider);
-        pnlConfig.add(pointerLb2);
+        pnlConfig.add(wSpdLbl);
         pnlConfig.add(wSpdSlider);
         pnlConfig.add(lblSpeed);
         pnlConfig.add(spdSlider);
-        pnlConfig.add(ChkMetric);
+        pnlConfig.add(ChkMetric); 
+        pnlConfig.add(compass);
         pnlConfig.add(chkPath);
         pnlConfig.add(chkBurnt);
 
@@ -499,8 +554,8 @@ public class Gui extends JPanel implements ChangeListener {
         lblFilters.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
         // Add components to Filter Panel
         pnlFilters.add(lblFilters);
-        pnlFilters.add(lblSearch);
-        pnlFilters.add(search);
+        //pnlFilters.add(lblSearch);
+        //pnlFilters.add(search);
         pnlFilters.add(ChkUnderGrowth);
         pnlFilters.add(ChkCanopy);
 
@@ -508,7 +563,7 @@ public class Gui extends JPanel implements ChangeListener {
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         JPanel pnlFilter2 = new JPanel();
-        pnlFilter2.setLayout(new GridLayout(5,1));
+        pnlFilter2.setLayout(new GridLayout(4,1));
         JLabel lblFilter2 = new JLabel("Filter by Height/Canopy:");
         //Height filter
         JPanel heightFilters = new JPanel();
@@ -549,10 +604,29 @@ public class Gui extends JPanel implements ChangeListener {
         canopyFilters.add(lblHiRadius);
         canopyFilters.add(tLoRadius);
         canopyFilters.add(tHiRadius);
+        
+        //Select in radius
+        JLabel lblSelectRad = new JLabel("Filter surrounding plants:");
+
+        radSlider = new JSlider(0, 1024);
+        radSlider.setEnabled(false);
+        radSlider.setValue(1024);
+        Hashtable<Integer, JLabel> table = new Hashtable<Integer, JLabel>();
+        table.put(0,new JLabel("0"));
+        table.put(1024,new JLabel("1024"));
+        radSlider.setLabelTable(table);
+        radSlider.setPaintLabels(true);
+
+        chkSelectRadius = new JCheckBox("Filter outliers");
+        JPanel pnlRadius = new JPanel();
+        pnlRadius.add(lblSelectRad);
+        pnlRadius.add(radSlider);
+        pnlRadius.add(chkSelectRadius);
 
         pnlFilter2.add(lblFilter2);
         pnlFilter2.add(heightFilters);
         pnlFilter2.add(canopyFilters);
+        pnlFilter2.add(pnlRadius);
 
         tabbedPane.addTab("Filter",null,pnlFilter2,"Visualisation filters");
         tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
@@ -631,20 +705,6 @@ public class Gui extends JPanel implements ChangeListener {
         }
     }
 
-    public void changeMetric() {
-        if (getChkMetric().isSelected()) {
-            wSpdSlider.setMaximum(371);
-            wSpdSlider.setValue((int) (1.60934 * wSpdSlider.getValue()));
-            pointerLb2.setText("Wind Speed: " + Integer.toString(wSpdSlider.getValue()) + " KPH");
-        } else {
-            wSpdSlider.setValue((int) (wSpdSlider.getValue() / 1.60934));
-            wSpdSlider.setMaximum(231);
-            pointerLb2.setText("Wind Speed: " + Integer.toString(wSpdSlider.getValue()) + " MPH");
-        }
-        wSpdSlider.addChangeListener(this);
-        pnlConfig.revalidate();
-    }
-
     public void setSpeciesDetails(String s) {
         this.plantDescription.setText(s);
     }
@@ -720,35 +780,5 @@ public class Gui extends JPanel implements ChangeListener {
     public boolean showChooser() {
         JFrame fr = new JFrame();
         return fChooser.showOpenDialog(fr) == JFileChooser.APPROVE_OPTION;
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        pointerLbl.setText("Wind Direction: " + Integer.toString(wDirSlider.getValue()) + " Degrees");
-        if (getChkMetric().isSelected())
-            pointerLb2.setText("Wind Speed: " + Integer.toString(wSpdSlider.getValue()) + " KPH");
-        else
-            pointerLb2.setText("Wind Speed: " + Integer.toString(wSpdSlider.getValue()) + " MPH");
-        lblSpeed.setText("Simulation Speed: x" + Integer.toString(spdSlider.getValue()));
-
-        // delay = 75; // default
-        switch (Integer.toString(spdSlider.getValue())) {
-            case "1":
-                delay = 125;
-                break;
-            case "2":
-                delay = 100;
-                break;
-            case "3":
-                delay = 75;
-                break;
-            case "4":
-                delay = 50;
-                break;
-            case "5":
-                delay = 25;
-                break;
-
-        }
     }
 }

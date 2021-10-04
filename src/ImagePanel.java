@@ -44,12 +44,10 @@ public class ImagePanel extends JPanel{
 	private boolean showUnderGrowth;
 
 	private int topleftx,toplefty,newDimX, newDimY;
-	private boolean painted;
-	//private float scale;
-
 	private float maxHeight, minHeight, maxRadius, minRadius;
 	private int circles;
 	private int[] plantsInView;
+	private int selectRad, selectX, selectY;
 
 	public ImagePanel(){
 		this.zoomMultiplier = 1;
@@ -59,11 +57,8 @@ public class ImagePanel extends JPanel{
 		this.circles = 0;
 		this.xOffset = 0;
 		this.yOffset = 0;
-		this.painted = false;
+		this.selectRad = -1;
 	}
-	/*public float getScale(){
-		return this.scale;
-	}*/
 
 	public int getStartX(){
 		return this.startPoint.x;
@@ -117,8 +112,8 @@ public class ImagePanel extends JPanel{
 		return this.newDimY;
 	}
 
-	public boolean getPainted(){
-		return this.painted;
+	public boolean getDragger(){
+		return this.dragger;
 	}
 
 	public int[] getPlantsInView(){
@@ -161,10 +156,6 @@ public class ImagePanel extends JPanel{
 		this.prevZoomMultiplier = multiplier;
 	}
 
-	public void setPainted(boolean b){
-		this.painted = b;
-	}
-
 	public void setPlantsInView(int size){
 		this.plantsInView = new int[size];
 		for(int i = 0; i < plantsInView.length; ++i){
@@ -182,6 +173,7 @@ public class ImagePanel extends JPanel{
 		this.yOffset = 0;
 		this.topleftx = 0;
 		this.toplefty = 0;
+		this.selectRad = -1;
 	}
 
 	
@@ -260,12 +252,16 @@ public class ImagePanel extends JPanel{
 				p.setCanopyFlag(false);
 			}else p.setCanopyFlag(true);
 			if(!p.getHeightFlag() || !p.getCanopyFlag()) continue;
-			//imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));
-			imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
-			++circles;
+			
+			if(insideSelected(p)){
+				p.setFilter(true);
+			}else p.setFilter(false);
+			//imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));						
 			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
 			//System.out.println("Plant before print: " + p.getX() + " " + p.getY());
 			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) | (this.showUnderGrowth && !p.getLayer()))){
+				++circles;
+				imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
 				plantsInView[p.getSpeciesID()] += 1;
 				imgGraphics.fillOval(p.getX()-(int)p.getCanopy(),p.getY()-(int)p.getCanopy(),(int)p.getCanopy()*2,(int)p.getCanopy()*2);
 			}
@@ -299,105 +295,74 @@ public class ImagePanel extends JPanel{
 		}		
 	}
 
+	public void calculateView(){
+		if (dragger){
+			xOffset -= 0.05*xDiff;
+			yOffset -= 0.05*yDiff;
+			if(xOffset < 0) xOffset = 0;
+			if(xOffset > dimX - newDimX) xOffset = dimX-newDimX;
+			if(yOffset < 0) yOffset = 0;
+			if(yOffset > dimY - newDimY) yOffset = dimY-newDimY;
+			if (released){
+				dragger = false;
+			}
+			
+
+		}
+		if (zoom) {
+			double scale = 1/zoomMultiplier;
+			double oldscale = 1/prevZoomMultiplier;
+			double scalechange = scale - oldscale;
+			double xRelative = MouseInfo.getPointerInfo().getLocation().getX()-getLocationOnScreen().getX();
+			double yRelative = MouseInfo.getPointerInfo().getLocation().getY()-getLocationOnScreen().getY();
+			xRelative *= oldscale; 
+			yRelative *= oldscale;
+			xRelative += xOffset; 
+			yRelative += yOffset;
+			newDimX = (int)Math.floor(dimX*scale);
+			newDimY = (int)Math.floor(dimY*scale);
+			xOffset += Math.round(-1 * (xRelative * scalechange));
+			yOffset += Math.round(-1 * (yRelative * scalechange));
+			
+			topleftx = (int)Math.max(xOffset,0.0f);
+			toplefty = (int)Math.max(yOffset, 0.0f);
+			if(topleftx + newDimX > dimX) topleftx = dimX - newDimX;
+			if(toplefty + newDimY > dimY) toplefty = dimY - newDimY;
+
+			prevZoomMultiplier = zoomMultiplier;
+
+			if(zoomMultiplier == 1){
+				zoom = false;
+				xOffset = 0.0;
+				yOffset = 0.0;
+			}
+		}
+	}
 	public void deriveImage(){
+		circles = 0;
 		if(zoomMultiplier == 1.0 && prevZoomMultiplier == 1.0){
 			derivePlants();
 			//graphics2d.drawImage(fire, 0, 0, null);	
 		}else{
-			if (dragger){
-				/*AffineTransform affine = new AffineTransform();
-				affine.translate(xOffset+xDiff,yOffset+yDiff);
-				affine.scale(zoomMultiplier,zoomMultiplier);
-				graphics2d.transform(affine);*/
-				xOffset -= 0.05*xDiff;
-				yOffset -= 0.05*yDiff;
-				if(xOffset < 0) xOffset = 0;
-				if(xOffset > dimX - newDimX) xOffset = dimX-newDimX;
-				if(yOffset < 0) yOffset = 0;
-				if(yOffset > dimY - newDimY) yOffset = dimY-newDimY;
-				if (released){
-					//xOffset += xDiff;
-					//yOffset += yDiff;
-					//zoomPlants
-					dragger = false;
-				}
-				
-
-			}
-			if (zoom) {
-				//AffineTransform affine = new AffineTransform();
-				double scale = 1/zoomMultiplier;
-				double oldscale = 1/prevZoomMultiplier;
-				double scalechange = scale - oldscale;
-				double xRelative = MouseInfo.getPointerInfo().getLocation().getX()-getLocationOnScreen().getX();
-				double yRelative = MouseInfo.getPointerInfo().getLocation().getY()-getLocationOnScreen().getY();
-				xRelative *= oldscale; 
-				yRelative *= oldscale;
-				xRelative += xOffset; 
-				yRelative += yOffset;
-				//int newDimX = (int)Math.floor(dimX/zoomMultiplier);
-				//int newDimY = (int)Math.floor(dimY/zoomMultiplier);
-				newDimX = (int)Math.floor(dimX*scale);
-				newDimY = (int)Math.floor(dimY*scale);
-				//System.out.println(newDimX);
-				//System.out.println(newDimY);
-				/*double centerx;
-				if(xRelative > dimX/2) centerx = dimX - Math.max(Math.abs(xRelative - dimX), newDimX/2);
-				else centerx = Math.max(xRelative, newDimX/2.0f + xOffset);
-				double centery;
-				if(yRelative > dimY/2) centery = dimY - Math.max(Math.abs(yRelative - dimY), newDimY/2);
-				else centery = Math.max(yRelative, newDimY/2.0f + yOffset);
-				//System.out.println(centerx + " " + centery);
-				int topleftx = (int)Math.floor(centerx - newDimX/2.0f);
-				int toplefty = (int)Math.floor(centery - newDimY/2.0f);*/
-				xOffset += Math.round(-1 * (xRelative * scalechange));
-				yOffset += Math.round(-1 * (yRelative * scalechange));
-				//System.out.println(xOffset + " " + yOffset);
-				topleftx = (int)Math.max(xOffset,0.0f);
-				toplefty = (int)Math.max(yOffset, 0.0f);
-				if(topleftx + newDimX > dimX) topleftx = dimX - newDimX;
-				if(toplefty + newDimY > dimY) toplefty = dimY - newDimY;
-				//System.out.println(topleftx);
-				//System.out.println(toplefty);
-				
-				//System.out.println(topleftx + " " + toplefty + " " + newDimX + " " + newDimY);
-				zoomTerrain = terrain.getSubimage(topleftx, toplefty, newDimX, newDimY);
-				//zoomPlants = canopy.getSubimage(topleftx, toplefty, newDimX, newDimY);
-				AffineTransform at = AffineTransform.getScaleInstance(zoomMultiplier, zoomMultiplier);
-				AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-				BufferedImage scaledT = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
-				//BufferedImage scaledP = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
-				scaledT = ato.filter(zoomTerrain, scaledT);
-				//scaledP = ato.filter(zoomPlants, scaledP);
-				zoomTerrain = scaledT;
-				//zoomPlants = scaledP;
-				/*if(Math.floor(Math.log(zoomMultiplier)/Math.log(1.1f) % 2) == 0.0f){
-					zoomPlants = zoomPlants(topleftx, toplefty, newDimX, newDimY);
-				}else{
-					zoomPlants = canopy.getSubimage(topleftx, toplefty, newDimX, newDimY);
-					BufferedImage scaledP = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
-					scaledP = ato.filter(zoomPlants, scaledP);
-					zoomPlants = scaledP;	
-				}*/
+			zoomTerrain = terrain.getSubimage(topleftx, toplefty, newDimX, newDimY);
+			//zoomPlants = canopy.getSubimage(topleftx, toplefty, newDimX, newDimY);
+			AffineTransform at = AffineTransform.getScaleInstance(zoomMultiplier, zoomMultiplier);
+			AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+			BufferedImage scaledT = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+			//BufferedImage scaledP = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+			scaledT = ato.filter(zoomTerrain, scaledT);
+			//scaledP = ato.filter(zoomPlants, scaledP);
+			zoomTerrain = scaledT;
+			//zoomPlants = scaledP;
+			/*if(Math.floor(Math.log(zoomMultiplier)/Math.log(1.1f) % 2) == 0.0f){
 				zoomPlants = zoomPlants(topleftx, toplefty, newDimX, newDimY);
-				prevZoomMultiplier = zoomMultiplier;
-
-				/*System.out.println(centerx + " " + centery);
-				double divident = zoomMultiplier/prevZoomMultiplier;
-
-				xOffset = divident * xOffset + (1-divident)*xRelative;
-				yOffset = divident * yOffset + (1-divident)*yRelative;
-
-				affine.translate(xOffset,yOffset);
-				affine.scale(zoomMultiplier, zoomMultiplier);
-				prevZoomMultiplier = zoomMultiplier;
-				graphics2d.transform(affine);*/
-				if(zoomMultiplier == 1){
-					zoom = false;
-					xOffset = 0.0;
-					yOffset = 0.0;
-				}
-			}
+			}else{
+				zoomPlants = canopy.getSubimage(topleftx, toplefty, newDimX, newDimY);
+				BufferedImage scaledP = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+				scaledP = ato.filter(zoomPlants, scaledP);
+				zoomPlants = scaledP;	
+			}*/
+			zoomPlants = zoomPlants(topleftx, toplefty, newDimX, newDimY);	
 		}	
 	}
 
@@ -419,6 +384,11 @@ public class ImagePanel extends JPanel{
 				p.setCanopyFlag(false);
 			}else p.setCanopyFlag(true);
 			if(!p.getHeightFlag() || !p.getCanopyFlag()) continue;
+
+			if(insideSelected(p)){
+				p.setFilter(true);
+			}else p.setFilter(false);
+
 			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) | (this.showUnderGrowth && !p.getLayer()))){
 				int x = p.getX();
 				int y = p.getY();
@@ -446,13 +416,19 @@ public class ImagePanel extends JPanel{
 		return false;
 	}
 
-	public void displayPlant(Plant plant){
+	public void displayPlant(Plant plant, int radius){
 		details = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imgGraphics = details.createGraphics();
 		//imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		imgGraphics.setComposite(AlphaComposite.Clear);
 		imgGraphics.fillRect(0,0, dimX, dimY);
 		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		if(plant == null){
+			selectRad = -1;
+			selectX = -1;
+			selectY = -1;
+			return;
+		}
 		imgGraphics.setColor(Color.BLACK);
 		int x = plant.getX();
 		int y = plant.getY();
@@ -460,6 +436,17 @@ public class ImagePanel extends JPanel{
 		int newx = (int)Math.round((x-rad)*zoomMultiplier- topleftx*zoomMultiplier) ;
 		int newy = (int)Math.round((y-rad)*zoomMultiplier- toplefty*zoomMultiplier) ;
 		imgGraphics.fillOval(newx,newy,(int)Math.round(rad*2*zoomMultiplier),(int)Math.round(rad*2*zoomMultiplier));
+		this.selectRad = radius;
+		this.selectX = x;
+		this.selectY = y;
+		if(radius != -1){
+			imgGraphics.drawOval((int)Math.round((x-radius-topleftx)*zoomMultiplier), (int)Math.round((y-radius-toplefty)*zoomMultiplier), (int)Math.round(radius*2*zoomMultiplier), (int)Math.round(radius*2*zoomMultiplier));
+		}
+	}
+
+	public boolean insideSelected(Plant p){
+		if(selectRad == -1) return true;
+		return (Math.pow((p.getX() - selectX),2) + Math.pow((p.getY()-selectY),2) <= Math.pow(selectRad,2));
 	}
 
 	public void resetDetails(){
