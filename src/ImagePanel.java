@@ -119,8 +119,8 @@ public class ImagePanel extends JPanel{
 		return this.newDimY;
 	}
 
-	public boolean getPainted(){
-		return this.painted;
+	public boolean getDragger(){
+		return this.dragger;
 	}
 
 	public int[] getPlantsInView(){
@@ -433,6 +433,12 @@ public class ImagePanel extends JPanel{
 		imgGraphics.setComposite(AlphaComposite.Clear);
 		imgGraphics.fillRect(0,0, dimX, dimY);
 		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		if(plant == null){
+			selectRad = -1;
+			selectX = -1;
+			selectY = -1;
+			return;
+		}
 		imgGraphics.setColor(Color.BLACK);
 		int x = plant.getX();
 		int y = plant.getY();
