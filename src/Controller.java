@@ -8,8 +8,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JCheckBox;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener{
+public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener, ChangeListener{
     private Gui gui;
     private ImagePanel image;
     private Terrain terrain;
@@ -154,6 +157,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void initView(){
         gui.getLoadFrame().setVisible(true);
+        JSlider[] sliderList = gui.getChangeListeners();
+        sliderList[0].addChangeListener(this);
+        sliderList[1].addChangeListener(this);
+        sliderList[2].addChangeListener(this);
         //gui.getMain().setVisible(false);
     }
 
@@ -288,10 +295,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getChkUndergrowth().setSelected(true);
     }
 
-    public void changeUnits(){
-        gui.changeMetric(); 
-    }
-
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         
@@ -379,6 +382,47 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 image.deriveImage();
                 image.repaint();
             }
+        }
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+
+        gui.setWindDirLbl("Wind Direction: "+Integer.toString(gui.getWindDir())+" Degrees");
+        if (gui.getChkMetric().isSelected()) gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
+        else gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
+        gui.setSpeedLbl("Simulation Speed: x"+Integer.toString(gui.getSimSpeed()));
+
+        //delay = 75; // default
+        switch(Integer.toString(gui.getSimSpeed())){
+            case "1":
+                delay = 125;
+                break;
+            case "2":
+                delay = 100;
+                break;
+            case "3":
+                delay = 75;
+                break;
+            case "4":
+                delay = 50;
+                break;
+            case "5":
+                delay = 25;
+                break;
+
+        }
+    }
+
+    public void changeUnits(){
+        if (gui.getChkMetric().isSelected()){
+            gui.setWindSpdMax(160);
+            gui.setWindSpd((int)Math.ceil((1.60934*gui.getWindSpd())));
+            gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
+        }else{
+            gui.setWindSpd((int)(gui.getWindSpd()/1.60934));
+            gui.setWindSpdMax(100);
+            gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
         }
     }
 
