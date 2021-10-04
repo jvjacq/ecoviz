@@ -3,6 +3,7 @@ import java.awt.image.BufferedImage;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -59,6 +60,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getMenu3().addActionListener(e -> goodbye());
         gui.getMenu4().addActionListener(e -> setGUItheme(0));
         gui.getMenu5().addActionListener(e -> setGUItheme(1));
+        gui.getHelp().addActionListener(e -> goHelp());
+
         //gui.getMenu6().addActionListener(e -> gui.changeTheme(2));
         //gui.getMenu7().addActionListener(e -> gui.changeTheme(3));
         gui.getChkCanopy().addItemListener(e -> filterLayers());
@@ -85,6 +88,20 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void initView() {
         gui.getLoadFrame().setVisible(true);
         //gui.getMain().setVisible(false);
+    }
+
+    public void goHelp(){
+
+        try{
+        System.out.println("Opening Remote Manual");
+            Desktop.getDesktop().browse(new URL(
+                "https://drive.google.com/file/d/1aTCMCyFpTKK3JMoRFI-DgpvK4iwiChlE/view?usp=sharing"
+                ).toURI());
+        } catch (Exception e){
+        System.out.println("Unable to open...");
+
+
+        }
     }
 
     public void setGUItheme(int theme){
