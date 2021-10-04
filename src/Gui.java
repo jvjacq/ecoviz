@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.FlowLayout;
 
+import java.awt.image.BufferedImage;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
@@ -49,7 +50,8 @@ public class Gui extends JPanel{
     private JLabel config;
     private miniMap mini;
     private JCheckBox ChkUnderGrowth,ChkCanopy,ChkMetric;
-    private JLabel lblSpeed;
+    private JLabel lblSpeed, compass;
+    private ImageIcon path3;
     private JPanel pnlFilters,pnlConfig;
     private JCheckBox[] filterlist;
     private JTabbedPane tabbedPane;
@@ -210,6 +212,16 @@ public class Gui extends JPanel{
         this.pointerLbl.setText(label);
     }
 
+    public void setCompassPath(String path){
+        this.path3 = new ImageIcon(path);
+    }
+    public ImageIcon getCompassPath(){
+        return this.path3;
+    }
+    public void setCompassIcon(){
+        this.compass.setIcon(getCompassPath());
+    }
+
     public int getWindSpd(){
         return this.wSpdSlider.getValue();
     }
@@ -308,6 +320,7 @@ public class Gui extends JPanel{
             //Add Components
             JLabel stamp = new JLabel();
             ImageIcon path2 = new ImageIcon("resources/stamp.gif");
+
             stamp.setIcon(path2);
 
             btnBack.setVisible(false);
@@ -357,7 +370,9 @@ public class Gui extends JPanel{
 //###
         //SLIDER FOR WIND DIRECTION:
         wDirSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
-        pointerLbl = new JLabel("Wind Direction: 0 Degrees");
+        wDirSlider.setMaximum(8);
+        wDirSlider.setMinimum(1);
+        pointerLbl = new JLabel("Wind Direction: North");
 
         //SLIDER FOR WIND SPEED:
         wSpdSlider = new JSlider(JSlider.HORIZONTAL, 0, 160, 0); //Wind limit in KPH
@@ -466,6 +481,10 @@ public class Gui extends JPanel{
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
         //Configurations:
+        compass = new JLabel();
+        path3 = new ImageIcon("resources/North.png");
+        compass.setIcon(path3);
+        //
         pnlConfig = new JPanel();
             JLabel lblConfig = new JLabel("Configurations");
             lblConfig.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
@@ -478,6 +497,7 @@ public class Gui extends JPanel{
             pnlConfig.add(lblSpeed);
             pnlConfig.add(spdSlider);
             pnlConfig.add(ChkMetric);
+            pnlConfig.add(compass);
 
         tabbedPane.addTab("Config",null,pnlConfig, "Change Simulation Settings");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);

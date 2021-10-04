@@ -388,7 +388,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     @Override
     public void stateChanged(ChangeEvent e) {
 
-        gui.setWindDirLbl("Wind Direction: "+Integer.toString(gui.getWindDir())+" Degrees");
         if (gui.getChkMetric().isSelected()) gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
         else gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
         gui.setSpeedLbl("Simulation Speed: x"+Integer.toString(gui.getSimSpeed()));
@@ -410,8 +409,47 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             case "5":
                 delay = 25;
                 break;
-
         }
+        switch(Integer.toString(gui.getWindDir())){
+            case "1":
+                gui.setWindDirLbl("Wind Direction: North");
+                moveCompass("North");
+                break;
+            case "2":
+                gui.setWindDirLbl("Wind Direction: North East");
+                moveCompass("North-East");
+                break;
+            case "3":
+                gui.setWindDirLbl("Wind Direction: East");
+                moveCompass("East");
+                break;
+            case "4":
+                gui.setWindDirLbl("Wind Direction: South East");
+                moveCompass("South-East");
+                break;
+            case "5":
+                gui.setWindDirLbl("Wind Direction: South");
+                moveCompass("South");
+                break;
+            case "6":
+                gui.setWindDirLbl("Wind Direction: South West");
+                moveCompass("South-West");
+                break;
+            case "7":
+                gui.setWindDirLbl("Wind Direction: West");
+                moveCompass("West");
+                break;
+            case "8":
+                gui.setWindDirLbl("Wind Direction: North West");
+                moveCompass("North-West");
+                break;
+        }
+    }
+
+    public void moveCompass(String direction){
+        String path = "resources/" + direction + ".png";
+        gui.setCompassPath(path);
+        gui.setCompassIcon();
     }
 
     public void changeUnits(){
