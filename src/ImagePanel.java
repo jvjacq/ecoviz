@@ -339,6 +339,7 @@ public class ImagePanel extends JPanel{
 		}
 	}
 	public void deriveImage(){
+		circles = 0;
 		if(zoomMultiplier == 1.0 && prevZoomMultiplier == 1.0){
 			derivePlants();
 			//graphics2d.drawImage(fire, 0, 0, null);	
