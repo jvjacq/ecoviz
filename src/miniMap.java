@@ -88,7 +88,7 @@ public class miniMap extends JPanel{
 		//Graphics2D g2 = outUnder.createGraphics();
 		Graphics2D g2 =	outCanopy.createGraphics();
 		Graphics2D g3 = smallbox.createGraphics();
-		g3.setStroke(new BasicStroke(5.0f));
+		g3.setStroke(new BasicStroke(3.0f));
 		g3.setColor(Color.RED);
 		
 		g3.drawRect((int)Math.floor(tlx/1024.0f*200), (int)Math.floor(tly/1024.0f*200), (int)Math.floor(boxdimX/1024.0f*200), (int)Math.floor(boxdimY/1024.0f*200));

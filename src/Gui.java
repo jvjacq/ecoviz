@@ -7,8 +7,6 @@
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.FlowLayout;
-
 import java.awt.image.BufferedImage;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -16,6 +14,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Hashtable;
 import java.util.Locale;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -61,7 +60,6 @@ public class Gui extends JPanel{
     private JCheckBox[] filterlist;
     private JTabbedPane tabbedPane;
     private JCheckBox speciesToggle;
-    private JSlider radSlider;
 
     private String common;
     private String latin;
@@ -76,11 +74,15 @@ public class Gui extends JPanel{
     private JLabel lblAvg;
     private JLabel lblNum;
 
+    //Filter Section:
     private JLabel shTitle;
     private JLabel taTitle;
     private JLabel avTitle;
-    JFormattedTextField tHiHeight, tLoHeight, tHiRadius, tLoRadius;
-    //Filter Section:
+    private JFormattedTextField tHiHeight, tLoHeight, tHiRadius, tLoRadius;
+    private JSlider radSlider;
+    private JCheckBox chkSelectRadius;
+    //private JSlider sdrViewRadius; 
+    
 
     private JLabel lblSearch;
     private JTextField search;
@@ -229,11 +231,15 @@ public class Gui extends JPanel{
         return this.tLoRadius;
     }
 
+    public JCheckBox getChkSelectRadius(){
+        return this.chkSelectRadius;
+    }
+
     //Mutator methods
     public void setFilterList(JCheckBox[] list){
         this.filterlist = list;
     }
-
+    
     public void setChkMetric() {
         this.ChkMetric.setSelected(true);
     }
@@ -536,8 +542,8 @@ public class Gui extends JPanel{
         lblFilters.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
         // Add components to Filter Panel
         pnlFilters.add(lblFilters);
-        pnlFilters.add(lblSearch);
-        pnlFilters.add(search);
+        //pnlFilters.add(lblSearch);
+        //pnlFilters.add(search);
         pnlFilters.add(ChkUnderGrowth);
         pnlFilters.add(ChkCanopy);
 
@@ -545,7 +551,7 @@ public class Gui extends JPanel{
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         JPanel pnlFilter2 = new JPanel();
-        pnlFilter2.setLayout(new GridLayout(5,1));
+        pnlFilter2.setLayout(new GridLayout(4,1));
         JLabel lblFilter2 = new JLabel("Filter by Height/Canopy:");
         //Height filter
         JPanel heightFilters = new JPanel();
@@ -586,10 +592,29 @@ public class Gui extends JPanel{
         canopyFilters.add(lblHiRadius);
         canopyFilters.add(tLoRadius);
         canopyFilters.add(tHiRadius);
+        
+        //Select in radius
+        JLabel lblSelectRad = new JLabel("Filter surrounding plants:");
+
+        radSlider = new JSlider(0, 1024);
+        radSlider.setEnabled(false);
+        radSlider.setValue(1024);
+        Hashtable<Integer, JLabel> table = new Hashtable<Integer, JLabel>();
+        table.put(0,new JLabel("0"));
+        table.put(1024,new JLabel("1024"));
+        radSlider.setLabelTable(table);
+        radSlider.setPaintLabels(true);
+
+        chkSelectRadius = new JCheckBox("Filter outliers");
+        JPanel pnlRadius = new JPanel();
+        pnlRadius.add(lblSelectRad);
+        pnlRadius.add(radSlider);
+        pnlRadius.add(chkSelectRadius);
 
         pnlFilter2.add(lblFilter2);
         pnlFilter2.add(heightFilters);
         pnlFilter2.add(canopyFilters);
+        pnlFilter2.add(pnlRadius);
 
         tabbedPane.addTab("Filter",null,pnlFilter2,"Visualisation filters");
         tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);

@@ -76,8 +76,8 @@ public class Plant implements Comparable<Plant>{
     }
 
     //Mutator methods
-    public void toggleFilter(){
-        this.filter = !(this.filter);
+    public void setFilter(boolean b){
+        this.filter = b;
     }
 
     public void setPosX(int X){
