@@ -89,6 +89,7 @@ public class Gui extends JPanel{
 
     private JLabel lblSearch;
     private JTextField search;
+    private JPanel pnlDetails;
 
     public JLabel getStamp(){
         return stamp;
@@ -450,7 +451,7 @@ public class Gui extends JPanel{
         // =================================================================
         // Details on Demand:
         // =================================================================
-        JPanel pnlDetails = new JPanel();
+        pnlDetails = new JPanel();
         // pnlDetails.setLayout(new BoxLayout(pnlDetails, BoxLayout.PAGE_AXIS ));
         pnlDetails.setLayout(new GridLayout(0, 1));
         // JLabel lblDetails = new JLabel("Details on Demand");
@@ -751,7 +752,6 @@ public class Gui extends JPanel{
 
     public void changeTheme(int theme) {
         LookAndFeel obj = new FlatDarculaLaf();
-        pnlSouth.setBackground(new Color(175, 186, 204));
         pnlSouth.setOpaque(false);
 
 
@@ -766,7 +766,7 @@ public class Gui extends JPanel{
                 message = "Light Mode Enabled";
                 pnlSouth.setBackground(new Color(175, 186, 204));
                 pnlSouth.setOpaque(true);
-
+                pnlDetails.setOpaque(true);
                 break;
             case 2:
                 // obj = new FlatDarculaLaf();
