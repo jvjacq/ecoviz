@@ -232,10 +232,6 @@ public class Gui extends JPanel implements ChangeListener {
         this.filterlist = list;
     }
 
-    public void setFilterList(JCheckBox[] list) {
-        this.filterlist = list;
-    }
-
     public void setChkMetric() {
         this.ChkMetric.setSelected(true);
     }
