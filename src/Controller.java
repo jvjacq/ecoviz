@@ -10,10 +10,8 @@ import java.util.TimerTask;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
-public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener, ChangeListener{
+public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener{
     private Gui gui;
     private ImagePanel image;
     private Terrain terrain;
@@ -73,11 +71,20 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getRadSlider().addChangeListener(e -> filterByRadius());
         gui.getChkSelectRadius().addItemListener(e -> toggleRadiusSlider());
         gui.getChkMetric().addItemListener(e -> changeUnits());
+        JSlider[] sliderList = gui.getSliderList();
+        sliderList[0].addChangeListener(e -> extractWindMetrics());
+        sliderList[1].addChangeListener(e -> extractWindMetrics());
+        sliderList[2].addChangeListener(e -> extractWindMetrics());
         image.addMouseListener(this);
         image.addMouseMotionListener(this);
         image.addMouseWheelListener(this);
         // gui.changeTheme(0); //###
         initView();
+    }
+
+    public void initView() {
+        gui.getLoadFrame().setVisible(true);
+        //gui.getMain().setVisible(false);
     }
 
     public void setGUItheme(int theme){
@@ -222,15 +229,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getRenderBtn().setEnabled(false);
     }
 
-    public void initView() {
-        gui.getLoadFrame().setVisible(true);
-        JSlider[] sliderList = gui.getChangeListeners();
-        sliderList[0].addChangeListener(this);
-        sliderList[1].addChangeListener(this);
-        sliderList[2].addChangeListener(this);
-        //gui.getMain().setVisible(false);
-    }
-
     public void goodbye() {
         System.exit(0);
     }
@@ -286,17 +284,23 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         return (Math.pow((x - plant.getX()), 2) + Math.pow((y - plant.getY()), 2)) <= Math.pow(plant.getCanopy(), 2);
     }
 
+    public void resetSpeciesColours(){
+        for(Species s: PlantLayer.getAllSpecies()){
+            s.setColour(s.getPrevColour());
+        }
+    }
+
     public void changeSpeciesColour(int id) {
         Species[] specieslist = PlantLayer.getAllSpecies();
+        resetSpeciesColours();
         Color c = new Color(0, 0, 0, 1.0f);
-        Color prev = specieslist[id].getColour();
-        //specieslist[id].setPrevColour(prev);
+        //Color prev = specieslist[id].getColour();
         specieslist[id].setColour(c);
-        image.deriveImage();
-        image.repaint();
+        //image.deriveImage();
+        //image.repaint();
         // while(!image.getPainted()){}
         // image.setPainted(false);
-        specieslist[id].setColour(prev);
+        //specieslist[id].setColour(prev);
     }
 
     public void refreshView() {
@@ -517,9 +521,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             gui.getSpeciesToggle().setSelected(false);
             int id = -1;
             Species[] list = PlantLayer.getAllSpecies();
-            for (Plant plant : PlantLayer.getPlantList()) {
+            for (int p = PlantLayer.getPlantList().size()-1; p >= 0; --p) {
+                Plant plant = PlantLayer.getPlantList().get(p);
                 // Check if species is not currently filtered
-                if (list[plant.getSpeciesID()].getFilter()) {
+                if (list[plant.getSpeciesID()].getFilter() && plant.getFilter() && plant.getCanopyFlag() && plant.getHeightFlag()) {
                     if (insideCanopy(click, plant)) {
                         // Will be lowest plant
                         selected = plant;
@@ -549,7 +554,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 image.displayPlant(selected, getViewRadius());
                 selected = null;
                 image.resetDetails();
-                resetDesc();              
+                resetDesc();
+                resetSpeciesColours();              
             }
             image.displayPlant(selected, getViewRadius());
             image.deriveImage();
@@ -557,9 +563,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }
     }
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-
+    public void extractWindMetrics(){
         if (gui.getChkMetric().isSelected()) gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
         else gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
         gui.setSpeedLbl("Simulation Speed: x"+Integer.toString(gui.getSimSpeed()));
@@ -638,29 +642,30 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void speciesDetails(){
         if(selected != null){
-            int id = selected.getSpeciesID();
-            changeSpeciesColour(id);
-            setSpeciesDesc(id);
+            if(gui.getSpeciesToggle().isSelected()){
+                int id = selected.getSpeciesID();
+                changeSpeciesColour(id);
+                setSpeciesDesc(id);
+            }else{
+                setPlantDesc();
+                resetSpeciesColours();
+            }
+            image.deriveImage();
+            image.repaint();
         }
     }
 
     public void setSpeciesDesc(int id) {
-        if (gui.getSpeciesToggle().isSelected()) {
-            gui.getShortTitle().setText("Shortest plant:");
-            gui.getTallTitle().setText("Tallest plant:");
-            gui.getAvTitle().setText("Avg. Radius-Height ratio:");
-            Species[] specieslist = PlantLayer.getAllSpecies();
-            gui.setCommon(specieslist[id].getCommon());
-            gui.setLatin(specieslist[id].getLatin());
-            gui.setTallest(Float.toString(specieslist[id].getMaxHeight()));
-            gui.setShortest(Float.toString(specieslist[id].getMinHeight()));
-            gui.setAvg(Float.toString(specieslist[id].getAvgRatio()));
-            gui.setNumber(Integer.toString(specieslist[id].getNumPlants()));
-        } else {
-            setPlantDesc();
-            image.deriveImage();
-            image.repaint();
-        }
+        gui.getShortTitle().setText("Shortest plant:");
+        gui.getTallTitle().setText("Tallest plant:");
+        gui.getAvTitle().setText("Avg. Radius-Height ratio:");
+        Species[] specieslist = PlantLayer.getAllSpecies();
+        gui.setCommon(specieslist[id].getCommon());
+        gui.setLatin(specieslist[id].getLatin());
+        gui.setTallest(round(Float.toString(specieslist[id].getMaxHeight())));
+        gui.setShortest(round(Float.toString(specieslist[id].getMinHeight())));
+        gui.setAvg(round(Float.toString(specieslist[id].getAvgRatio())));
+        gui.setNumber(Integer.toString(specieslist[id].getNumPlants()));       
     }
 
     public void setPlantDesc() {
@@ -670,9 +675,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         Species[] specieslist = PlantLayer.getAllSpecies();
         gui.setCommon(specieslist[selected.getSpeciesID()].getCommon());
         gui.setLatin(specieslist[selected.getSpeciesID()].getLatin());
-        gui.setTallest(Double.toString(selected.getHeight()));
-        gui.setShortest(Double.toString(selected.getCanopy()));
-        gui.setAvg(Double.toString(selected.getHeight() / selected.getCanopy()));
+        gui.setTallest(round(Double.toString(selected.getHeight())));
+        gui.setShortest(round(Double.toString(selected.getCanopy())));
+        gui.setAvg(round(Double.toString(selected.getHeight() / selected.getCanopy())));
         gui.setNumber("1");
     }
 
@@ -725,5 +730,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     @Override
     public void mouseExited(MouseEvent e) {
         //
+    }
+
+    public String round(String f){
+
+        float temp = Math.round(Float.valueOf(f)*100.0f) / 100.0f;
+        return Float.toString(temp);
     }
 }
