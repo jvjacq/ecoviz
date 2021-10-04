@@ -242,6 +242,9 @@ public class Fire {
                     g2d.setColor(ashColor); // Usually dark grey
                     g2d.fillRect(x, y, 1, 1);
                 }
+
+                
+
             }
         }
         }

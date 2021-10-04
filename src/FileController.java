@@ -16,6 +16,8 @@ public class FileController implements Runnable{
 
     private int totalPlants;
     private float scale;
+    private static float MAXHeight, MAXRadius;
+    private int totalSpecies;
 
     private String threadFile;
     private PlantLayer threadLayer;
@@ -94,15 +96,37 @@ public class FileController implements Runnable{
         new Color(147,170,0),
         new Color(89,51,21)
         };*/
+    public static float getMaxHeight(){
+        return FileController.MAXHeight;
+    }
+
+    public static float getMaxRadius(){
+        return FileController.MAXRadius;
+    }
+
+    public int getTotalSpecies(){
+        return this.totalSpecies;
+    }
+
+    synchronized public static void compareAndSetMaxHeight(float f){
+        if(MAXHeight < f) FileController.MAXHeight = f;
+    }
+
+    synchronized public static void compareAndSetMaxRadius(float f){
+        if(MAXRadius < f) FileController.MAXRadius = f;
+    }
 
     public FileController(){
-        //
+        MAXHeight = 0;
+        MAXRadius = 0;
     }
 
     public FileController(String filename, PlantLayer layer, boolean canopy){
         threadFile = filename;
         threadLayer = layer;
         threadCanopy = canopy;
+        MAXHeight = 0;
+        MAXRadius = 0;
         //new Color(153,61,61),
         //new Color(229,91,91),
         
@@ -199,6 +223,7 @@ public class FileController implements Runnable{
             int numPlants = filein.nextInt();
             //
             totalPlants += numPlants;
+            compareAndSetMaxHeight(maxHeight);
             //
             //Species species = new Species(speciesID, minHeight, maxHeight, avgRatio, numPlants);
             if((list[speciesID].getMinHeight() == -1) || (list[speciesID].getMinHeight() > minHeight)) list[speciesID].setMinHeight(minHeight);                            
@@ -226,6 +251,8 @@ public class FileController implements Runnable{
                 //
                 if(( !(xpos > Terrain.getDimX()-1) ) & ( !(ypos > Terrain.getDimY()-1) ) )
                     layer.setPlantAtLocation(xpos, ypos, speciesID, id);
+                //
+                compareAndSetMaxRadius(canopy);
             }
             if(bCanopy) list[speciesID].setCanopyPlants(plantlist);
             else list[speciesID].setUnderPlants(plantlist);
@@ -243,7 +270,7 @@ public class FileController implements Runnable{
         File file = new File(filename);
         Scanner filein = new Scanner(file);
 
-        int totalSpecies = 0;
+        totalSpecies = 0;
         while(filein.hasNextLine()){
             ++totalSpecies;
             filein.nextLine();

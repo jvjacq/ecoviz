@@ -15,9 +15,12 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.event.*;
+import javax.swing.text.NumberFormatter;
+
 import com.formdev.flatlaf.*;
 //import com.jidesoft.swing.*;
 
@@ -30,6 +33,7 @@ public class Gui extends JPanel implements ChangeListener {
     private JMenuItem i1, i2, i3, a1, a2, a3, a4;
     private JLabel pointerLbl, pointerLb2;
     private JSlider wDirSlider, wSpdSlider, spdSlider;
+
     private ImagePanel mainPanel;
     private JButton btnFire;
     private JButton btnBack;
@@ -73,8 +77,9 @@ public class Gui extends JPanel implements ChangeListener {
     private JLabel shTitle;
     private JLabel taTitle;
     private JLabel avTitle;
+    JFormattedTextField tHiHeight, tLoHeight, tHiRadius, tLoRadius;
+    //Filter Section:
 
-    // Filter Section:
     private JLabel lblSearch;
     private JTextField search;
 
@@ -154,11 +159,11 @@ public class Gui extends JPanel implements ChangeListener {
         return this.ChkUnderGrowth;
     }
 
-    public JCheckBox getChkMetric() {
+    public JCheckBox getChkMetric(){
         return this.ChkMetric;
     }
 
-    public JCheckBox getChkCanopy() {
+    public JCheckBox getChkCanopy(){
         return this.ChkCanopy;
     }
 
@@ -204,6 +209,27 @@ public class Gui extends JPanel implements ChangeListener {
 
     public JLabel getAvTitle() {
         return this.avTitle;
+    }
+
+    public JFormattedTextField getHiHeight(){
+        return this.tHiHeight;
+    }
+
+    public JFormattedTextField getLoHeight(){
+        return this.tLoHeight;
+    }
+
+    public JFormattedTextField getHiRadius(){
+        return this.tHiRadius;
+    }
+
+    public JFormattedTextField getLoRadius(){
+        return this.tLoRadius;
+    }
+
+    //Mutator methods
+    public void setFilterList(JCheckBox[] list){
+        this.filterlist = list;
     }
 
     public void setFilterList(JCheckBox[] list) {
@@ -431,7 +457,6 @@ public class Gui extends JPanel implements ChangeListener {
 
         chkPath = new JCheckBox("Show Path of Fire",true);
         
-
         speciesToggle = new JCheckBox("Full species details");
         speciesToggle.setEnabled(false);
         speciesToggle.setSelected(false);
@@ -474,9 +499,58 @@ public class Gui extends JPanel implements ChangeListener {
         tabbedPane.addTab("Species", null, pnlFilters, "Filter by species");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
-        //// ********************************************************** */
+        JPanel pnlFilter2 = new JPanel();
+        pnlFilter2.setLayout(new GridLayout(5,1));
+        JLabel lblFilter2 = new JLabel("Filter by Height/Canopy:");
+        //Height filter
+        JPanel heightFilters = new JPanel();
+        heightFilters.setLayout(new GridLayout(0,2));
+        heightFilters.setSize(new Dimension(200, 50));
+        NumberFormat format = DecimalFormat.getInstance(Locale.UK);
+        format.setMinimumFractionDigits(2);
+        format.setMaximumFractionDigits(2);
+        NumberFormatter nf = new NumberFormatter(format);
+        nf.setOverwriteMode(true);
+        nf.setAllowsInvalid(false);
 
-        // DRAW MINIMAP
+        tHiHeight = new JFormattedTextField(nf);
+        tHiHeight.setValue(0.00f);
+        JLabel lblHiHeight = new JLabel("Max Height:");
+        tLoHeight = new JFormattedTextField(nf);
+        tLoHeight.setValue(0.00f);
+        JLabel lblLoHeight = new JLabel("Min Height:");
+
+        //Canopy filter
+        JPanel canopyFilters = new JPanel();
+        canopyFilters.setLayout(new GridLayout(0,2));
+        canopyFilters.setSize(new Dimension(200, 50));
+
+        tHiRadius = new JFormattedTextField(nf);
+        tHiRadius.setValue(0.00f);
+        JLabel lblHiRadius = new JLabel("Max Radius:");
+        tLoRadius = new JFormattedTextField(nf);
+        tLoRadius.setValue(0.00f);
+        JLabel lblLoRadius = new JLabel("Min Radius:");
+
+        heightFilters.add(lblLoHeight);
+        heightFilters.add(lblHiHeight);
+        heightFilters.add(tLoHeight);
+        heightFilters.add(tHiHeight);
+
+        canopyFilters.add(lblLoRadius);
+        canopyFilters.add(lblHiRadius);
+        canopyFilters.add(tLoRadius);
+        canopyFilters.add(tHiRadius);
+
+        pnlFilter2.add(lblFilter2);
+        pnlFilter2.add(heightFilters);
+        pnlFilter2.add(canopyFilters);
+
+        tabbedPane.addTab("Filter",null,pnlFilter2,"Visualisation filters");
+        tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
+        ////********************************************************** */
+            
+        //DRAW MINIMAP
         mini = new miniMap(mainPanel);
         mini.setPreferredSize(new Dimension(200, 200));
         mini.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -493,17 +567,14 @@ public class Gui extends JPanel implements ChangeListener {
 
         JMenu m1 = new JMenu("File");
 
-        i1 = new JMenuItem("Load Files");
-        // i1.addActionListener(this);
-        i2 = new JMenuItem("Export as PNG");
-        // i2.addActionListener(this);
-        i3 = new JMenuItem("Exit");
-        // i3.addActionListener(this);
+            i1 = new JMenuItem("Load Files");
+            i2 = new JMenuItem("Export as PNG");
+            i3 = new JMenuItem("Exit");
 
-        m1.add(i1);
-        m1.add(i2);
-        m1.add(i3);
-
+                m1.add(i1);
+                m1.add(i2);
+                m1.add(i3);
+    
         JMenu m2 = new JMenu("Help");
         JMenu m3 = new JMenu("Appearance");
 
@@ -512,16 +583,9 @@ public class Gui extends JPanel implements ChangeListener {
         a3 = new JMenuItem("Cosmo");
         a4 = new JMenuItem("Forest");
         m3.add(a1);
-        // a1.addActionListener(this);
-
         m3.add(a2);
-        // a2.addActionListener(this);
-
         m3.add(a3);
-        // a3.addActionListener(this);
-
         m3.add(a4);
-        // a4.addActionListener(this);
 
         mb.add(m1);
         mb.add(m2);
@@ -652,7 +716,6 @@ public class Gui extends JPanel implements ChangeListener {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-
         pointerLbl.setText("Wind Direction: " + Integer.toString(wDirSlider.getValue()) + " Degrees");
         if (getChkMetric().isSelected())
             pointerLb2.setText("Wind Speed: " + Integer.toString(wSpdSlider.getValue()) + " KPH");
