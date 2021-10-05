@@ -721,8 +721,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 image.deriveImage();
                 updateFilterSpeciesCounts();
                 if(selected != null) image.displayPlant(selected, getViewRadius());
-                image.repaint();
+                
             }
+            image.repaint();
         }		
 	}
 
