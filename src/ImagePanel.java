@@ -519,15 +519,6 @@ public class ImagePanel extends JPanel{
 
 	public int colorMixer(int col1, int col2){
 		return (255 << 24) + ((((col1 & 0x00FF0000) >>17) + ((col2 & 0x00FF0000) >>17)) << 16) + ((((col1 & 0x0000FF00) >>9) + ((col2 & 0x0000FF00) >>9)) << 8) + (((col1 & 0x000000FF) >>1) + ((col2 & 0x000000FF) >>1));
-		//return new Color((int)(((col1 & 0x00FF0000) >>16)+ col2.getRed())/2,(int)(((col1 & 0x0000FF00) >>8)+ col2.getGreen())/2,(int)(((col1 & 0x000000FF) >>0) + col2.getBlue())/2).getRGB();
-		
-		/*int a2 = col2.getAlpha();
-		int a1 = (1-col2.getAlpha())*col1.getAlpha();
-		int a21 = (a1 + a2);
-		int r = (int)(col1.getRed()*a1 + col2.getRed()*a2)/a21;
-		int g = (int)(col1.getGreen()*a1 + col2.getGreen()*a2)/a21;
-		int b = (int)(col1.getBlue()*a1 + col2.getBlue()*a2)/a21;
-		return new Color(r,g,b).getRGB();*/
 	}
 
 }
