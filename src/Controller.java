@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,17 +20,22 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private PlantLayer undergrowth;
     private PlantLayer canopy;
     private FileController files;
-    private boolean fireMode, metric;
+    private boolean fireMode, metric,timerRunning;
     private int numSpecies;
     private Fire fire;
-    private Timer timer,timerDerive;
+    private Timer timer,timerDerive, captureTimer;
     private int delay;
+    private boolean first;
+    private int windMaxKPH, windMaxMPH;
+    private float convertion;
     private boolean running;
     private Plant selected;
     private boolean deaf;
-    private TimerTask task,task2;
+    private TimerTask task,task2,task3;
     private ImageIcon pauseImg,runImg;
     private Firebreak fb;
+    private ArrayList<BufferedImage> pathFrames,burntFrames;
+    private int frames;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -39,10 +45,17 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.canopy = canopy;
         this.files = new FileController();
         running = false;
+        timerRunning = false;
         selected = null;
         deaf = false;
-        delay = 25;// default - Update Speed
+        delay = 125;// default - Update Speed
+        windMaxKPH = 160;
+        windMaxMPH = 100;
+        convertion = (float)1.60934;
         metric = true;
+        pathFrames = new ArrayList<BufferedImage>();
+        burntFrames = new ArrayList<BufferedImage>();
+
         runImg = new ImageIcon("resources/Running.gif");
         pauseImg = new ImageIcon("resources/stamp.gif");
 
@@ -63,9 +76,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getMenu4().addActionListener(e -> setGUItheme(0));
         gui.getMenu5().addActionListener(e -> setGUItheme(1));
         gui.getHelp().addActionListener(e -> goHelp());
-
-        //gui.getMenu6().addActionListener(e -> gui.changeTheme(2));
-        //gui.getMenu7().addActionListener(e -> gui.changeTheme(3));
+        gui.getCloseRender().addActionListener(e -> ScrubbingUI());
+        gui.getScrubber().addChangeListener(e -> iterateImages());
+        gui.getEndSession().addActionListener(e -> closeScrub());
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
@@ -83,11 +96,58 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.addMouseListener(this);
         image.addMouseMotionListener(this);
         image.addMouseWheelListener(this);
-        // gui.changeTheme(0); //###
         initView();
     }
 
+    public void closeScrub(){
+        gui.getScrubber().setEnabled(false);
+        gui.getScrubber().setVisible(false);
+        gui.getEndSession().setVisible(false);
+        gui.getFireBtn().setVisible(true);
+
+        resetFrames();
+        first=false;
+
+    }
+
+    public void ScrubbingUI(){
+        gui.getEndSession().setVisible(true);
+        gui.getStamp().setIcon(pauseImg);
+        gui.getCloseRender().setEnabled(false);
+        gui.getScrubber().setEnabled(true);
+        gui.getScrubber().setVisible(true);
+        closeFireSim();
+        gui.getRenderBtn().setVisible(false);
+        gui.getFireBtn().setVisible(false);
+        gui.getStamp().setIcon(pauseImg);
+
+        gui.getScrubber().setMaximum(burntFrames.size()-1);
+        System.out.println("Simulation Ended, Showing the Final Render");
+    }
+
+    public void iterateImages(){
+
+        //Pass through the bufferedImage to render
+        System.out.println(gui.getScrubber().getValue());
+        image.setFire(pathFrames.get(gui.getScrubber().getValue()));
+        image.setBurnt(burntFrames.get(gui.getScrubber().getValue()));
+        image.repaint();
+
+    }
+
+    public void storeImage(BufferedImage p, BufferedImage b){
+        pathFrames.add(p);
+        burntFrames.add(b);
+    }
+
+    public void resetFrames(){
+        pathFrames = new ArrayList<BufferedImage>();
+        burntFrames = new ArrayList<BufferedImage>();
+    }
+
     public void initView() {
+        gui.getChkShowBurnt().setVisible(false);
+        gui.getChkShowPath().setVisible(false);
         gui.getLoadFrame().setVisible(true);
         //gui.getMain().setVisible(false);
     }
@@ -113,7 +173,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void resetFireSim() {
-        pauseFireSim();
+        if (running) pauseFireSim();
         fire.clearGrid();
         fire.deriveFireImage();
         BufferedImage updatedFireImage = fire.getImage();
@@ -121,7 +181,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         BufferedImage updatedBurntImage = fire.getImage();
         image.setBurnt(updatedBurntImage);
-        gui.repaint();
+        fire.setShowBurnt(true);
+        fire.setShowPath(true);
+        gui.setChkBurnt();
+        gui.setChkPath();
+        image.repaint();
     }
 
     public void showPath() {
@@ -130,6 +194,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         } else {
             fire.setShowPath(false);
         }
+        fire.deriveFireImage();
+        image.setFire(fire.getImage());
+        image.setBurnt(fire.getBurntImage());
+        image.repaint();
     }
 
     public void showBurnt() {
@@ -138,26 +206,40 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         } else {
             fire.setShowBurnt(false);
         }
+        fire.deriveFireImage();
+        image.setFire(fire.getImage());
+        image.setBurnt(fire.getBurntImage());
+        image.repaint();
     }
 
     public void openFireSim() {
+        gui.getCloseRender().setEnabled(false);
+
         gui.getTabPane().setSelectedIndex(1);
         gui.getFireBtn().setVisible(false);
         gui.getPauseBtn().setVisible(true);
         gui.getBackBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
         gui.getRenderBtn().setVisible(true);
+        gui.getCloseRender().setVisible(true);
+        gui.getChkShowBurnt().setVisible(true);
+        gui.getChkShowPath().setVisible(true);
         fireMode = true;
         gui.getPauseBtn().setEnabled(false);
         // Setup fire:
         fire = new Fire(Terrain.getDimX(), Terrain.getDimY(), undergrowth.getLocations(), canopy.getLocations());
         if (running){
             fire.setWindDirection(gui.getWindDir());
-            fire.setWindForce(gui.getWindSpd(), metric);
+            if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+            else fire.setWindForce(gui.getWindSpd(), windMaxMPH); 
         }
     }
 
     public void closeFireSim() {
+        first=false;
+
+        gui.getCloseRender().setEnabled(false);
+
         gui.getTabPane().setSelectedIndex(0);
 
         gui.getFireBtn().setVisible(true);
@@ -165,22 +247,31 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getResetBtn().setVisible(false);
         gui.getRenderBtn().setVisible(false);
         gui.getPauseBtn().setVisible(false);
+        gui.getCloseRender().setVisible(false);
+        gui.getChkShowBurnt().setVisible(false);
+        gui.getChkShowPath().setVisible(false);
 
-        resetFireSim();
         fireMode = false;
-        if (running){
+        if (timerRunning){
             task.cancel();
             task2.cancel();
             timer.cancel();
             timerDerive.cancel();
             timer.purge();
             timerDerive.purge();
+            task3.cancel();
+            captureTimer.cancel();
+            captureTimer.purge();
+            timerRunning=false;
         }
+        running = false;
+
         gui.getRenderBtn().setEnabled(true);
         gui.getPauseBtn().setEnabled(false);
         image.repaint();
         gui.getStamp().setIcon(pauseImg);
-        running = false;
+        resetFireSim();
+
     }
 
     public void pauseFireSim() {
@@ -188,27 +279,36 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             running = true;
             gui.getPauseBtn().setText("Pause");
             gui.getStamp().setIcon(runImg);
+            fire.setWindDirection(gui.getWindDir());
+            if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+            else fire.setWindForce(gui.getWindSpd(), windMaxMPH); 
         } else {
             running = false;
             gui.getPauseBtn().setText("Play");
             gui.getStamp().setIcon(pauseImg);
-
-
+            fire.setWindDirection(gui.getWindDir());
+            if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+            else fire.setWindForce(gui.getWindSpd(), windMaxMPH); 
         }
     }
 
     public void renderFireSim() { // Single use
-
+        frames=0;
+        gui.getCloseRender().setEnabled(true);
         System.out.println("Running the Fire Simulation");
         gui.getPauseBtn().setEnabled(true);
+        fire.setWindDirection(gui.getWindDir());
+        if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+        else fire.setWindForce(gui.getWindSpd(), windMaxMPH); 
         running = true;
         gui.getStamp().setIcon(runImg);
 
         timer = new Timer();
         timerDerive = new Timer();
+        captureTimer = new Timer();
+        timerRunning=true;
 
         task = new TimerTask() {
-
             @Override
             public void run() {
                 if (running) {
@@ -242,12 +342,35 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 }
             }
         };
+        
+        task3 = new TimerTask() {
 
+            @Override
+            public void run() {
+
+                /*if (running) {
+                    BufferedImage updatedFireImage = fire.getImage();
+                    BufferedImage updatedBurnImage = fire.getBurntImage();
+
+                    if (frames<=3000 && (first)){
+                        try{
+                            storeImage(updatedFireImage,updatedBurnImage);
+                        }catch(OutOfMemoryError e){
+                            System.out.println("WHy your computer suck?");
+                            task3.cancel();
+                        }
+                    }else{
+                        System.out.println("Simulation Render Complete (No more can be recorded)");
+                    }
+                    frames++;
+                    
+                }*/
+            }
+        };
 
         timer.schedule(task, 0, 1);
         timerDerive.schedule(task2,0,1);
-
-
+        captureTimer.schedule(task3,0,1);
 
         gui.getRenderBtn().setEnabled(false);
     }
@@ -567,7 +690,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             }
 
             if (clicked){
-                
+                first=true;
                 fire.addFire(xPos, yPos,rad);
 
             }
@@ -637,7 +760,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         if (running){
             fire.setWindDirection(gui.getWindDir());
-            fire.setWindForce(gui.getWindSpd(), metric);
+            if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+            else fire.setWindForce(gui.getWindSpd(), windMaxMPH);
         }
         //delay = 75; // default
         switch(Integer.toString(gui.getSimSpeed())){
@@ -702,13 +826,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void changeUnits(){
         if (gui.getChkMetric().isSelected()){
             metric = true;
-            gui.setWindSpdMax(160);
-            gui.setWindSpd((int)Math.ceil((1.60934*gui.getWindSpd())));
+            gui.setWindSpdMax(windMaxKPH);
+            gui.setWindSpd((int)Math.ceil((convertion*gui.getWindSpd())));
             gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
         }else{
             metric = false;
-            gui.setWindSpd((int)(gui.getWindSpd()/1.60934));
-            gui.setWindSpdMax(100);
+            gui.setWindSpd((int)Math.floor((gui.getWindSpd()/convertion)));
+            gui.setWindSpdMax(windMaxMPH);
             gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
         }
     }

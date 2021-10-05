@@ -81,6 +81,16 @@ public class ImagePanel extends JPanel{
 		this.fire = fire;
 	}
 
+	public void setFireRender(BufferedImage fire){
+		this.fire = fire;
+		repaint();
+	}
+
+	public void setBurntRender(BufferedImage burnt){
+		this.burnt = burnt;
+		repaint();
+	}
+
 	public void setBurnt(BufferedImage burnt){
 		this.burnt = burnt;
 	}
