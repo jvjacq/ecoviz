@@ -521,10 +521,38 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void mouseClicked(MouseEvent e) {
         gui.getSpeciesToggle().setEnabled(true);
         Point click = e.getPoint();
-        
+        int xPos =0;
+        int yPos=0;
+        double rad = 0.0;
+        Boolean clicked=false;
         // Fire Placement:
         if (fireMode) {
-            fire.addFire(click.x, click.y);
+            //fire.addFire(click.x, click.y);
+
+            Species[] list = PlantLayer.getAllSpecies();
+
+            for (int p = PlantLayer.getPlantList().size()-1; p >= 0; --p) {
+                Plant plant = PlantLayer.getPlantList().get(p);
+                // Check if species is not currently filtered
+                if (list[plant.getSpeciesID()].getFilter() && plant.getFilter() && plant.getCanopyFlag() && plant.getHeightFlag()) {
+                    if (insideCanopy(click, plant)) {
+                        // Will be lowest plant
+                        rad = plant.getCanopy();
+                        xPos = plant.getX();
+                        yPos = plant.getY();
+                        clicked=true;
+                        break;
+                    }
+                }
+
+            }
+
+            if (clicked){
+                
+                fire.addFire(xPos, yPos,rad);
+
+            }
+
             BufferedImage updatedFireImage = fire.getImage();
             BufferedImage burntImage = fire.getBurntImage();
 
@@ -534,6 +562,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             // image.deriveImage();
             image.repaint();
             System.out.println("Fire Added");
+
         } else {
             gui.getSpeciesToggle().setSelected(false);
             int id = -1;
