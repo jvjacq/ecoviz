@@ -59,6 +59,7 @@ public class Gui extends JPanel{
     private JTabbedPane tabbedPane;
     private JCheckBox speciesToggle;
 
+    private JButton playR;
     private String common;
     private String latin;
     private String shortest;
@@ -83,6 +84,8 @@ public class Gui extends JPanel{
     private JSlider radSlider;
     private JCheckBox chkSelectRadius;
     private JSlider scrubber;
+
+
     //private JSlider sdrViewRadius; 
     
     private JLabel stamp;
@@ -94,6 +97,10 @@ public class Gui extends JPanel{
 
     public JButton getEndSession(){
         return this.btnEndSession;
+    }
+
+    public JButton getPlayR(){
+        return this.playR;
     }
 
     public JMenuItem getHelp(){
@@ -419,11 +426,16 @@ public class Gui extends JPanel{
 
         btnEndSession = new JButton("End Session");
         btnEndSession.setVisible(false);
+        
+        playR = new JButton("Play");
+        playR.setVisible(false);
 
         scrubber = new JSlider();
         //scrubber.setMaximum(1000);
         scrubber.setEnabled(false);
         scrubber.setVisible(false);
+
+        pnlSouth.add(playR);
         pnlSouth.add(btnEndSession);
         pnlSouth.add(scrubber);
         

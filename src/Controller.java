@@ -23,7 +23,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean fireMode, metric,timerRunning;
     private int numSpecies;
     private Fire fire;
-    private Timer timer,timerDerive, captureTimer;
+    private Timer timer,timerDerive, captureTimer, iterator;
     private int delay;
     private boolean first;
     private int windMaxKPH, windMaxMPH;
@@ -31,10 +31,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean running;
     private Plant selected;
     private boolean deaf;
-    private TimerTask task,task2,task3;
+    private TimerTask task,task2,task3, iterate;
     private ImageIcon pauseImg,runImg;
     private ArrayList<BufferedImage> pathFrames,burntFrames;
     private int frames;
+    private boolean playing;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -54,7 +55,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         metric = true;
         pathFrames = new ArrayList<BufferedImage>();
         burntFrames = new ArrayList<BufferedImage>();
-
+        playing = false;
         runImg = new ImageIcon("resources/Running.gif");
         pauseImg = new ImageIcon("resources/stamp.gif");
 
@@ -78,6 +79,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getCloseRender().addActionListener(e -> ScrubbingUI());
         gui.getScrubber().addChangeListener(e -> iterateImages());
         gui.getEndSession().addActionListener(e -> closeScrub());
+        gui.getPlayR().addActionListener(e -> playRButton());
+
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
@@ -99,6 +102,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeScrub(){
+        iterate.cancel();
+
+        iterator.cancel();
+        iterator.purge();
+
+        gui.getPlayR().setVisible(false);
         gui.getScrubber().setEnabled(false);
         gui.getScrubber().setVisible(false);
         gui.getEndSession().setVisible(false);
@@ -112,9 +121,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void ScrubbingUI(){
+        playRender();
+
         gui.getEndSession().setVisible(true);
         gui.getStamp().setIcon(pauseImg);
         gui.getCloseRender().setEnabled(false);
+
+        gui.getPlayR().setVisible(true);
         gui.getScrubber().setEnabled(true);
         gui.getScrubber().setVisible(true);
         closeFireSim();
@@ -125,6 +138,40 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getScrubber().setMaximum(burntFrames.size()-1);
         gui.getScrubber().setValue(0);
         System.out.println("Simulation Ended, Showing the Final Render");
+    }
+
+    public void playRButton(){
+        playing=!playing;
+
+        if (playing){
+            gui.getPlayR().setText("Pause");
+        } else {
+            gui.getPlayR().setText("Play");
+        }
+    };
+
+    public void playRender(){
+        iterator = new Timer();
+
+        iterate = new TimerTask() {
+
+            @Override
+            public void run() {
+                if (playing){
+
+                int prev = gui.getScrubber().getValue();
+
+                if (prev!=pathFrames.size()){
+                    gui.getScrubber().setValue(prev+1);
+                }
+            }
+        }
+        };
+
+        iterator.schedule(iterate,0, 25);
+
+
+
     }
 
     public void iterateImages(){
