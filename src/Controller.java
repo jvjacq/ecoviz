@@ -36,6 +36,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private Firebreak fb;
     private ArrayList<BufferedImage> pathFrames,burntFrames;
     private int frames;
+    //private boolean fireReset;
+    private boolean firebreakMode;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -44,20 +46,21 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.undergrowth = undergrowth;
         this.canopy = canopy;
         this.files = new FileController();
-        running = false;
-        timerRunning = false;
-        selected = null;
-        deaf = false;
-        delay = 125;// default - Update Speed
-        windMaxKPH = 160;
-        windMaxMPH = 100;
-        convertion = (float)1.60934;
-        metric = true;
-        pathFrames = new ArrayList<BufferedImage>();
-        burntFrames = new ArrayList<BufferedImage>();
-
-        runImg = new ImageIcon("resources/Running.gif");
-        pauseImg = new ImageIcon("resources/stamp.gif");
+        this.running = false;
+        this.timerRunning = false;
+        this.selected = null;
+        this.deaf = false;
+        this.delay = 125;// default - Update Speed
+        this.windMaxKPH = 160;
+        this.windMaxMPH = 100;
+        this.convertion = (float)1.60934;
+        this.metric = true;
+        this.pathFrames = new ArrayList<BufferedImage>();
+        this.burntFrames = new ArrayList<BufferedImage>();
+        //this.fireReset = false;
+        this.firebreakMode = false;
+        this.runImg = new ImageIcon("resources/Running.gif");
+        this.pauseImg = new ImageIcon("resources/stamp.gif");
 
     }
 
@@ -67,6 +70,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getBackBtn().addActionListener(e -> closeFireSim());
         gui.getChkShowPath().addActionListener(e -> showPath());
         gui.getChkShowBurnt().addActionListener(e -> showBurnt());
+        gui.getChkFirebreak().addItemListener(e -> setupFirebreak());
+        gui.getUndoBtn().addActionListener(e -> removeFirebreak());
         gui.getPauseBtn().addActionListener(e -> pauseFireSim());
         gui.getLoadBtn().addActionListener(e -> loadFiles());
         gui.getResetBtn().addActionListener(e -> resetFireSim());
@@ -97,6 +102,53 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.addMouseMotionListener(this);
         image.addMouseWheelListener(this);
         initView();
+    }
+
+    public void removeFirebreak(){
+        int latest = Firebreak.getBreakList().size() -1;
+        if(latest < 0) return;
+        Firebreak f = Firebreak.getBreakList().get(latest);
+        for(int[] i: f.getIDList()){
+            fire.restorePlant(i[0], i[1]);
+        }
+        Species[] slist = PlantLayer.getAllSpecies();
+        for(int j = 0; j < f.getIDList().size(); ++j){
+            int speciesid = f.getIDList().get(j)[0];
+            int plantid = f.getIDList().get(j)[1];
+            if(f.getLayers().get(j) == true){       
+                slist[speciesid].getCanopyPlants()[plantid].decFirebreak();
+            }else{
+                slist[speciesid].getUnderPlants()[plantid].decFirebreak();
+            }
+        }
+        Firebreak.removeLatest();
+        fire.clearGrid();
+        fire.genGrid();
+        image.deriveImage();
+        image.repaint();
+    }
+
+    public void setupFirebreak(){
+        if(gui.getChkFirebreak().isSelected()){
+            firebreakMode = true;
+            gui.getUndoBtn().setEnabled(true);
+            gui.getPauseBtn().setEnabled(false);
+            gui.getRenderBtn().setEnabled(false);
+            gui.getResetBtn().setEnabled(false);
+            gui.getBackBtn().setEnabled(false);
+            fire.deriveFireImage();
+            image.setFire(fire.getImage());
+            image.setBurnt(fire.getBurntImage());
+            image.repaint();
+        }else{
+            firebreakMode = false;
+            gui.getUndoBtn().setEnabled(false);
+            gui.getPauseBtn().setEnabled(true);
+            gui.getRenderBtn().setEnabled(true);
+            gui.getResetBtn().setEnabled(true);
+            gui.getBackBtn().setEnabled(true); 
+        }
+
     }
 
     public void closeScrub(){
@@ -215,9 +267,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void openFireSim() {
         gui.getCloseRender().setEnabled(false);
-
         gui.getTabPane().setSelectedIndex(1);
+        gui.getTabPane().setEnabled(false);
         gui.getFireBtn().setVisible(false);
+        gui.getChkFirebreak().setVisible(true);
+        gui.getUndoBtn().setVisible(true);
         gui.getPauseBtn().setVisible(true);
         gui.getBackBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
@@ -242,8 +296,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getCloseRender().setEnabled(false);
 
         gui.getTabPane().setSelectedIndex(0);
-
+        gui.getTabPane().setEnabled(true);
         gui.getFireBtn().setVisible(true);
+        gui.getChkFirebreak().setVisible(false);
+        gui.getUndoBtn().setVisible(false);
         gui.getBackBtn().setVisible(false);
         gui.getResetBtn().setVisible(false);
         gui.getRenderBtn().setVisible(false);
@@ -788,6 +844,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.setYDiff(cursor.y - image.getStartY());
         image.setDragger(true);
         if(fireMode){
+            if(!firebreakMode) return;
             image.drawFirebreak(fb);
             image.repaint();
         }else{
@@ -812,6 +869,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         Boolean clicked=false;
         // Fire Placement:
         if (fireMode) {
+            if(firebreakMode) return;
             //fire.addFire(click.x, click.y);
 
             Species[] list = PlantLayer.getAllSpecies();
@@ -900,7 +958,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void mousePressed(MouseEvent e) {
         image.setReleased(false);
         image.setStartPoint(MouseInfo.getPointerInfo().getLocation());
-        if(fireMode) fb = new Firebreak();
+        if(firebreakMode) fb = new Firebreak();
     }
 
     @Override
@@ -908,6 +966,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         if(image.getDragger()){
             image.setReleased(true);
             if(fireMode){
+                if(!firebreakMode) return;
                 image.drawFirebreak(fb);
                 image.deriveImage();
                 updateFireGrid();
