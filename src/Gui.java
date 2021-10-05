@@ -42,7 +42,7 @@ public class Gui extends JPanel{
     private JButton btnPause;
     private JButton btnReset;
     private JCheckBox chkPath,chkBurnt;
-
+    private JButton btnEndSession;
     PlantLayer canopy, undergrowth;
 
     // East Panel:
@@ -82,6 +82,7 @@ public class Gui extends JPanel{
     private JFormattedTextField tHiHeight, tLoHeight, tHiRadius, tLoRadius;
     private JSlider radSlider;
     private JCheckBox chkSelectRadius;
+    private JSlider scrubber;
     //private JSlider sdrViewRadius; 
     
     private JLabel stamp;
@@ -90,6 +91,10 @@ public class Gui extends JPanel{
     private JLabel lblSearch;
     private JTextField search;
     private JPanel pnlDetails;
+
+    public JButton getEndSession(){
+        return this.btnEndSession;
+    }
 
     public JMenuItem getHelp(){
         return this.h1;
@@ -228,6 +233,10 @@ public class Gui extends JPanel{
 
     public JLabel getTallTitle() {
         return this.taTitle;
+    }
+
+    public JSlider getScrubber(){
+        return this.scrubber;
     }
 
     public JLabel getAvTitle() {
@@ -402,8 +411,14 @@ public class Gui extends JPanel{
         pnlSouth.add(btnCloseRender);
         pnlSouth.add(btnBack);
 
-        JSlider scrubber = new JSlider();
+        btnEndSession = new JButton("End Session");
+        btnEndSession.setVisible(false);
+
+        scrubber = new JSlider();
+        //scrubber.setMaximum(1000);
         scrubber.setEnabled(false);
+        scrubber.setVisible(false);
+        pnlSouth.add(btnEndSession);
         pnlSouth.add(scrubber);
         
 
