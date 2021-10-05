@@ -58,11 +58,13 @@ public class Fire {
 
     // Populates a grid of the trees on the map
     public void genGrid() {
+        int update;
         for (int x = 0; x < dimX; x++) {
             for (int y = 0; y < dimY; y++) {
-                if (underPlants[y][x][1] > 1) {
+                if (underPlants[y][x][1] > -1) {
                     try {
                         int specId = underPlants[y][x][0]; // Species ID
+                        //if(specId == -1) System.out.println("?");
                         int plantID = underPlants[y][x][1]; // Plant ID
 
                         Plant[] uPlants = specieslist[specId].getCanopyPlants();
@@ -84,8 +86,34 @@ public class Fire {
                     } catch (Exception e) {
                     }
 
-                }
-                if (canopyPlants[y][x][1] > 1) {
+                }else if (underPlants[y][x][1] == -1) {
+                    System.out.println("in under -1");
+                    try {
+                        int specId = underPlants[y][x][0]; // Species ID
+                        //if(specId == -1) System.out.println("?");
+                        int plantID = underPlants[y][x][1]; // Plant ID
+
+                        Plant[] uPlants = specieslist[specId].getCanopyPlants();
+                        double rad = uPlants[plantID].getCanopy();
+
+                        double temp = Math.round(rad);
+                        int boundary = (int) temp + 1;
+
+                        for (int j = y - boundary; j < (y + boundary + 1); j++) {
+                            for (int i = x - boundary; i < (x + boundary + 1); i++) {
+                                if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
+                                    double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
+                                    if (dist <= rad) {
+                                        plantGrid[i][j] = 0;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                    }
+                }else{System.out.println("Weird edge case");}
+                if (canopyPlants[y][x][1] > -1){
+                    update = 1;
                     try {
                         int specId = canopyPlants[y][x][0]; // Species ID
                         int plantID = canopyPlants[y][x][1]; // Plant ID
@@ -101,15 +129,39 @@ public class Fire {
                                 if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
                                     double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
                                     if (dist <= rad) {
-                                        plantGrid[i][j] = 1;
+                                        plantGrid[i][j] = update;
                                     }
                                 }
                             }
                         }
                     } catch (Exception e) {
                     }
+                }else if(canopyPlants[y][x][1] == -1){
+                    System.out.println("in over -1");
+                    update = 0;
+                    try {
+                        int specId = canopyPlants[y][x][0]; // Species ID
+                        int plantID = canopyPlants[y][x][1]; // Plant ID
 
-                }
+                        Plant[] uPlants = specieslist[specId].getCanopyPlants();
+                        double rad = uPlants[plantID].getCanopy();
+
+                        double temp = Math.round(rad);
+                        int boundary = (int) temp + 1;
+
+                        for (int j = y - boundary; j < (y + boundary + 1); j++) {
+                            for (int i = x - boundary; i < (x + boundary + 1); i++) {
+                                if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
+                                    double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
+                                    if (dist <= rad) {
+                                        plantGrid[i][j] = update;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                    }
+                }else{ System.out.println("Weird edge case");}
             }
         }
         System.out.println("Plants Populated for Fire Sim");
@@ -407,5 +459,23 @@ public class Fire {
     public void setWindForce(int windSpeed, boolean metric){
         if (metric) this.windForce = (float)(windSpeed / 160);
         else this.windForce = (float)(windSpeed / 100);
+    }
+
+    public void removePlant(int speciesid, int plantid){
+        System.out.println(speciesid + " " + plantid);
+        try{
+            int x = specieslist[speciesid].getCanopyPlants()[plantid].getX();
+            int y = specieslist[speciesid].getCanopyPlants()[plantid].getY();
+            canopyPlants[y][x][0] = -1;
+            canopyPlants[y][x][1] = -1;
+        }catch(Exception e){
+            //
+        }
+    }
+
+    public void restorePlant(int speciesid, int plantid){
+        int x = specieslist[speciesid].getCanopyPlants()[plantid].getX();
+        int y = specieslist[speciesid].getCanopyPlants()[plantid].getY();
+        canopyPlants[y][x][1] = plantid;
     }
 }
