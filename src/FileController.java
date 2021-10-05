@@ -126,10 +126,7 @@ public class FileController implements Runnable{
         threadLayer = layer;
         threadCanopy = canopy;
         MAXHeight = 0;
-        MAXRadius = 0;
-        //new Color(153,61,61),
-        //new Color(229,91,91),
-        
+        MAXRadius = 0;       
     }
 
     public boolean validateFiles(File[] list, String[] filenames){
