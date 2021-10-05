@@ -343,6 +343,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.setPlantsInView(files.getTotalSpecies());
         image.deriveImg(terrain);
         // image.setZoom(true);
+        selected = null;
         image.reset();
         image.calculateView();
         image.deriveImage();
@@ -481,7 +482,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-   
+        if(fireMode) return;
+        //
         double multiplier = image.getZoomMult();
         if (e.getWheelRotation() < 0) { // Zoom in
             multiplier *= 1.1; // Adjust for smoothness
@@ -507,18 +509,22 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
         Point cursor = e.getLocationOnScreen();
         image.setXDiff(cursor.x - image.getStartX());
         image.setYDiff(cursor.y - image.getStartY());
-
         image.setDragger(true);
-        image.calculateView();
-        image.deriveImage();
-        updateFilterSpeciesCounts();
-        if(selected != null) image.displayPlant(selected, getViewRadius());
-		image.repaint();
-        gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
+        if(fireMode){
+            image.drawFirebreak();
+            image.repaint();
+        }else{
+            if(image.getZoomMult()==1.0) return;
+            image.calculateView();
+            image.deriveImage();
+            updateFilterSpeciesCounts();
+            if(selected != null) image.displayPlant(selected, getViewRadius());
+            image.repaint();
+            gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
+        }
 
     }
 
@@ -576,13 +582,15 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 Plant plant = PlantLayer.getPlantList().get(p);
                 // Check if species is not currently filtered
                 if (list[plant.getSpeciesID()].getFilter() && plant.getFilter() && plant.getCanopyFlag() && plant.getHeightFlag()) {
-                    if (insideCanopy(click, plant)) {
-                        // Will be lowest plant
-                        selected = plant;
-                        id = plant.getSpeciesID();
-                        image.displayPlant(selected, getViewRadius());
-                        image.repaint();
-                        break;
+                    if((image.getShowCanopy() && plant.getLayer()) || (image.getShowUndergrowth() && !plant.getLayer())){ 
+                        if (insideCanopy(click, plant)) {
+                            // Will be lowest plant
+                            selected = plant;
+                            id = plant.getSpeciesID();
+                            image.displayPlant(selected, getViewRadius());
+                            image.repaint();
+                            break;
+                        }
                     }
                 }
 
@@ -758,17 +766,21 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void mousePressed(MouseEvent e) {
         image.setReleased(false);
         image.setStartPoint(MouseInfo.getPointerInfo().getLocation());
-
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         if(image.getDragger()){
             image.setReleased(true);
-            image.calculateView();
-            image.deriveImage();
-            updateFilterSpeciesCounts();
-            if(selected != null) image.displayPlant(selected, getViewRadius());
+            if(fireMode){
+                image.drawFirebreak();
+            }else{
+                image.calculateView();
+                image.deriveImage();
+                updateFilterSpeciesCounts();
+                if(selected != null) image.displayPlant(selected, getViewRadius());
+                
+            }
             image.repaint();
         }		
 	}
