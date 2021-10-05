@@ -47,7 +47,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         timerRunning = false;
         selected = null;
         deaf = false;
-        delay = 125;// default - Update Speed
+        delay = 25;// default - Update Speed
         windMaxKPH = 160;
         windMaxMPH = 100;
         convertion = (float)1.60934;
@@ -103,9 +103,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getScrubber().setVisible(false);
         gui.getEndSession().setVisible(false);
         gui.getFireBtn().setVisible(true);
+        closeFireSim();
 
         resetFrames();
         first=false;
+        image.repaint();
 
     }
 
@@ -121,13 +123,14 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getStamp().setIcon(pauseImg);
 
         gui.getScrubber().setMaximum(burntFrames.size()-1);
+        gui.getScrubber().setValue(0);
         System.out.println("Simulation Ended, Showing the Final Render");
     }
 
     public void iterateImages(){
 
         //Pass through the bufferedImage to render
-        System.out.println(gui.getScrubber().getValue());
+        //System.out.println(gui.getScrubber().getValue());
         image.setFire(pathFrames.get(gui.getScrubber().getValue()));
         image.setBurnt(burntFrames.get(gui.getScrubber().getValue()));
         image.repaint();
@@ -347,29 +350,28 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             @Override
             public void run() {
 
-                /*if (running) {
+                if (running) {
                     BufferedImage updatedFireImage = fire.getImage();
                     BufferedImage updatedBurnImage = fire.getBurntImage();
 
-                    if (frames<=3000 && (first)){
-                        try{
-                            //storeImage(updatedFireImage,updatedBurnImage);
-                        }catch(OutOfMemoryError e){
-                            System.out.println("WHy your computer suck?");
-                            task3.cancel();
-                        }
+                    if (frames<=400 && (first)){
+                    storeImage(updatedFireImage,updatedBurnImage);
                     }else{
                         System.out.println("Simulation Render Complete (No more can be recorded)");
+                        captureTimer.cancel();
+                        captureTimer.purge();
+                        task3.cancel();
                     }
                     frames++;
                     
-                }*/
+                }
             }
         };
 
+
         timer.schedule(task, 0, 1);
         timerDerive.schedule(task2,0,1);
-        captureTimer.schedule(task3,0,1);
+        captureTimer.schedule(task3,0,50);
 
         gui.getRenderBtn().setEnabled(false);
     }
@@ -758,16 +760,16 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         //delay = 75; // default
         switch(Integer.toString(gui.getSimSpeed())){
             case "1":
-                delay = 125;
+                delay = 25;
                 break;
             case "2":
-                delay = 100;
+                delay = 25;
                 break;
             case "3":
-                delay = 75;
+                delay = 25;
                 break;
             case "4":
-                delay = 50;
+                delay = 25;
                 break;
             case "5":
                 delay = 25;

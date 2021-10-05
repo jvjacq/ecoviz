@@ -469,7 +469,8 @@ public class Gui extends JPanel{
         // ###
         spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
         spdSlider.setMaximum(5);
-        spdSlider.setMinimum(1);
+        //spdSlider.setMinimum(1);\
+        spdSlider.setMinimum(5);
         lblSpeed = new JLabel("Simulation Speed: x1");
 
         search = new JTextField(20);
