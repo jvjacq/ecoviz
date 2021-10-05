@@ -87,7 +87,8 @@ public class Gui extends JPanel{
     
     private JLabel stamp;
     //Filter Section:
-
+    private JButton btnUndo;
+    private JCheckBox chkFirebreak;
     private JLabel lblSearch;
     private JTextField search;
     private JPanel pnlDetails;
@@ -138,6 +139,14 @@ public class Gui extends JPanel{
 
     public JButton getLoadBtn() {
         return this.load;
+    }
+
+    public JButton getUndoBtn() {
+        return this.btnUndo;
+    }
+
+    public JCheckBox getChkFirebreak() {
+        return this.chkFirebreak;
     }
 
     public JFileChooser getChooser() {
@@ -409,14 +418,27 @@ public class Gui extends JPanel{
         btnBack.setBackground(Color.RED);
 
         pnlSouth.add(stamp);
-
+        
         pnlSouth.add(btnFire);
+        //
+        JPanel pnlFirebreak = new JPanel();
+        pnlFirebreak.setLayout(new GridLayout(0,2));
+        chkFirebreak = new JCheckBox("");
+        //chkFirebreak.setEnabled(false);
+        chkFirebreak.setVisible(false);
+        btnUndo = new JButton("Undo");
+        btnUndo.setVisible(false);
+        btnUndo.setEnabled(false);
+        pnlFirebreak.add(chkFirebreak);
+        pnlFirebreak.add(btnUndo);
+        pnlSouth.add(pnlFirebreak);
+        //
         pnlSouth.add(btnRender);
         pnlSouth.add(btnPause);
         pnlSouth.add(btnReset);
         pnlSouth.add(btnCloseRender);
         pnlSouth.add(btnBack);
-
+        
         btnEndSession = new JButton("End Session");
         btnEndSession.setVisible(false);
 
