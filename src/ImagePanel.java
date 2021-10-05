@@ -504,6 +504,7 @@ public class ImagePanel extends JPanel{
 				}
 			}
 		}else{
+			dragger = false;
 			for(Plant p: PlantLayer.getPlantList()){
 				if(fb.inFirebreak(p)) p.incFirebreak();
 			}
