@@ -25,6 +25,7 @@ public class ImagePanel extends JPanel{
 	private BufferedImage canopy;
 	private BufferedImage undergrowth;
 	private BufferedImage fire,burnt;
+	private BufferedImage firebreakImg;
 	//
 	private BufferedImage details;
 	//
@@ -297,6 +298,7 @@ public class ImagePanel extends JPanel{
 				graphics2d.drawImage(burnt, 0, 0, null);	
 			}
 			if(details != null) graphics2d.drawImage(details,0,0,null);
+			if(firebreakImg != null) graphics2d.drawImage(firebreakImg,0,0,null);
 		}		
 	}
 
@@ -449,6 +451,21 @@ public class ImagePanel extends JPanel{
 		this.selectY = y;
 		if(radius != -1){
 			imgGraphics.drawOval((int)Math.round((x-radius-topleftx)*zoomMultiplier), (int)Math.round((y-radius-toplefty)*zoomMultiplier), (int)Math.round(radius*2*zoomMultiplier), (int)Math.round(radius*2*zoomMultiplier));
+		}
+	}
+
+	public void drawFirebreak(){
+		if(firebreakImg == null) firebreakImg = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = firebreakImg.createGraphics();
+		g.setColor(Color.RED);
+		if(!released){			
+			if(!dragger){
+				g.fillOval(startPoint.x-(int)getLocationOnScreen().getX()-10, startPoint.y-(int)getLocationOnScreen().getY()-10, 10*2, 10*2);
+			}else{
+				g.fillOval(startPoint.x-(int)getLocationOnScreen().getX() + (int)xDiff - 10, startPoint.y-(int)getLocationOnScreen().getY() + (int)yDiff - 10, 10*2, 10*2);
+			}
+		}else{
+			firebreakImg = null;	
 		}
 	}
 
