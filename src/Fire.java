@@ -24,7 +24,7 @@ public class Fire {
     private boolean showBurnt;
     private Species[] specieslist;
     private Color ashColor, burntColor, igniteColor;
-    private double chance;
+    private double chance, windChance;
 
     // Paramaterised Constructor
     public Fire(int dimX, int dimY, int[][][] plantGrid1, int[][][] plantGrid2) {
@@ -37,6 +37,7 @@ public class Fire {
 
         // Global Variables
         chance = 25; // Chance of fire moving on ground
+        windChance = 50;
         windDirection = 1;
         windForce = 0;
         specieslist = PlantLayer.getAllSpecies();
@@ -239,63 +240,17 @@ public class Fire {
         fireGrid[x][y] = 2; // ASH cant move anymore
         if (x > 0 || y > 0 || x < Terrain.getDimX() || y < Terrain.getDimY()) {
             try {
-                if (plantGrid[y - 1][x] == 1 && fireGrid[x - 1][y] != 2) { // West
+                if (plantGrid[x][y - 1] == 1 && fireGrid[x][y - 1] != 2) { // North
                     // 100% chance of fire spread
-                    plantGrid[x - 1][y] = 2; // FIRE
-                    fireGrid[x - 1][y] = 1; // FIRE
+                    plantGrid[x][y - 1] = 2;
+                    fireGrid[x][y - 1] = 1; // FIRE
 
-                } else if (windDirection == 7 && rand < (chance + chance*windForce) && fireGrid[x - 1][y] != 2) {
+                } else if (fireGrid[x][y - 1] != 2) {
                     // 20% chance of fire spread + wind force
-                    fireGrid[x - 1][y] = 1; // FIRE
-                }
-
-                if (plantGrid[x + 1][y] == 1 && fireGrid[x + 1][y] != 2) { // East
-                    // 100% chance of fire spread
-                    plantGrid[x + 1][y] = 2;
-                    fireGrid[x + 1][y] = 1;
-
-                } else if (windDirection == 3 && rand < (chance + chance*windForce) && fireGrid[x + 1][y] != 2) {
-                    // 20% chance of fire spread + wind force
-                    fireGrid[x + 1][y] = 1;
-                }
-
-                if (plantGrid[x + 1][y + 1] == 1 && fireGrid[x + 1][y + 1] != 2) { // South East
-                    // 100% chance of fire spread
-                    plantGrid[x + 1][y + 1] = 2;
-                    fireGrid[x + 1][y + 1] = 1;
-
-                } else if (windDirection == 4 && rand < (chance + chance*windForce) && fireGrid[x + 1][y + 1] != 2) {
-                    // 20% chance of fire spread + wind force
-                    fireGrid[x + 1][y + 1] = 1;
-                }
-
-                if (plantGrid[x][y + 1] == 1 && fireGrid[x][y + 1] != 2) { // South
-                    plantGrid[x][y + 1] = 2;
-                    fireGrid[x][y + 1] = 1; // FIRE
-
-                } else if (windDirection == 5 && rand < (chance + chance*windForce) && fireGrid[x][y + 1] != 2) {
-                    // 20% chance of fire spread + wind force
-                    fireGrid[x][y + 1] = 1; // FIRE
-                }
-
-                if (plantGrid[x - 1][y + 1] == 1 && fireGrid[x - 1][y + 1] != 2) { // South West
-                    // 100% chance of fire spread
-                    plantGrid[x - 1][y + 1] = 2;
-                    fireGrid[x - 1][y + 1] = 1; // FIRE
-
-                } else if (windDirection == 6 && rand < (chance + chance*windForce) && fireGrid[x - 1][y + 1] != 2) {
-                    // 20% chance of fire spread + wind force
-                    fireGrid[x - 1][y + 1] = 1; // FIRE
-                }
-
-                if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) { // North West
-                    // 100% chance of fire spread
-                    plantGrid[x - 1][y - 1] = 2;
-                    fireGrid[x - 1][y - 1] = 1; // FIRE
-
-                } else if (windDirection == 8 && rand < (chance + chance*windForce) && fireGrid[x - 1][y - 1] != 2) {
-                    // 20% chance of fire spread + wind force
-                    fireGrid[x - 1][y - 1] = 1; // FIRE
+                    if (windDirection == 1 && windForce > 0){ 
+                        windChance = chance + chance*windForce;
+                    if (rand < windChance) fireGrid[x][y - 1] = 1; // FIRE
+                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
                 }
 
                 if (plantGrid[x + 1][y - 1] == 1 && fireGrid[x + 1][y - 1] != 2) { // North East
@@ -303,20 +258,174 @@ public class Fire {
                     plantGrid[x + 1][y - 1] = 2;
                     fireGrid[x + 1][y - 1] = 1; // FIRE
 
-                } else if (windDirection == 2 && rand < (chance + chance*windForce) && fireGrid[x + 1][y - 1] != 2) {
+                } else if (fireGrid[x + 1][y - 1] != 2) {
                     // 20% chance of fire spread + wind force
-                    fireGrid[x + 1][y - 1] = 1; // FIRE
+                    if (windDirection == 2 && windForce > 0){
+                        windChance = chance + chance*windForce;
+                    if (rand < windChance) fireGrid[x + 1][y - 1] = 1; // FIRE
+                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
                 }
 
-                if (plantGrid[x][y - 1] == 1 && fireGrid[x][y - 1] != 2) { // North
+                if (plantGrid[x + 1][y] == 1 && fireGrid[x + 1][y] != 2) { // East
                     // 100% chance of fire spread
-                    plantGrid[x][y - 1] = 2;
-                    fireGrid[x][y - 1] = 1; // FIRE
+                    plantGrid[x + 1][y] = 2;
+                    fireGrid[x + 1][y] = 1;
 
-                } else if (windDirection == 1 && rand < (chance + chance*windForce) && fireGrid[x][y - 1] != 2) {
+                } else if (fireGrid[x + 1][y] != 2) {
                     // 20% chance of fire spread + wind force
-                    fireGrid[x][y - 1] = 1; // FIRE
+                    if (windDirection == 3 && windForce > 0){
+                        windChance = chance + chance*windForce;
+                    if (rand < windChance) fireGrid[x + 1][y] = 1;
+                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
                 }
+
+                if (plantGrid[x + 1][y + 1] == 1 && fireGrid[x + 1][y + 1] != 2) { // South East
+                    // 100% chance of fire spread
+                    plantGrid[x + 1][y + 1] = 2;
+                    fireGrid[x + 1][y + 1] = 1;
+
+                } else if (fireGrid[x + 1][y + 1] != 2) {
+                    // 20% chance of fire spread + wind force
+                    if (windDirection == 4 && windForce > 0){
+                        windChance = chance + chance*windForce;
+                    if (rand < windChance) fireGrid[x + 1][y + 1] = 1;
+                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                }
+
+                if (plantGrid[x][y + 1] == 1 && fireGrid[x][y + 1] != 2) { // South
+                    plantGrid[x][y + 1] = 2;
+                    fireGrid[x][y + 1] = 1; // FIRE
+
+                } else if (fireGrid[x][y + 1] != 2) {
+                    // 20% chance of fire spread + wind force
+                    if (windDirection == 5 && windForce > 0){
+                        windChance = chance + chance*windForce;
+                    if (rand < windChance) fireGrid[x][y + 1] = 1; // FIRE
+                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                }
+
+                if (plantGrid[x - 1][y + 1] == 1 && fireGrid[x - 1][y + 1] != 2) { // South West
+                    // 100% chance of fire spread
+                    plantGrid[x - 1][y + 1] = 2;
+                    fireGrid[x - 1][y + 1] = 1; // FIRE
+
+                } else if (fireGrid[x - 1][y + 1] != 2) {
+                    // 20% chance of fire spread + wind force
+                    if (windDirection == 6 && windForce > 0){
+                        windChance = chance + chance*windForce;
+                    if (rand < windChance) fireGrid[x - 1][y + 1] = 1; // FIRE
+                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                }
+
+                if (plantGrid[x - 1][y] == 1 && fireGrid[x - 1][y] != 2) { // West
+                    // 100% chance of fire spread
+                    plantGrid[x - 1][y] = 2; // FIRE
+                    fireGrid[x - 1][y] = 1; // FIRE
+
+                } else if (fireGrid[x - 1][y] != 2) {
+                    // 20% chance of fire spread + wind force
+                    if (windDirection == 7 && windForce > 0){
+                        windChance = chance + chance*windForce;
+                    if (rand < windChance) fireGrid[x - 1][y] = 1; // FIRE
+                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                }
+
+                if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) { // North West
+                    // 100% chance of fire spread
+                    plantGrid[x - 1][y - 1] = 2;
+                    fireGrid[x - 1][y - 1] = 1; // FIRE
+
+                } else if (fireGrid[x - 1][y - 1] != 2) {
+                    // 20% chance of fire spread + wind force
+                    if (windDirection == 8 && windForce > 0){
+                        windChance = chance + chance*windForce;
+                    if (rand < windChance) fireGrid[x - 1][y - 1] = 1; // FIRE
+                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                }
+
+
+
+
+
+                ////////////////
+                // if (plantGrid[y - 1][x] == 1 && fireGrid[x - 1][y] != 2) { // West
+                //     // 100% chance of fire spread
+                //     plantGrid[x - 1][y] = 2; // FIRE
+                //     fireGrid[x - 1][y] = 1; // FIRE
+
+                // } else if (windDirection == 7 && rand < (chance + chance*windForce) && fireGrid[x - 1][y] != 2) {
+                //     // 20% chance of fire spread + wind force
+                //     fireGrid[x - 1][y] = 1; // FIRE
+                // }
+
+                // if (plantGrid[x + 1][y] == 1 && fireGrid[x + 1][y] != 2) { // East
+                //     // 100% chance of fire spread
+                //     plantGrid[x + 1][y] = 2;
+                //     fireGrid[x + 1][y] = 1;
+
+                // } else if (windDirection == 3 && rand < (chance + chance*windForce) && fireGrid[x + 1][y] != 2) {
+                //     // 20% chance of fire spread + wind force
+                //     fireGrid[x + 1][y] = 1;
+                // }
+
+                // if (plantGrid[x + 1][y + 1] == 1 && fireGrid[x + 1][y + 1] != 2) { // South East
+                //     // 100% chance of fire spread
+                //     plantGrid[x + 1][y + 1] = 2;
+                //     fireGrid[x + 1][y + 1] = 1;
+
+                // } else if (windDirection == 4 && rand < (chance + chance*windForce) && fireGrid[x + 1][y + 1] != 2) {
+                //     // 20% chance of fire spread + wind force
+                //     fireGrid[x + 1][y + 1] = 1;
+                // }
+
+                // if (plantGrid[x][y + 1] == 1 && fireGrid[x][y + 1] != 2) { // South
+                //     plantGrid[x][y + 1] = 2;
+                //     fireGrid[x][y + 1] = 1; // FIRE
+
+                // } else if (windDirection == 5 && rand < (chance + chance*windForce) && fireGrid[x][y + 1] != 2) {
+                //     // 20% chance of fire spread + wind force
+                //     fireGrid[x][y + 1] = 1; // FIRE
+                // }
+
+                // if (plantGrid[x - 1][y + 1] == 1 && fireGrid[x - 1][y + 1] != 2) { // South West
+                //     // 100% chance of fire spread
+                //     plantGrid[x - 1][y + 1] = 2;
+                //     fireGrid[x - 1][y + 1] = 1; // FIRE
+
+                // } else if (windDirection == 6 && rand < (chance + chance*windForce) && fireGrid[x - 1][y + 1] != 2) {
+                //     // 20% chance of fire spread + wind force
+                //     fireGrid[x - 1][y + 1] = 1; // FIRE
+                // }
+
+                // if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) { // North West
+                //     // 100% chance of fire spread
+                //     plantGrid[x - 1][y - 1] = 2;
+                //     fireGrid[x - 1][y - 1] = 1; // FIRE
+
+                // } else if (windDirection == 8 && rand < (chance + chance*windForce) && fireGrid[x - 1][y - 1] != 2) {
+                //     // 20% chance of fire spread + wind force
+                //     fireGrid[x - 1][y - 1] = 1; // FIRE
+                // }
+
+                // if (plantGrid[x + 1][y - 1] == 1 && fireGrid[x + 1][y - 1] != 2) { // North East
+                //     // 100% chance of fire spread
+                //     plantGrid[x + 1][y - 1] = 2;
+                //     fireGrid[x + 1][y - 1] = 1; // FIRE
+
+                // } else if (windDirection == 2 && rand < (chance + chance*windForce) && fireGrid[x + 1][y - 1] != 2) {
+                //     // 20% chance of fire spread + wind force
+                //     fireGrid[x + 1][y - 1] = 1; // FIRE
+                // }
+
+                // if (plantGrid[x][y - 1] == 1 && fireGrid[x][y - 1] != 2) { // North
+                //     // 100% chance of fire spread
+                //     plantGrid[x][y - 1] = 2;
+                //     fireGrid[x][y - 1] = 1; // FIRE
+
+                // } else if (windDirection == 1 && rand < (chance + chance*windForce) && fireGrid[x][y - 1] != 2) {
+                //     // 20% chance of fire spread + wind force
+                //     fireGrid[x][y - 1] = 1; // FIRE
+                // }
             } catch (Exception e) {
             }
         }
@@ -393,7 +502,6 @@ public class Fire {
 
     public void setShowPath(Boolean b) {
         showPath = b;
-
     }
 
     public void setShowBurnt(Boolean b) {
@@ -404,8 +512,7 @@ public class Fire {
         this.windDirection = windDirection;
     }
 
-    public void setWindForce(int windSpeed, boolean metric){
-        if (metric) this.windForce = (float)(windSpeed / 160);
-        else this.windForce = (float)(windSpeed / 100);
+    public void setWindForce(int windSpeed, int windMax){
+        this.windForce = (float)(windSpeed / windMax);
     }
 }
