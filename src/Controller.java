@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,7 +20,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private PlantLayer undergrowth;
     private PlantLayer canopy;
     private FileController files;
-    private boolean fireMode, metric;
+    private boolean fireMode, metric,timerRunning;
     private int numSpecies;
     private Fire fire;
     private Timer timer,timerDerive;
@@ -29,6 +30,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean deaf;
     private TimerTask task,task2;
     private ImageIcon pauseImg,runImg;
+    private ArrayList<BufferedImage> frames;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -38,10 +40,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.canopy = canopy;
         this.files = new FileController();
         running = false;
+        timerRunning = false;
         selected = null;
         deaf = false;
         delay = 25;// default - Update Speed
         metric = true;
+        frames = new ArrayList<BufferedImage>();
         runImg = new ImageIcon("resources/Running.gif");
         pauseImg = new ImageIcon("resources/stamp.gif");
 
@@ -62,7 +66,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getMenu4().addActionListener(e -> setGUItheme(0));
         gui.getMenu5().addActionListener(e -> setGUItheme(1));
         gui.getHelp().addActionListener(e -> goHelp());
-
+        gui.getCloseRender().addActionListener(e -> ScrubbingUI());
+        
         //gui.getMenu6().addActionListener(e -> gui.changeTheme(2));
         //gui.getMenu7().addActionListener(e -> gui.changeTheme(3));
         gui.getChkCanopy().addItemListener(e -> filterLayers());
@@ -84,6 +89,23 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.addMouseWheelListener(this);
         // gui.changeTheme(0); //###
         initView();
+    }
+
+    public void ScrubbingUI(){
+        closeFireSim();
+        gui.getStamp().setIcon(pauseImg);
+        gui.getMainPanel().setVisible(false);
+        gui.getRenderPanel().setVisible(true);
+        System.out.println("Simulation Ended, Showing the Final Render");
+    }
+
+    public void iterateImages(int i){
+        //Pass through the bufferedImage to render
+        gui.getRenderPanel().setFrame(frames.get(i));
+    }
+
+    public void storeImage(BufferedImage b){
+        frames.add(b);
     }
 
     public void initView() {
@@ -112,6 +134,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void resetFireSim() {
+        
         pauseFireSim();
         fire.clearGrid();
         fire.deriveFireImage();
@@ -121,6 +144,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         BufferedImage updatedBurntImage = fire.getImage();
         image.setBurnt(updatedBurntImage);
         gui.repaint();
+        running=false;
     }
 
     public void showPath() {
@@ -146,6 +170,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getBackBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
         gui.getRenderBtn().setVisible(true);
+        gui.getCloseRender().setVisible(true);
         fireMode = true;
         gui.getPauseBtn().setEnabled(false);
         // Setup fire:
@@ -157,6 +182,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeFireSim() {
+
         gui.getTabPane().setSelectedIndex(0);
 
         gui.getFireBtn().setVisible(true);
@@ -164,22 +190,26 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getResetBtn().setVisible(false);
         gui.getRenderBtn().setVisible(false);
         gui.getPauseBtn().setVisible(false);
+        gui.getCloseRender().setVisible(false);
 
-        resetFireSim();
         fireMode = false;
-        if (running){
+        if (timerRunning){
             task.cancel();
             task2.cancel();
             timer.cancel();
             timerDerive.cancel();
             timer.purge();
             timerDerive.purge();
+            timerRunning=false;
         }
+        running = false;
+
         gui.getRenderBtn().setEnabled(true);
         gui.getPauseBtn().setEnabled(false);
         image.repaint();
         gui.getStamp().setIcon(pauseImg);
-        running = false;
+        resetFireSim();
+
     }
 
     public void pauseFireSim() {
@@ -205,9 +235,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         timer = new Timer();
         timerDerive = new Timer();
+        timerRunning=true;
 
         task = new TimerTask() {
-
             @Override
             public void run() {
                 if (running) {

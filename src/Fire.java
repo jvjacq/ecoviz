@@ -20,6 +20,7 @@ public class Fire {
     private int[] traversal;
     private BufferedImage fireImage, burntImage;
     private ArrayList<Integer> permute; // permuted list of integers in range [0, dimx*dimy)
+    
     private boolean showPath;
     private boolean showBurnt;
     private Species[] specieslist;
