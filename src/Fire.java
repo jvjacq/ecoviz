@@ -138,15 +138,33 @@ public class Fire {
     }
 
     // Add fire from user input
-    public void addFire(int x, int y) {
+    public void addFire(int x, int y, double rad) {
         // Add Fire To grid
-        for (int i = -3; i < 4; i++) {
-            for (int j = -3; j < 4; j++) {
-                if (x + i > 0 && x + i < dimX - 2 && y + j > 0 && y + j < dimY - 2) {
-                    fireGrid[x + i][y + j] = 1; // 1 means there is fire here //2 means there is ash there
+
+        /*
+         * for (int i = -3; i < 4; i++) { for (int j = -3; j < 4; j++) { if (x + i > 0
+         * && x + i < dimX - 2 && y + j > 0 && y + j < dimY - 2) { fireGrid[x + i][y +
+         * j] = 1; // 1 means there is fire here //2 means there is ash there } } }
+         */
+
+        try {
+            
+            double temp = Math.round(rad);
+            int boundary = (int) temp + 1;
+
+            for (int j = y - boundary; j < (y + boundary + 1); j++) {
+                for (int i = x - boundary; i < (x + boundary + 1); i++) {
+                    if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
+                        double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
+                        if (dist <= rad) {
+                            fireGrid[i][j] = 1;
+                        }
+                    }
                 }
             }
+        } catch (Exception e) {
         }
+
         deriveFireImage();
     }
 
