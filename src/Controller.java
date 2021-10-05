@@ -352,7 +352,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                     BufferedImage updatedBurnImage = fire.getBurntImage();
 
                     if (frames<=3000 && (first)){
-                    storeImage(updatedFireImage,updatedBurnImage);
+                        try{
+                            storeImage(updatedFireImage,updatedBurnImage);
+                        }catch(Exception e){
+                            System.out.println("WHy your computer suck?");
+                        }
                     }else{
                         System.out.println("Simulation Render Complete (No more can be recorded)");
                     }
