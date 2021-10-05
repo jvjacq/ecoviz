@@ -347,22 +347,23 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             @Override
             public void run() {
 
-                if (running) {
+                /*if (running) {
                     BufferedImage updatedFireImage = fire.getImage();
                     BufferedImage updatedBurnImage = fire.getBurntImage();
 
                     if (frames<=3000 && (first)){
                         try{
-                            storeImage(updatedFireImage,updatedBurnImage);
-                        }catch(Exception e){
+                            //storeImage(updatedFireImage,updatedBurnImage);
+                        }catch(OutOfMemoryError e){
                             System.out.println("WHy your computer suck?");
+                            task3.cancel();
                         }
                     }else{
                         System.out.println("Simulation Render Complete (No more can be recorded)");
                     }
                     frames++;
                     
-                }
+                }*/
             }
         };
 
