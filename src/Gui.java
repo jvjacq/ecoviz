@@ -36,7 +36,6 @@ public class Gui extends JPanel{
     private JButton btnFire;
     private JButton btnBack;
     private int delay;
-    private RenderPanel renderPanel;
 
     // FireSim Controls:
     private JButton btnRender;
@@ -130,10 +129,6 @@ public class Gui extends JPanel{
 
     public JButton getPauseBtn() {
         return this.btnPause;
-    }
-
-    public RenderPanel getRenderPanel() {
-        return this.renderPanel;
     }
 
     public JButton getLoadBtn() {
@@ -360,14 +355,11 @@ public class Gui extends JPanel{
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 
-        renderPanel = new RenderPanel();
-        renderPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        renderPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-        renderPanel.setVisible(false);
+        
 
         pnlWest = new JPanel();
         pnlWest.add(mainPanel);
-        pnlWest.add(renderPanel);
+
 
 
         // ======================================================================
@@ -410,6 +402,9 @@ public class Gui extends JPanel{
         pnlSouth.add(btnCloseRender);
         pnlSouth.add(btnBack);
 
+        JSlider scrubber = new JSlider();
+        scrubber.setEnabled(false);
+        pnlSouth.add(scrubber);
         
 
         // pnlSouth.setPreferredSize(new Dimension(100,100));
