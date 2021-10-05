@@ -486,14 +486,15 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        Point cursor = e.getLocationOnScreen();
+        image.setXDiff(cursor.x - image.getStartX());
+        image.setYDiff(cursor.y - image.getStartY());
+        image.setDragger(true);
         if(fireMode){
-            //Firebreak
+            image.drawFirebreak();
+            image.repaint();
         }else{
-            Point cursor = e.getLocationOnScreen();
-            image.setXDiff(cursor.x - image.getStartX());
-            image.setYDiff(cursor.y - image.getStartY());
-
-            image.setDragger(true);
+            if(image.getZoomMult()==1.0) return;
             image.calculateView();
             image.deriveImage();
             updateFilterSpeciesCounts();
@@ -707,18 +708,21 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void mousePressed(MouseEvent e) {
         image.setReleased(false);
         image.setStartPoint(MouseInfo.getPointerInfo().getLocation());
-
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         if(image.getDragger()){
             image.setReleased(true);
-            image.calculateView();
-            image.deriveImage();
-            updateFilterSpeciesCounts();
-            if(selected != null) image.displayPlant(selected, getViewRadius());
-            image.repaint();
+            if(fireMode){
+                image.drawFirebreak();
+            }else{
+                image.calculateView();
+                image.deriveImage();
+                updateFilterSpeciesCounts();
+                if(selected != null) image.displayPlant(selected, getViewRadius());
+                image.repaint();
+            }
         }		
 	}
 
