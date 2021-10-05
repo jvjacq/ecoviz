@@ -7,7 +7,6 @@
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.image.BufferedImage;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
@@ -18,7 +17,6 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.event.*;
 import javax.swing.text.NumberFormatter;
 
 import com.formdev.flatlaf.*;
@@ -30,7 +28,7 @@ public class Gui extends JPanel{
     private JFileChooser fChooser;
     private JFrame frame;
     private JFrame loadIn;
-    private JMenuItem i1,i2,i3,a1,a2,a3,a4;
+    private JMenuItem i1,i2,i3,a1,a2,a3,a4,h1;
     private JLabel wDirLbl, wSpdLbl;
     private JSlider wDirSlider, wSpdSlider, spdSlider;
 
@@ -90,6 +88,10 @@ public class Gui extends JPanel{
     private JLabel lblSearch;
     private JTextField search;
     private JPanel pnlDetails;
+
+    public JMenuItem getHelp(){
+        return h1;
+    }
 
     public JLabel getStamp(){
         return stamp;
@@ -162,6 +164,7 @@ public class Gui extends JPanel{
     public JMenuItem getMenu7() {
         return this.a4;
     }
+
 
     public JCheckBox getChkShowPath() {
         return this.chkPath;
@@ -292,7 +295,7 @@ public class Gui extends JPanel{
         this.lblSpeed.setText(label);
     }
 
-    public JSlider[] getChangeListeners(){
+    public JSlider[] getSliderList(){
         JSlider[] sliderList = new JSlider[3];
         sliderList[0] = wDirSlider;
         sliderList[1] = wSpdSlider;
@@ -660,13 +663,17 @@ public class Gui extends JPanel{
                 m1.add(i2);
                 m1.add(i3);
     
-        JMenu m2 = new JMenu("Help");
         JMenu m3 = new JMenu("Appearance");
 
         a1 = new JMenuItem("Dark Mode");
         a2 = new JMenuItem("Light Mode");
         a3 = new JMenuItem("Cosmo");
         a4 = new JMenuItem("Forest");
+
+        JMenu m2 = new JMenu("Help");
+        h1 = new JMenuItem("Manual");
+        m2.add(h1);
+
         m3.add(a1);
         m3.add(a2);
         m3.add(a3);
