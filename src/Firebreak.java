@@ -4,12 +4,17 @@ public class Firebreak{
     private static ArrayList<Firebreak> breaklist;
     private ArrayList<int[]> region;
     private int minX, maxX, minY, maxY;
-    private int[][] ids;
+    private ArrayList<int[]> ids;
 
     public Firebreak(){
-        if(breaklist == null) breaklist = new ArrayList<Firebreak>(1);
-        region = new ArrayList<int[]>(1);
+        if(breaklist == null) breaklist = new ArrayList<Firebreak>();
+        region = new ArrayList<int[]>();
+        ids = new ArrayList<int[]>();
         maxX = -1; minX = -1; minY = -1; maxY = -1;
+    }
+
+    public ArrayList<int[]> getIDList(){
+        return this.ids;
     }
 
     public void addToRegion(int x, int y){
@@ -36,6 +41,8 @@ public class Firebreak{
         for(int i = 0; i < region.size(); ++i){
             //System.out.println(region.get(i)[0]);
             if((p.getX() == region.get(i)[0]) && (p.getY() == region.get(i)[1])){
+                int[] pair = {p.getSpeciesID(), p.getID()};
+                ids.add(pair);
                 return true;
             }
         }
