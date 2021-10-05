@@ -353,7 +353,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
                     if (frames<=3000 && (first)){
                         try{
-                            //storeImage(updatedFireImage,updatedBurnImage);
+                            storeImage(updatedFireImage,updatedBurnImage);
                         }catch(OutOfMemoryError e){
                             System.out.println("WHy your computer suck?");
                             task3.cancel();
