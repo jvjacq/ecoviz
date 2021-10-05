@@ -416,8 +416,8 @@ public class ImagePanel extends JPanel{
 							if (j < dimX && j > 0 && i < dimY && i > 0) {
 								double dist = Math.sqrt(Math.pow((newx - i), 2) + Math.pow((newy - j), 2));
 								if (dist <= iRad-1){
-									if(img.getRGB(i, j) == 0) img.setRGB(i, j, colorMixer(new Color(zoomTerrain.getRGB(i,j)),specieslist[p.getSpeciesID()].getColour()));
-									else img.setRGB(i, j, colorMixer(new Color(img.getRGB(i,j)),specieslist[p.getSpeciesID()].getColour()));
+									if(img.getRGB(i, j) == 0) img.setRGB(i, j, colorMixer(zoomTerrain.getRGB(i,j),specieslist[p.getSpeciesID()].getColour()));
+									else img.setRGB(i, j, colorMixer(img.getRGB(i,j),specieslist[p.getSpeciesID()].getColour()));
 								}
 							}
 
@@ -517,8 +517,8 @@ public class ImagePanel extends JPanel{
 		this.maxRadius = maxR;
 	}
 
-	public int colorMixer(Color col1, Color col2){
-		return new Color((int)(col1.getRed()+ col2.getRed())/2,(int)(col1.getGreen()+ col2.getGreen())/2,(int)(col1.getBlue() + col2.getBlue())/2).getRGB();
+	public int colorMixer(int col1, Color col2){
+		return new Color((int)(((col1 & 0x00FF0000) >>16)+ col2.getRed())/2,(int)(((col1 & 0x0000FF00) >>8)+ col2.getGreen())/2,(int)(((col1 & 0x000000FF) >>0) + col2.getBlue())/2).getRGB();
 		
 		/*int a2 = col2.getAlpha();
 		int a1 = (1-col2.getAlpha())*col1.getAlpha();

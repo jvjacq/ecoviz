@@ -321,6 +321,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.setPlantsInView(files.getTotalSpecies());
         image.deriveImg(terrain);
         // image.setZoom(true);
+        selected = null;
         image.reset();
         image.calculateView();
         image.deriveImage();
