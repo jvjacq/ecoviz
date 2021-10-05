@@ -242,7 +242,7 @@ public class ImagePanel extends JPanel{
 		imgGraphics.setComposite(AlphaComposite.Clear);
 		imgGraphics.fillRect(0,0, dimX, dimY);
 		
-		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		//
 		//imgGraphics.setColor(new Color(0,0,0,1.0f));
 		//imgGraphics.fillOval(0,0,10,10);
@@ -378,11 +378,12 @@ public class ImagePanel extends JPanel{
 		setPlantsInView(this.plantsInView.length);
 		Species[] specieslist = PlantLayer.getAllSpecies();
 		BufferedImage img = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+		//System.out.println((new Color(img.getRGB(0, 0)).getRGB()));
 		Graphics2D imgGraphics = img.createGraphics();
-		imgGraphics.setComposite(AlphaComposite.Clear);
-		imgGraphics.fillRect(tlx,tly, newX, newY);
+		//imgGraphics.setComposite(AlphaComposite.Clear);
+		//imgGraphics.fillRect(tlx,tly, newX, newY);
 		
-		imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+		//imgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 
 		for(Plant p: PlantLayer.getPlantList()){
 			if((p.getHeight() > maxHeight) || (p.getHeight() < minHeight)){
@@ -406,9 +407,22 @@ public class ImagePanel extends JPanel{
 				if(plantInRect(x,y,rad,tlx,tly,newX,newY)){
 					plantsInView[p.getSpeciesID()] += 1;
 					imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
-					int newx = (int)Math.round((x-rad)*zoomMultiplier- tlx*zoomMultiplier) ;
-					int newy = (int)Math.round((y-rad)*zoomMultiplier- tly*zoomMultiplier) ;
-					imgGraphics.fillOval(newx,newy,(int)Math.round(rad*2*zoomMultiplier),(int)Math.round(rad*2*zoomMultiplier));
+					int newx = (int)Math.round((x)*zoomMultiplier- tlx*zoomMultiplier) ;
+					int newy = (int)Math.round((y)*zoomMultiplier- tly*zoomMultiplier) ;
+					//imgGraphics.fillOval(newx,newy,(int)Math.round(rad*2*zoomMultiplier),(int)Math.round(rad*2*zoomMultiplier));
+					int iRad = (int)Math.round(rad*zoomMultiplier) + 1;
+					for(int j = newy - iRad; j < (newy+iRad+1); ++j){
+						for(int i = newx - iRad; i < (newx+iRad+1); ++i){
+							if (j < dimX && j > 0 && i < dimY && i > 0) {
+								double dist = Math.sqrt(Math.pow((newx - i), 2) + Math.pow((newy - j), 2));
+								if (dist <= iRad-1){
+									if(img.getRGB(i, j) == 0) img.setRGB(i, j, colorMixer(new Color(zoomTerrain.getRGB(i,j)),specieslist[p.getSpeciesID()].getColour()));
+									else img.setRGB(i, j, colorMixer(new Color(img.getRGB(i,j)),specieslist[p.getSpeciesID()].getColour()));
+								}
+							}
+
+						}
+					}
 				}
 			}
 		}
@@ -501,6 +515,18 @@ public class ImagePanel extends JPanel{
 		this.maxHeight = maxH;
 		this.minRadius = minR;
 		this.maxRadius = maxR;
+	}
+
+	public int colorMixer(Color col1, Color col2){
+		return new Color((int)(col1.getRed()+ col2.getRed())/2,(int)(col1.getGreen()+ col2.getGreen())/2,(int)(col1.getBlue() + col2.getBlue())/2).getRGB();
+		
+		/*int a2 = col2.getAlpha();
+		int a1 = (1-col2.getAlpha())*col1.getAlpha();
+		int a21 = (a1 + a2);
+		int r = (int)(col1.getRed()*a1 + col2.getRed()*a2)/a21;
+		int g = (int)(col1.getGreen()*a1 + col2.getGreen()*a2)/a21;
+		int b = (int)(col1.getBlue()*a1 + col2.getBlue()*a2)/a21;
+		return new Color(r,g,b).getRGB();*/
 	}
 
 }
