@@ -18,7 +18,7 @@ public class Plant implements Comparable<Plant>{
     private boolean filter;
     private boolean layer;
     private boolean fHeight, fCanopy;
-    private boolean inFirebreak;
+    private int inFirebreak;
 
     public Plant(int sid, int pid, int x, int y, float height, float rad, boolean canopy){
         this.speciesid = sid;
@@ -31,7 +31,7 @@ public class Plant implements Comparable<Plant>{
         this.filter = true;
         this.fHeight = true;
         this.fCanopy = true;
-        this.inFirebreak = false;
+        this.inFirebreak = 0;
     }
 
     //Accessor methods
@@ -75,7 +75,7 @@ public class Plant implements Comparable<Plant>{
         return this.fCanopy;
     }
 
-    public boolean isInFireBreak(){
+    public int isInFireBreak(){
         return this.inFirebreak;
     }
 
@@ -104,8 +104,12 @@ public class Plant implements Comparable<Plant>{
         this.fCanopy = b;
     }
 
-    public void setFirebreak(boolean b){
-        this.inFirebreak = b;
+    public void incFirebreak(){
+        this.inFirebreak++;
+    }
+
+    public void decFirebreak(){
+        this.inFirebreak--;
     }
 
     @Override
