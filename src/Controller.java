@@ -175,6 +175,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void resetFireSim() {
         if (running) pauseFireSim();
         fire.clearGrid();
+        fire.genGrid();
         fire.deriveFireImage();
         BufferedImage updatedFireImage = fire.getImage();
         image.setFire(updatedFireImage);
@@ -605,10 +606,152 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void updateFireGrid(){
+        fire.clearGrid();
         for(int[] i: fb.getIDList()){
             fire.removePlant(i[0], i[1]);
         }
         fire.genGrid();
+    }
+
+    public void extractWindMetrics(){
+        if (gui.getChkMetric().isSelected()) gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
+        else gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
+        gui.setSpeedLbl("Simulation Speed: x"+Integer.toString(gui.getSimSpeed()));
+
+        if (running){
+            fire.setWindDirection(gui.getWindDir());
+            if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+            else fire.setWindForce(gui.getWindSpd(), windMaxMPH);
+        }
+        //delay = 75; // default
+        switch(Integer.toString(gui.getSimSpeed())){
+            case "1":
+                delay = 125;
+                break;
+            case "2":
+                delay = 100;
+                break;
+            case "3":
+                delay = 75;
+                break;
+            case "4":
+                delay = 50;
+                break;
+            case "5":
+                delay = 25;
+                break;
+        }
+        switch(Integer.toString(gui.getWindDir())){
+            case "1":
+                gui.setWindDirLbl("Wind Direction: North");
+                moveCompass("North");
+                break;
+            case "2":
+                gui.setWindDirLbl("Wind Direction: North East");
+                moveCompass("North-East");
+                break;
+            case "3":
+                gui.setWindDirLbl("Wind Direction: East");
+                moveCompass("East");
+                break;
+            case "4":
+                gui.setWindDirLbl("Wind Direction: South East");
+                moveCompass("South-East");
+                break;
+            case "5":
+                gui.setWindDirLbl("Wind Direction: South");
+                moveCompass("South");
+                break;
+            case "6":
+                gui.setWindDirLbl("Wind Direction: South West");
+                moveCompass("South-West");
+                break;
+            case "7":
+                gui.setWindDirLbl("Wind Direction: West");
+                moveCompass("West");
+                break;
+            case "8":
+                gui.setWindDirLbl("Wind Direction: North West");
+                moveCompass("North-West");
+                break;
+        }
+    }
+
+    public void moveCompass(String direction){
+        String path = "resources/" + direction + ".png";
+        gui.setCompassPath(path);
+        gui.setCompassIcon();
+    }
+
+    public void changeUnits(){
+        if (gui.getChkMetric().isSelected()){
+            metric = true;
+            gui.setWindSpdMax(windMaxKPH);
+            gui.setWindSpd((int)Math.ceil((convertion*gui.getWindSpd())));
+            gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
+        }else{
+            metric = false;
+            gui.setWindSpd((int)Math.floor((gui.getWindSpd()/convertion)));
+            gui.setWindSpdMax(windMaxMPH);
+            gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
+        }
+    }
+
+    public void speciesDetails(){
+        if(selected != null){
+            if(gui.getSpeciesToggle().isSelected()){
+                int id = selected.getSpeciesID();
+                changeSpeciesColour(id);
+                setSpeciesDesc(id);
+            }else{
+                setPlantDesc();
+                resetSpeciesColours();
+            }
+            image.deriveImage();
+            image.repaint();
+        }
+    }
+
+    public void setSpeciesDesc(int id) {
+        gui.getShortTitle().setText("Shortest plant:");
+        gui.getTallTitle().setText("Tallest plant:");
+        gui.getAvTitle().setText("Avg. Radius-Height ratio:");
+        Species[] specieslist = PlantLayer.getAllSpecies();
+        gui.setCommon(specieslist[id].getCommon());
+        gui.setLatin(specieslist[id].getLatin());
+        gui.setTallest(round(Float.toString(specieslist[id].getMaxHeight())));
+        gui.setShortest(round(Float.toString(specieslist[id].getMinHeight())));
+        gui.setAvg(round(Float.toString(specieslist[id].getAvgRatio())));
+        gui.setNumber(Integer.toString(specieslist[id].getNumPlants()));       
+    }
+
+    public void setPlantDesc() {
+        gui.getShortTitle().setText("Canopy radius:");
+        gui.getTallTitle().setText("Height:");
+        gui.getAvTitle().setText("Radius-Height ratio:");
+        Species[] specieslist = PlantLayer.getAllSpecies();
+        gui.setCommon(specieslist[selected.getSpeciesID()].getCommon());
+        gui.setLatin(specieslist[selected.getSpeciesID()].getLatin());
+        gui.setTallest(round(Double.toString(selected.getHeight())));
+        gui.setShortest(round(Double.toString(selected.getCanopy())));
+        gui.setAvg(round(Double.toString(selected.getHeight() / selected.getCanopy())));
+        gui.setNumber("1");
+    }
+
+    public void resetDesc() {
+        gui.getShortTitle().setText("Canopy radius:");
+        gui.getTallTitle().setText("Height:");
+        gui.getAvTitle().setText("Radius-Height ratio:");
+        gui.setCommon("No plant selected. \nSelect one");
+        gui.setLatin("No plant selected. \nSelect one");
+        gui.setTallest("0.0");
+        gui.setShortest("0.0");
+        gui.setAvg("0.0");
+        gui.setNumber("0");
+    }
+
+    public void setDelay(int d){
+        delay = d;
     }
 
     @Override
@@ -751,147 +894,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             image.deriveImage();
             image.repaint();
         }
-    }
-
-    public void extractWindMetrics(){
-        if (gui.getChkMetric().isSelected()) gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
-        else gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
-        gui.setSpeedLbl("Simulation Speed: x"+Integer.toString(gui.getSimSpeed()));
-
-        if (running){
-            fire.setWindDirection(gui.getWindDir());
-            if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
-            else fire.setWindForce(gui.getWindSpd(), windMaxMPH);
-        }
-        //delay = 75; // default
-        switch(Integer.toString(gui.getSimSpeed())){
-            case "1":
-                delay = 125;
-                break;
-            case "2":
-                delay = 100;
-                break;
-            case "3":
-                delay = 75;
-                break;
-            case "4":
-                delay = 50;
-                break;
-            case "5":
-                delay = 25;
-                break;
-        }
-        switch(Integer.toString(gui.getWindDir())){
-            case "1":
-                gui.setWindDirLbl("Wind Direction: North");
-                moveCompass("North");
-                break;
-            case "2":
-                gui.setWindDirLbl("Wind Direction: North East");
-                moveCompass("North-East");
-                break;
-            case "3":
-                gui.setWindDirLbl("Wind Direction: East");
-                moveCompass("East");
-                break;
-            case "4":
-                gui.setWindDirLbl("Wind Direction: South East");
-                moveCompass("South-East");
-                break;
-            case "5":
-                gui.setWindDirLbl("Wind Direction: South");
-                moveCompass("South");
-                break;
-            case "6":
-                gui.setWindDirLbl("Wind Direction: South West");
-                moveCompass("South-West");
-                break;
-            case "7":
-                gui.setWindDirLbl("Wind Direction: West");
-                moveCompass("West");
-                break;
-            case "8":
-                gui.setWindDirLbl("Wind Direction: North West");
-                moveCompass("North-West");
-                break;
-        }
-    }
-
-    public void moveCompass(String direction){
-        String path = "resources/" + direction + ".png";
-        gui.setCompassPath(path);
-        gui.setCompassIcon();
-    }
-
-    public void changeUnits(){
-        if (gui.getChkMetric().isSelected()){
-            metric = true;
-            gui.setWindSpdMax(windMaxKPH);
-            gui.setWindSpd((int)Math.ceil((convertion*gui.getWindSpd())));
-            gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
-        }else{
-            metric = false;
-            gui.setWindSpd((int)Math.floor((gui.getWindSpd()/convertion)));
-            gui.setWindSpdMax(windMaxMPH);
-            gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
-        }
-    }
-
-    public void speciesDetails(){
-        if(selected != null){
-            if(gui.getSpeciesToggle().isSelected()){
-                int id = selected.getSpeciesID();
-                changeSpeciesColour(id);
-                setSpeciesDesc(id);
-            }else{
-                setPlantDesc();
-                resetSpeciesColours();
-            }
-            image.deriveImage();
-            image.repaint();
-        }
-    }
-
-    public void setSpeciesDesc(int id) {
-        gui.getShortTitle().setText("Shortest plant:");
-        gui.getTallTitle().setText("Tallest plant:");
-        gui.getAvTitle().setText("Avg. Radius-Height ratio:");
-        Species[] specieslist = PlantLayer.getAllSpecies();
-        gui.setCommon(specieslist[id].getCommon());
-        gui.setLatin(specieslist[id].getLatin());
-        gui.setTallest(round(Float.toString(specieslist[id].getMaxHeight())));
-        gui.setShortest(round(Float.toString(specieslist[id].getMinHeight())));
-        gui.setAvg(round(Float.toString(specieslist[id].getAvgRatio())));
-        gui.setNumber(Integer.toString(specieslist[id].getNumPlants()));       
-    }
-
-    public void setPlantDesc() {
-        gui.getShortTitle().setText("Canopy radius:");
-        gui.getTallTitle().setText("Height:");
-        gui.getAvTitle().setText("Radius-Height ratio:");
-        Species[] specieslist = PlantLayer.getAllSpecies();
-        gui.setCommon(specieslist[selected.getSpeciesID()].getCommon());
-        gui.setLatin(specieslist[selected.getSpeciesID()].getLatin());
-        gui.setTallest(round(Double.toString(selected.getHeight())));
-        gui.setShortest(round(Double.toString(selected.getCanopy())));
-        gui.setAvg(round(Double.toString(selected.getHeight() / selected.getCanopy())));
-        gui.setNumber("1");
-    }
-
-    public void resetDesc() {
-        gui.getShortTitle().setText("Canopy radius:");
-        gui.getTallTitle().setText("Height:");
-        gui.getAvTitle().setText("Radius-Height ratio:");
-        gui.setCommon("No plant selected. \nSelect one");
-        gui.setLatin("No plant selected. \nSelect one");
-        gui.setTallest("0.0");
-        gui.setShortest("0.0");
-        gui.setAvg("0.0");
-        gui.setNumber("0");
-    }
-
-    public void setDelay(int d){
-        delay = d;
     }
 
     @Override
