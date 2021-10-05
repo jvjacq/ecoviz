@@ -224,16 +224,17 @@ public class Fire {
             for (int y = 0; y < dimY; y++) {
                 fireGrid[x][y] = 0;
                 burntPlants[x][y] = 0;
-                if (plantGrid[x][y] == 2) {
+                plantGrid[x][y] = 0;
+                /*if (plantGrid[x][y] == 2) {
                     plantGrid[x][y] = 1;
-                }
+                }*/
             }
         }
         System.out.println("Reset Simulation");
     }
 
     // Sets a tree on fire (at the root)
-    public void fillTree(int x, int y) {
+    /*public void fillTree(int x, int y) {
         fireGrid[x][y] = 1;
 
         if (underPlants[y][x][1] > 0) {
@@ -281,7 +282,7 @@ public class Fire {
                 }
             }
         }
-    }
+    }*/
 
     // Moves Fire and sets Fire to plants/ground
     public void moveFire(int x, int y) {
