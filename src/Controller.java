@@ -29,6 +29,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean deaf;
     private TimerTask task,task2;
     private ImageIcon pauseImg,runImg;
+    private Firebreak fb;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -480,6 +481,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.repaint();
     }
 
+    public void updateFireGrid(){
+        for(int[] i: fb.getIDList()){
+            fire.removePlant(i[0], i[1]);
+        }
+        fire.genGrid();
+    }
+
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         if(fireMode) return;
@@ -514,7 +522,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.setYDiff(cursor.y - image.getStartY());
         image.setDragger(true);
         if(fireMode){
-            image.drawFirebreak();
+            image.drawFirebreak(fb);
             image.repaint();
         }else{
             if(image.getZoomMult()==1.0) return;
@@ -766,6 +774,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void mousePressed(MouseEvent e) {
         image.setReleased(false);
         image.setStartPoint(MouseInfo.getPointerInfo().getLocation());
+        if(fireMode) fb = new Firebreak();
     }
 
     @Override
@@ -773,7 +782,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         if(image.getDragger()){
             image.setReleased(true);
             if(fireMode){
-                image.drawFirebreak();
+                image.drawFirebreak(fb);
+                image.deriveImage();
+                updateFireGrid();
             }else{
                 image.calculateView();
                 image.deriveImage();
