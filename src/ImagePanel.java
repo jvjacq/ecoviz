@@ -265,7 +265,7 @@ public class ImagePanel extends JPanel{
 			//imgGraphics.setColor(new Color(colourlist[p.getSpeciesID()], true));						
 			//imgGraphics.fillOval(Math.round(p.getX()*scale),Math.round(p.getY()*scale),(int)(Math.round(p.getCanopy())*2*scale),(int)(Math.round(p.getCanopy())*2*scale));
 			//System.out.println("Plant before print: " + p.getX() + " " + p.getY());
-			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) || (this.showUnderGrowth && !p.getLayer()))){
+			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) || (this.showUnderGrowth && !p.getLayer())) && (p.isInFireBreak()==0)){
 				++circles;
 				imgGraphics.setColor(specieslist[p.getSpeciesID()].getColour());
 				plantsInView[p.getSpeciesID()] += 1;
@@ -400,7 +400,7 @@ public class ImagePanel extends JPanel{
 				p.setFilter(true);
 			}else p.setFilter(false);
 
-			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) || (this.showUnderGrowth && !p.getLayer()))){
+			if((p.getFilter()) && (specieslist[p.getSpeciesID()].getFilter()) && ((this.showCanopy && p.getLayer()) || (this.showUnderGrowth && !p.getLayer())) && (p.isInFireBreak()==0)){
 				int x = p.getX();
 				int y = p.getY();
 				double rad = p.getCanopy();
@@ -468,18 +468,47 @@ public class ImagePanel extends JPanel{
 		}
 	}
 
-	public void drawFirebreak(){
+	public void drawFirebreak(Firebreak fb){
 		if(firebreakImg == null) firebreakImg = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = firebreakImg.createGraphics();
 		g.setColor(Color.RED);
+		int x = startPoint.x-(int)getLocationOnScreen().getX();
+		int y = startPoint.y-(int)getLocationOnScreen().getY();
+		int strokesize = 20;
 		if(!released){			
 			if(!dragger){
-				g.fillOval(startPoint.x-(int)getLocationOnScreen().getX()-10, startPoint.y-(int)getLocationOnScreen().getY()-10, 10*2, 10*2);
+				for (int j = y - strokesize - 1; j < (y + strokesize + 1); j++) {
+					for (int i = x - strokesize; i < (x + strokesize + 1); i++) {
+						if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
+							double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
+							if (dist <= strokesize) {
+								firebreakImg.setRGB(i,j,(255 << 24) + (255 << 16));
+								fb.addToRegion(i, j);
+							}
+						}
+					}
+				}
 			}else{
-				g.fillOval(startPoint.x-(int)getLocationOnScreen().getX() + (int)xDiff - 10, startPoint.y-(int)getLocationOnScreen().getY() + (int)yDiff - 10, 10*2, 10*2);
+				x += (int)xDiff;
+				y += (int)yDiff;
+				for (int j = y - strokesize - 1; j < (y + strokesize + 1); j++) {
+					for (int i = x - strokesize; i < (x + strokesize + 1); i++) {
+						if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
+							double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
+							if (dist <= strokesize) {
+								firebreakImg.setRGB(i,j,(255 << 24) + (255 << 16));
+								fb.addToRegion(i, j);
+							}
+						}
+					}
+				}
 			}
 		}else{
-			firebreakImg = null;	
+			for(Plant p: PlantLayer.getPlantList()){
+				if(fb.inFirebreak(p)) p.incFirebreak();
+			}
+			Firebreak.addCompleted(fb);
+			firebreakImg = null;
 		}
 	}
 
