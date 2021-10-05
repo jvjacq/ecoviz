@@ -42,7 +42,7 @@ public class Gui extends JPanel{
     private JButton btnPause;
     private JButton btnReset;
     private JCheckBox chkPath,chkBurnt;
-
+    private JButton btnEndSession;
     PlantLayer canopy, undergrowth;
 
     // East Panel:
@@ -72,6 +72,8 @@ public class Gui extends JPanel{
     private JLabel lblAvg;
     private JLabel lblNum;
     private JPanel pnlSouth;
+    private JButton btnCloseRender;
+    private JPanel pnlWest;
 
     //Filter Section:
     private JLabel shTitle;
@@ -80,6 +82,7 @@ public class Gui extends JPanel{
     private JFormattedTextField tHiHeight, tLoHeight, tHiRadius, tLoRadius;
     private JSlider radSlider;
     private JCheckBox chkSelectRadius;
+    private JSlider scrubber;
     //private JSlider sdrViewRadius; 
     
     private JLabel stamp;
@@ -89,12 +92,16 @@ public class Gui extends JPanel{
     private JTextField search;
     private JPanel pnlDetails;
 
+    public JButton getEndSession(){
+        return this.btnEndSession;
+    }
+
     public JMenuItem getHelp(){
-        return h1;
+        return this.h1;
     }
 
     public JLabel getStamp(){
-        return stamp;
+        return this.stamp;
     }
 
     public JFrame getMain() {
@@ -165,6 +172,9 @@ public class Gui extends JPanel{
         return this.a4;
     }
 
+    public JButton getCloseRender(){
+        return this.btnCloseRender;
+    }
 
     public JCheckBox getChkShowPath() {
         return this.chkPath;
@@ -225,6 +235,10 @@ public class Gui extends JPanel{
         return this.taTitle;
     }
 
+    public JSlider getScrubber(){
+        return this.scrubber;
+    }
+
     public JLabel getAvTitle() {
         return this.avTitle;
     }
@@ -262,6 +276,10 @@ public class Gui extends JPanel{
     }
     public void setChkPath() {
         this.chkPath.setSelected(true);
+    }
+
+    public ImagePanel getMainPanel(){
+        return mainPanel;
     }
 
     public int getWindDir(){
@@ -352,8 +370,12 @@ public class Gui extends JPanel{
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 
-        JPanel pnlWest = new JPanel();
+        
+
+        pnlWest = new JPanel();
         pnlWest.add(mainPanel);
+
+
 
         // ======================================================================
         // South Panel:
@@ -378,7 +400,10 @@ public class Gui extends JPanel{
         ImageIcon path2 = new ImageIcon("resources/stamp.gif");
         stamp.setIcon(path2);
 
-        
+        btnCloseRender = new JButton("Generate Render (Closes Sim)");
+
+        btnCloseRender.setVisible(false);
+        btnCloseRender.setBackground(new Color(44, 105, 122));
 
         btnBack.setVisible(false);
         btnBack.setBackground(Color.RED);
@@ -389,8 +414,18 @@ public class Gui extends JPanel{
         pnlSouth.add(btnRender);
         pnlSouth.add(btnPause);
         pnlSouth.add(btnReset);
+        pnlSouth.add(btnCloseRender);
         pnlSouth.add(btnBack);
 
+        btnEndSession = new JButton("End Session");
+        btnEndSession.setVisible(false);
+
+        scrubber = new JSlider();
+        //scrubber.setMaximum(1000);
+        scrubber.setEnabled(false);
+        scrubber.setVisible(false);
+        pnlSouth.add(btnEndSession);
+        pnlSouth.add(scrubber);
         
 
         // pnlSouth.setPreferredSize(new Dimension(100,100));
@@ -461,12 +496,7 @@ public class Gui extends JPanel{
         // Details on Demand:
         // =================================================================
         pnlDetails = new JPanel();
-        // pnlDetails.setLayout(new BoxLayout(pnlDetails, BoxLayout.PAGE_AXIS ));
         pnlDetails.setLayout(new GridLayout(0, 1));
-        // JLabel lblDetails = new JLabel("Details on Demand");
-        // lblDetails.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
-        // Add components to Details on Demand Panel
-        // pnlDetails.add(lblDetails);
 
         JLabel comTitle = new JLabel("Common Name:");
         comTitle.setFont(f.deriveFont(f.getStyle() | Font.BOLD));

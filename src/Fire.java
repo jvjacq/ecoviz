@@ -20,6 +20,7 @@ public class Fire {
     private int[] traversal;
     private BufferedImage fireImage, burntImage;
     private ArrayList<Integer> permute; // permuted list of integers in range [0, dimx*dimy)
+    
     private boolean showPath;
     private boolean showBurnt;
     private Species[] specieslist;
@@ -61,12 +62,13 @@ public class Fire {
     public void genGrid() {
         for (int x = 0; x < dimX; x++) {
             for (int y = 0; y < dimY; y++) {
-                if (underPlants[y][x][1] > 1) {
+                
+                /*if (underPlants[y][x][1] > -1) {
                     try {
                         int specId = underPlants[y][x][0]; // Species ID
                         int plantID = underPlants[y][x][1]; // Plant ID
 
-                        Plant[] uPlants = specieslist[specId].getCanopyPlants();
+                        Plant[] uPlants = specieslist[specId].getUnderPlants();
                         double rad = uPlants[plantID].getCanopy();
 
                         double temp = Math.round(rad);
@@ -85,8 +87,8 @@ public class Fire {
                     } catch (Exception e) {
                     }
 
-                }
-                if (canopyPlants[y][x][1] > 1) {
+                } */
+                if (canopyPlants[y][x][1] > -1) {
                     try {
                         int specId = canopyPlants[y][x][0]; // Species ID
                         int plantID = canopyPlants[y][x][1]; // Plant ID
@@ -141,13 +143,6 @@ public class Fire {
     // Add fire from user input
     public void addFire(int x, int y, double rad) {
         // Add Fire To grid
-
-        /*
-         * for (int i = -3; i < 4; i++) { for (int j = -3; j < 4; j++) { if (x + i > 0
-         * && x + i < dimX - 2 && y + j > 0 && y + j < dimY - 2) { fireGrid[x + i][y +
-         * j] = 1; // 1 means there is fire here //2 means there is ash there } } }
-         */
-
         try {
             
             double temp = Math.round(rad);

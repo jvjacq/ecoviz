@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,18 +20,21 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private PlantLayer undergrowth;
     private PlantLayer canopy;
     private FileController files;
-    private boolean fireMode, metric;
+    private boolean fireMode, metric,timerRunning;
     private int numSpecies;
     private Fire fire;
-    private Timer timer,timerDerive;
+    private Timer timer,timerDerive, captureTimer;
     private int delay;
+    private boolean first;
     private int windMaxKPH, windMaxMPH;
     private float convertion;
     private boolean running;
     private Plant selected;
     private boolean deaf;
-    private TimerTask task,task2;
+    private TimerTask task,task2,task3;
     private ImageIcon pauseImg,runImg;
+    private ArrayList<BufferedImage> pathFrames,burntFrames;
+    private int frames;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -40,6 +44,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.canopy = canopy;
         this.files = new FileController();
         running = false;
+        timerRunning = false;
         selected = null;
         deaf = false;
         delay = 125;// default - Update Speed
@@ -47,6 +52,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         windMaxMPH = 100;
         convertion = (float)1.60934;
         metric = true;
+        pathFrames = new ArrayList<BufferedImage>();
+        burntFrames = new ArrayList<BufferedImage>();
+
         runImg = new ImageIcon("resources/Running.gif");
         pauseImg = new ImageIcon("resources/stamp.gif");
 
@@ -67,9 +75,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getMenu4().addActionListener(e -> setGUItheme(0));
         gui.getMenu5().addActionListener(e -> setGUItheme(1));
         gui.getHelp().addActionListener(e -> goHelp());
-
-        //gui.getMenu6().addActionListener(e -> gui.changeTheme(2));
-        //gui.getMenu7().addActionListener(e -> gui.changeTheme(3));
+        gui.getCloseRender().addActionListener(e -> ScrubbingUI());
+        gui.getScrubber().addChangeListener(e -> iterateImages());
+        gui.getEndSession().addActionListener(e -> closeScrub());
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
@@ -87,8 +95,53 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.addMouseListener(this);
         image.addMouseMotionListener(this);
         image.addMouseWheelListener(this);
-        // gui.changeTheme(0); //###
         initView();
+    }
+
+    public void closeScrub(){
+        gui.getScrubber().setEnabled(false);
+        gui.getScrubber().setVisible(false);
+        gui.getEndSession().setVisible(false);
+        gui.getFireBtn().setVisible(true);
+
+        resetFrames();
+        first=false;
+
+    }
+
+    public void ScrubbingUI(){
+        gui.getEndSession().setVisible(true);
+        gui.getStamp().setIcon(pauseImg);
+        gui.getCloseRender().setEnabled(false);
+        gui.getScrubber().setEnabled(true);
+        gui.getScrubber().setVisible(true);
+        closeFireSim();
+        gui.getRenderBtn().setVisible(false);
+        gui.getFireBtn().setVisible(false);
+        gui.getStamp().setIcon(pauseImg);
+
+        gui.getScrubber().setMaximum(burntFrames.size()-1);
+        System.out.println("Simulation Ended, Showing the Final Render");
+    }
+
+    public void iterateImages(){
+
+        //Pass through the bufferedImage to render
+        System.out.println(gui.getScrubber().getValue());
+        image.setFire(pathFrames.get(gui.getScrubber().getValue()));
+        image.setBurnt(burntFrames.get(gui.getScrubber().getValue()));
+        image.repaint();
+
+    }
+
+    public void storeImage(BufferedImage p, BufferedImage b){
+        pathFrames.add(p);
+        burntFrames.add(b);
+    }
+
+    public void resetFrames(){
+        pathFrames = new ArrayList<BufferedImage>();
+        burntFrames = new ArrayList<BufferedImage>();
     }
 
     public void initView() {
@@ -159,12 +212,15 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void openFireSim() {
+        gui.getCloseRender().setEnabled(false);
+
         gui.getTabPane().setSelectedIndex(1);
         gui.getFireBtn().setVisible(false);
         gui.getPauseBtn().setVisible(true);
         gui.getBackBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
         gui.getRenderBtn().setVisible(true);
+        gui.getCloseRender().setVisible(true);
         gui.getChkShowBurnt().setVisible(true);
         gui.getChkShowPath().setVisible(true);
         fireMode = true;
@@ -179,6 +235,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeFireSim() {
+        first=false;
+
+        gui.getCloseRender().setEnabled(false);
+
         gui.getTabPane().setSelectedIndex(0);
 
         gui.getFireBtn().setVisible(true);
@@ -186,24 +246,31 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getResetBtn().setVisible(false);
         gui.getRenderBtn().setVisible(false);
         gui.getPauseBtn().setVisible(false);
+        gui.getCloseRender().setVisible(false);
         gui.getChkShowBurnt().setVisible(false);
         gui.getChkShowPath().setVisible(false);
 
-        resetFireSim();
         fireMode = false;
-        if (running){
+        if (timerRunning){
             task.cancel();
             task2.cancel();
             timer.cancel();
             timerDerive.cancel();
             timer.purge();
             timerDerive.purge();
+            task3.cancel();
+            captureTimer.cancel();
+            captureTimer.purge();
+            timerRunning=false;
         }
+        running = false;
+
         gui.getRenderBtn().setEnabled(true);
         gui.getPauseBtn().setEnabled(false);
         image.repaint();
         gui.getStamp().setIcon(pauseImg);
-        running = false;
+        resetFireSim();
+
     }
 
     public void pauseFireSim() {
@@ -225,7 +292,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void renderFireSim() { // Single use
-
+        frames=0;
+        gui.getCloseRender().setEnabled(true);
         System.out.println("Running the Fire Simulation");
         gui.getPauseBtn().setEnabled(true);
         fire.setWindDirection(gui.getWindDir());
@@ -236,9 +304,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         timer = new Timer();
         timerDerive = new Timer();
+        captureTimer = new Timer();
+        timerRunning=true;
 
         task = new TimerTask() {
-
             @Override
             public void run() {
                 if (running) {
@@ -272,12 +341,35 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 }
             }
         };
+        
+        task3 = new TimerTask() {
 
+            @Override
+            public void run() {
+
+                /*if (running) {
+                    BufferedImage updatedFireImage = fire.getImage();
+                    BufferedImage updatedBurnImage = fire.getBurntImage();
+
+                    if (frames<=3000 && (first)){
+                        try{
+                            //storeImage(updatedFireImage,updatedBurnImage);
+                        }catch(OutOfMemoryError e){
+                            System.out.println("WHy your computer suck?");
+                            task3.cancel();
+                        }
+                    }else{
+                        System.out.println("Simulation Render Complete (No more can be recorded)");
+                    }
+                    frames++;
+                    
+                }*/
+            }
+        };
 
         timer.schedule(task, 0, 1);
         timerDerive.schedule(task2,0,1);
-
-
+        captureTimer.schedule(task3,0,1);
 
         gui.getRenderBtn().setEnabled(false);
     }
@@ -590,7 +682,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             }
 
             if (clicked){
-                
+                first=true;
                 fire.addFire(xPos, yPos,rad);
 
             }
