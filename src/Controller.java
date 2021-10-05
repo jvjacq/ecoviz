@@ -73,8 +73,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getCloseRender().addActionListener(e -> ScrubbingUI());
         gui.getScrubber().addChangeListener(e -> iterateImages());
         gui.getEndSession().addActionListener(e -> closeScrub());
-        //gui.getMenu6().addActionListener(e -> gui.changeTheme(2));
-        //gui.getMenu7().addActionListener(e -> gui.changeTheme(3));
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
@@ -92,7 +90,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.addMouseListener(this);
         image.addMouseMotionListener(this);
         image.addMouseWheelListener(this);
-        // gui.changeTheme(0); //###
         initView();
     }
 
@@ -103,6 +100,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getFireBtn().setVisible(true);
 
         resetFrames();
+        first=false;
 
     }
 
@@ -115,11 +113,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         closeFireSim();
         gui.getRenderBtn().setVisible(false);
         gui.getFireBtn().setVisible(false);
-
-
         gui.getStamp().setIcon(pauseImg);
-        //Pass current terrain etc.
-        iterateImages();
+
         gui.getScrubber().setMaximum(burntFrames.size()-1);
         System.out.println("Simulation Ended, Showing the Final Render");
     }
@@ -127,7 +122,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void iterateImages(){
 
         //Pass through the bufferedImage to render
-        //gui.getScrubber().getValue();
         System.out.println(gui.getScrubber().getValue());
         image.setFire(pathFrames.get(gui.getScrubber().getValue()));
         image.setBurnt(burntFrames.get(gui.getScrubber().getValue()));
@@ -221,6 +215,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeFireSim() {
+        first=false;
+
         gui.getCloseRender().setEnabled(false);
 
         gui.getTabPane().setSelectedIndex(0);
