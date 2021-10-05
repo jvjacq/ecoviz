@@ -51,7 +51,7 @@ public class Gui extends JPanel{
     private JTextArea plantDescription;
     private JLabel config;
     private miniMap mini;
-    private JCheckBox ChkUnderGrowth,ChkCanopy,ChkMetric;
+    private JCheckBox chkUnderGrowth,chkCanopy,chkMetric;
     private JLabel lblSpeed, compass;
     private ImageIcon path3;
     private JPanel pnlFilters,pnlConfig;
@@ -184,15 +184,15 @@ public class Gui extends JPanel{
     }
 
     public JCheckBox getChkUndergrowth() {
-        return this.ChkUnderGrowth;
+        return this.chkUnderGrowth;
     }
 
     public JCheckBox getChkMetric(){
-        return this.ChkMetric;
+        return this.chkMetric;
     }
 
     public JCheckBox getChkCanopy(){
-        return this.ChkCanopy;
+        return this.chkCanopy;
     }
 
     public ImagePanel getImage() {
@@ -269,7 +269,13 @@ public class Gui extends JPanel{
     }
     
     public void setChkMetric() {
-        this.ChkMetric.setSelected(true);
+        this.chkMetric.setSelected(true);
+    }
+    public void setChkBurnt() {
+        this.chkBurnt.setSelected(true);
+    }
+    public void setChkPath() {
+        this.chkPath.setSelected(true);
     }
 
     public ImagePanel getMainPanel(){
@@ -470,15 +476,15 @@ public class Gui extends JPanel{
         search.setMaximumSize(search.getPreferredSize());
         lblSearch = new JLabel("Search: ");
 
-        ChkUnderGrowth = new JCheckBox("Show Undergrowth", true);
-        // ChkUnderGrowth.addItemListener(this);
-        ChkUnderGrowth.setBounds(150, 150, 50, 50);
-        ChkCanopy = new JCheckBox("Show Canopy", true);
-        // ChkCanopy.addItemListener(this);
-        ChkCanopy.setBounds(150, 150, 50, 50);
+        chkUnderGrowth = new JCheckBox("Show Undergrowth", true);
+        // chkUnderGrowth.addItemListener(this);
+        chkUnderGrowth.setBounds(150, 150, 50, 50);
+        chkCanopy = new JCheckBox("Show Canopy", true);
+        // chkCanopy.addItemListener(this);
+        chkCanopy.setBounds(150, 150, 50, 50);
 
-        ChkMetric = new JCheckBox("Metric Units", true);
-        ChkMetric.setBounds(150, 150, 50, 50);
+        chkMetric = new JCheckBox("Metric Units", true);
+        chkMetric.setBounds(150, 150, 50, 50);
 
         //// ********************************************************** */
         tabbedPane = new JTabbedPane();
@@ -575,7 +581,7 @@ public class Gui extends JPanel{
         pnlConfig.add(wSpdSlider);
         pnlConfig.add(lblSpeed);
         pnlConfig.add(spdSlider);
-        pnlConfig.add(ChkMetric); 
+        pnlConfig.add(chkMetric); 
         pnlConfig.add(compass);
         pnlConfig.add(chkPath);
         pnlConfig.add(chkBurnt);
@@ -592,8 +598,8 @@ public class Gui extends JPanel{
         pnlFilters.add(lblFilters);
         //pnlFilters.add(lblSearch);
         //pnlFilters.add(search);
-        pnlFilters.add(ChkUnderGrowth);
-        pnlFilters.add(ChkCanopy);
+        pnlFilters.add(chkUnderGrowth);
+        pnlFilters.add(chkCanopy);
 
         tabbedPane.addTab("Species", null, pnlFilters, "Filter by species");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
