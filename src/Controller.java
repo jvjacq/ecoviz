@@ -24,6 +24,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private Fire fire;
     private Timer timer,timerDerive;
     private int delay;
+    private int windMaxKPH, windMaxMPH;
+    private float convertion;
     private boolean running;
     private Plant selected;
     private boolean deaf;
@@ -40,7 +42,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         running = false;
         selected = null;
         deaf = false;
-        delay = 25;// default - Update Speed
+        delay = 125;// default - Update Speed
+        windMaxKPH = 160;
+        windMaxMPH = 100;
+        convertion = (float)1.60934;
         metric = true;
         runImg = new ImageIcon("resources/Running.gif");
         pauseImg = new ImageIcon("resources/stamp.gif");
@@ -87,6 +92,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void initView() {
+        gui.getChkShowBurnt().setVisible(false);
+        gui.getChkShowPath().setVisible(false);
         gui.getLoadFrame().setVisible(true);
         //gui.getMain().setVisible(false);
     }
@@ -112,7 +119,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void resetFireSim() {
-        pauseFireSim();
+        if (running) pauseFireSim();
         fire.clearGrid();
         fire.deriveFireImage();
         BufferedImage updatedFireImage = fire.getImage();
@@ -120,7 +127,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         BufferedImage updatedBurntImage = fire.getImage();
         image.setBurnt(updatedBurntImage);
-        gui.repaint();
+        fire.setShowBurnt(true);
+        fire.setShowPath(true);
+        gui.setChkBurnt();
+        gui.setChkPath();
+        image.repaint();
     }
 
     public void showPath() {
@@ -129,6 +140,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         } else {
             fire.setShowPath(false);
         }
+        fire.deriveFireImage();
+        image.setFire(fire.getImage());
+        image.setBurnt(fire.getBurntImage());
+        image.repaint();
     }
 
     public void showBurnt() {
@@ -137,6 +152,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         } else {
             fire.setShowBurnt(false);
         }
+        fire.deriveFireImage();
+        image.setFire(fire.getImage());
+        image.setBurnt(fire.getBurntImage());
+        image.repaint();
     }
 
     public void openFireSim() {
@@ -146,13 +165,16 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getBackBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
         gui.getRenderBtn().setVisible(true);
+        gui.getChkShowBurnt().setVisible(true);
+        gui.getChkShowPath().setVisible(true);
         fireMode = true;
         gui.getPauseBtn().setEnabled(false);
         // Setup fire:
         fire = new Fire(Terrain.getDimX(), Terrain.getDimY(), undergrowth.getLocations(), canopy.getLocations());
         if (running){
             fire.setWindDirection(gui.getWindDir());
-            fire.setWindForce(gui.getWindSpd(), metric);
+            if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+            else fire.setWindForce(gui.getWindSpd(), windMaxMPH); 
         }
     }
 
@@ -164,6 +186,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getResetBtn().setVisible(false);
         gui.getRenderBtn().setVisible(false);
         gui.getPauseBtn().setVisible(false);
+        gui.getChkShowBurnt().setVisible(false);
+        gui.getChkShowPath().setVisible(false);
 
         resetFireSim();
         fireMode = false;
@@ -187,12 +211,16 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             running = true;
             gui.getPauseBtn().setText("Pause");
             gui.getStamp().setIcon(runImg);
+            fire.setWindDirection(gui.getWindDir());
+            if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+            else fire.setWindForce(gui.getWindSpd(), windMaxMPH); 
         } else {
             running = false;
             gui.getPauseBtn().setText("Play");
             gui.getStamp().setIcon(pauseImg);
-
-
+            fire.setWindDirection(gui.getWindDir());
+            if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+            else fire.setWindForce(gui.getWindSpd(), windMaxMPH); 
         }
     }
 
@@ -200,6 +228,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         System.out.println("Running the Fire Simulation");
         gui.getPauseBtn().setEnabled(true);
+        fire.setWindDirection(gui.getWindDir());
+        if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+        else fire.setWindForce(gui.getWindSpd(), windMaxMPH); 
         running = true;
         gui.getStamp().setIcon(runImg);
 
@@ -629,7 +660,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         if (running){
             fire.setWindDirection(gui.getWindDir());
-            fire.setWindForce(gui.getWindSpd(), metric);
+            if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
+            else fire.setWindForce(gui.getWindSpd(), windMaxMPH);
         }
         //delay = 75; // default
         switch(Integer.toString(gui.getSimSpeed())){
@@ -694,13 +726,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void changeUnits(){
         if (gui.getChkMetric().isSelected()){
             metric = true;
-            gui.setWindSpdMax(160);
-            gui.setWindSpd((int)Math.ceil((1.60934*gui.getWindSpd())));
+            gui.setWindSpdMax(windMaxKPH);
+            gui.setWindSpd((int)Math.ceil((convertion*gui.getWindSpd())));
             gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
         }else{
             metric = false;
-            gui.setWindSpd((int)(gui.getWindSpd()/1.60934));
-            gui.setWindSpdMax(100);
+            gui.setWindSpd((int)Math.floor((gui.getWindSpd()/convertion)));
+            gui.setWindSpdMax(windMaxMPH);
             gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
         }
     }
