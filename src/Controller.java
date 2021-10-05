@@ -20,7 +20,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private PlantLayer undergrowth;
     private PlantLayer canopy;
     private FileController files;
-    private boolean fireMode;
+    private boolean fireMode, metric;
     private int numSpecies;
     private Fire fire;
     private Timer timer,timerDerive;
@@ -42,6 +42,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         selected = null;
         deaf = false;
         delay = 25;// default - Update Speed
+        metric = true;
         runImg = new ImageIcon("resources/Running.gif");
         pauseImg = new ImageIcon("resources/stamp.gif");
 
@@ -125,6 +126,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getPauseBtn().setEnabled(false);
         // Setup fire:
         fire = new Fire(Terrain.getDimX(), Terrain.getDimY(), undergrowth.getLocations(), canopy.getLocations());
+        if (running){
+            fire.setWindDirection(gui.getWindDir());
+            fire.setWindForce(gui.getWindSpd(), metric);
+        }
     }
 
     public void closeFireSim() {
@@ -564,6 +569,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         else gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
         gui.setSpeedLbl("Simulation Speed: x"+Integer.toString(gui.getSimSpeed()));
 
+        if (running){
+            fire.setWindDirection(gui.getWindDir());
+            fire.setWindForce(gui.getWindSpd(), metric);
+        }
         //delay = 75; // default
         switch(Integer.toString(gui.getSimSpeed())){
             case "1":
@@ -626,10 +635,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void changeUnits(){
         if (gui.getChkMetric().isSelected()){
+            metric = true;
             gui.setWindSpdMax(160);
             gui.setWindSpd((int)Math.ceil((1.60934*gui.getWindSpd())));
             gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
         }else{
+            metric = false;
             gui.setWindSpd((int)(gui.getWindSpd()/1.60934));
             gui.setWindSpdMax(100);
             gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
