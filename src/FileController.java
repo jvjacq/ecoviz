@@ -1,11 +1,9 @@
 /*
 * File: FileController.java
+* MVC: Controller
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 1.0
-* Created: 09/09/2021
-* Last edited: 09/09/2021
-* Status: In progress
-* MVC - Controller
+* Last edited: 06/10/2021
+* Status: Complete
 */
 
 import java.io.*;

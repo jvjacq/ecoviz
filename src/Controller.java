@@ -1,3 +1,11 @@
+/*
+* File: Controller.java
+* MVC: Controller
+* Author(s): BRNJAM019, FRNOWE001, VJRJAC003
+* Last edited: 06/10/2021
+* Status: Complete
+*/
+
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.*;
@@ -184,6 +192,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         if(latest < 1) gui.getUndoBtn().setEnabled(false);
         fire.clearGrid();
         fire.genGrid();
+        fire.deriveFireImage();
+        image.setFire(fire.getImage());
+        image.setBurnt(fire.getBurntImage());
         image.deriveImage();
         image.repaint();
     }
@@ -434,6 +445,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getTabPane().setEnabled(false);
         gui.getFireBtn().setVisible(false);
         gui.getChkFirebreak().setVisible(true);
+        gui.getChkFirebreak().setEnabled(true);
         gui.getUndoBtn().setVisible(true);
         gui.getPauseBtn().setVisible(true);
         gui.getBackBtn().setVisible(true);
@@ -518,6 +530,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void renderFireSim() { // Single use
         frames=0;
         gui.getCloseRender().setEnabled(true);
+        gui.getChkFirebreak().setEnabled(false);
         System.out.println("Running the Fire Simulation");
         gui.getPauseBtn().setEnabled(true);
         fire.setWindDirection(gui.getWindDir());

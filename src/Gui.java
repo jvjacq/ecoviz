@@ -1,8 +1,9 @@
 /*
-* Previously: PlantLayer.java
 * File: Gui.java
+* MVC: View
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Status: In progress
+* Last edited: 06/10/2021
+* Status: Complete
 */
 
 import javax.swing.*;
@@ -694,6 +695,8 @@ public class Gui extends JPanel{
         NumberFormat format = DecimalFormat.getInstance(Locale.UK);
         format.setMinimumFractionDigits(2);
         format.setMaximumFractionDigits(2);
+        format.setMinimumIntegerDigits(2);
+        format.setMaximumIntegerDigits(2);
         NumberFormatter nf = new NumberFormatter(format);
         nf.setOverwriteMode(true);
         nf.setAllowsInvalid(false);
@@ -879,6 +882,7 @@ public class Gui extends JPanel{
         //popup.setIconImage(frameIcon);
        // }catch(Exception e){}
         String name = JOptionPane.showInputDialog(popup, "Save As:");
+        if(name.length() == 0) return;
         mainPanel.exportImage(name);
     }
 

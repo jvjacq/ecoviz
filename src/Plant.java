@@ -1,12 +1,11 @@
 /*
 * File: Plant.java
+* MVC: Model
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 2.0
-* Created: 25/08/2021
-* Last edited: 09/09/2021
-* Status: In progress
-* MVC - Model
+* Last edited: 06/10/2021
+* Status: Complete
 */
+
 public class Plant implements Comparable<Plant>{
     
     private int speciesid;

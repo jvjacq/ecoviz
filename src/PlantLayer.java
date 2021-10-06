@@ -1,3 +1,11 @@
+/*
+* File: PlantLayer.java
+* MVC: Model
+* Author(s): BRNJAM019, FRNOWE001, VJRJAC003
+* Last edited: 06/10/2021
+* Status: Complete
+*/
+
 import java.util.ArrayList;
 
 public class PlantLayer{
