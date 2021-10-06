@@ -11,7 +11,7 @@ import javax.swing.JCheckBox;
 
 public class JUnitTests {
 
-	@Test //Incomplete
+	@Test //Controller class requires no obvious testing
 	public void testController(){
 		//Class : Controller.java
 	}
