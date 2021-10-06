@@ -437,8 +437,9 @@ public class Gui extends JPanel{
         pnlSouth.add(btnFire);
         //
         JPanel pnlFirebreak = new JPanel();
+        pnlFirebreak.setOpaque(false);
         pnlFirebreak.setLayout(new GridLayout(0,2));
-        chkFirebreak = new JCheckBox("");
+        chkFirebreak = new JCheckBox("Add Firebreak");
         //chkFirebreak.setEnabled(false);
         chkFirebreak.setVisible(false);
         btnUndo = new JButton("Undo");
