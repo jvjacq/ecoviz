@@ -46,6 +46,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean record;
     private Thread mousecapture;
     private Color speciesColour;
+    private boolean scrubUI;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -224,6 +225,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getScrubber().setVisible(false);
         gui.getEndSession().setVisible(false);
         gui.getFireBtn().setVisible(true);
+        scrubUI=false;
         closeFireSim();
 
         resetFrames();
@@ -233,6 +235,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void ScrubbingUI(){
+        scrubUI=true;
         gui.getScrubSpeed().setEnabled(true);
         if(record){
             record=false;
@@ -355,7 +358,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         try{
         System.out.println("Opening Remote Manual");
             Desktop.getDesktop().browse(new URL(
-                "https://drive.google.com/file/d/1aTCMCyFpTKK3JMoRFI-DgpvK4iwiChlE/view?usp=sharing"
+                "https://drive.google.com/file/d/1DyzfVwKW3HFA8k4Cycb2po5Bd8ccfikE/view?usp=sharing"
                 ).toURI());
         } catch (Exception e){
         System.out.println("Unable to open...");
@@ -459,7 +462,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getChkShowBurnt().setVisible(false);
         gui.getChkShowPath().setVisible(false);
 
-        fireMode = false;
+        if (!scrubUI){fireMode = false;}
+        
         if (timerRunning){
             task.cancel();
             task2.cancel();
@@ -630,6 +634,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             System.out.println("Cancelled by the user.");
         }
         //System.out.println(FileController.getMaxHeight() + " " + FileController.getMaxRadius());
+
+        //Starts the application maximised
+
+        gui.getMain().setExtendedState(gui.getMain().getExtendedState() | JFrame.MAXIMIZED_BOTH);
     }
 
     private boolean insideCanopy(Point point, Plant plant) {
@@ -1072,7 +1080,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             //fire.addFire(click.x, click.y);
 
             //Species[] list = PlantLayer.getAllSpecies();
-
+            if (!scrubUI){
             for (int p = PlantLayer.getPlantList().size()-1; p >= 0; --p) {
                 Plant plant = PlantLayer.getPlantList().get(p);
                 // Check if species is not currently filtered
@@ -1089,7 +1097,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
             }
 
-            if (clicked){
+            if (clicked & !scrubUI){
                 first=true;
                 fire.addFire(xPos, yPos,rad);
 
@@ -1102,8 +1110,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             image.setBurnt(burntImage);
 
             // image.deriveImage();
+            
             image.repaint();
             System.out.println("Fire Added");
+        }
 
         } else {
             gui.getSpeciesToggle().setSelected(false);
