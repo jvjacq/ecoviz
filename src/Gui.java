@@ -388,9 +388,12 @@ public class Gui extends JPanel{
         // Frame:
         // ======================================================================
         frame = new JFrame("EcoViz");
+
+        try{
         Image frameIcon = Toolkit.getDefaultToolkit().getImage("resources/frameIcon.png");
         frame.setIconImage(frameIcon);
         loadIn.setIconImage(frameIcon);
+        }catch(Exception e){}
         //frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -871,8 +874,10 @@ public class Gui extends JPanel{
     //////
     public void exportView() {
         JFrame popup = new JFrame();
+        try{
         Image frameIcon = Toolkit.getDefaultToolkit().getImage("resources/frameIcon.png");
         popup.setIconImage(frameIcon);
+        }catch(Exception e){}
         String name = JOptionPane.showInputDialog(popup, "Save As:");
         mainPanel.exportImage(name);
     }
@@ -915,8 +920,12 @@ public class Gui extends JPanel{
 
     public boolean showChooser() {
         JFrame fr = new JFrame();
-        Image frameIcon = Toolkit.getDefaultToolkit().getImage("resources/frameIcon.png");
-        fr.setIconImage(frameIcon);
+
+        try{
+            Image frameIcon = Toolkit.getDefaultToolkit().getImage("resources/frameIcon.png");
+            fr.setIconImage(frameIcon);
+            }catch(Exception e){}
+        
         return fChooser.showOpenDialog(fr) == JFileChooser.APPROVE_OPTION;
     }
 }
