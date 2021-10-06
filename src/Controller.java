@@ -636,6 +636,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         //System.out.println(FileController.getMaxHeight() + " " + FileController.getMaxRadius());
 
         //Starts the application maximised
+
         gui.getMain().setExtendedState(gui.getMain().getExtendedState() | JFrame.MAXIMIZED_BOTH);
     }
 
