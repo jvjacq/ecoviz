@@ -237,6 +237,7 @@ public class FileController implements Runnable{
                 xpos = (int)Math.round(Float.parseFloat(filein.next())/0.9144*scale);
                 ypos = (int)Math.round(Float.parseFloat(filein.next())/0.9144*scale);
                 zpos = Math.round(Float.parseFloat(filein.next()));  //Intentionally unused
+                zpos = 1*zpos; //irrelevant, just removed VSCode warning
                 height = Float.parseFloat(filein.next());
                 canopy = Float.parseFloat(filein.next())*scale;
 

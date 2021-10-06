@@ -115,10 +115,10 @@ public class Fire {
                 if (canopyPlants[y][x][1] > -1){
                     update = 1;
                 } */
-                if (canopyPlants[y][x][1] > -1) {
+                if (canopyPlants[x][y][1] > -1) {
                     try {
-                        int specId = canopyPlants[y][x][0]; // Species ID
-                        int plantID = canopyPlants[y][x][1]; // Plant ID
+                        int specId = canopyPlants[x][y][0]; // Species ID
+                        int plantID = canopyPlants[x][y][1]; // Plant ID
 
                         Plant[] uPlants = specieslist[specId].getCanopyPlants();
                         double rad = uPlants[plantID].getCanopy();
@@ -543,7 +543,7 @@ public class Fire {
         try{
             int x = specieslist[speciesid].getCanopyPlants()[plantid].getX();
             int y = specieslist[speciesid].getCanopyPlants()[plantid].getY();
-            canopyPlants[y][x][1] = -1;
+            canopyPlants[x][y][1] = -1;
         }catch(Exception e){
             //
         }
@@ -553,7 +553,7 @@ public class Fire {
         try{
             int x = specieslist[speciesid].getCanopyPlants()[plantid].getX();
             int y = specieslist[speciesid].getCanopyPlants()[plantid].getY();
-            canopyPlants[y][x][1] = plantid;
+            canopyPlants[x][y][1] = plantid;
         }catch(Exception e){
             //
         }

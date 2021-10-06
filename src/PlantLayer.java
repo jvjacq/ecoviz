@@ -23,8 +23,8 @@ public class PlantLayer{
     }
 
     public void setPlantAtLocation(int x, int y, int speciesid, int plantid){
-        this.idLocations[y][x][0] = speciesid;
-        this.idLocations[y][x][1] = plantid;
+        this.idLocations[x][y][0] = speciesid;
+        this.idLocations[x][y][1] = plantid;
         //For FireSim:
         //Create a simple hit box for each plant (Currently a square) : fiddle with this for better accuracy
     }
