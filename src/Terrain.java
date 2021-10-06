@@ -8,13 +8,15 @@
 
 public class Terrain {
     private double[][] elevations;
+    //dim values are 1024x1024 (scaled up image)
     private static int dimX;
     private static int dimY;
+
+    //base values are original image size
     private static int baseX;
     private static int baseY;
     private double gridSpacing = 0.0;
     private double latitude = 0.0;
-    //private BufferedImage img;
 
     public Terrain(){
         //Do something
