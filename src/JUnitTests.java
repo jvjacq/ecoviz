@@ -1,5 +1,4 @@
 import static org.junit.Assert.*;
-import org.graalvm.compiler.hotspot.stubs.NewArrayStub;
 import org.junit.Test;
 import java.awt.Color;
 import java.awt.Point;
