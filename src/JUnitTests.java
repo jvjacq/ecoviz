@@ -205,7 +205,6 @@ public class JUnitTests {
 	public void testPlantLayer() {
 		//Class : PlantLayer.java
 		
-		int[][][] idLocations;
 		Plant testPlant1 = new Plant(1, 1, 50, 50, (float)10, (float)10, true);
 		Plant testPlant2 = new Plant(2, 2, 100, 100, (float)10, (float)10, true);
 		Plant testPlant3 = new Plant(3, 3, 150, 150, (float)10, (float)10, false);
