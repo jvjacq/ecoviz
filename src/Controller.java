@@ -33,8 +33,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean deaf;
     private TimerTask task,task2,task3, iterate;
     private ImageIcon pauseImg,runImg;
+    private Firebreak fb;
     private ArrayList<BufferedImage> pathFrames,burntFrames;
     private int frames;
+    //private boolean fireReset;
+    private boolean firebreakMode;
     private boolean playing;
     private boolean record;
 
@@ -45,22 +48,23 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.undergrowth = undergrowth;
         this.canopy = canopy;
         this.files = new FileController();
-        running = false;
-        timerRunning = false;
-        selected = null;
-        deaf = false;
-        record = true;
-        delay = 25;// default - Update Speed
-        windMaxKPH = 160;
-        windMaxMPH = 100;
-        convertion = (float)1.60934;
-        metric = true;
-        pathFrames = new ArrayList<BufferedImage>();
-        burntFrames = new ArrayList<BufferedImage>();
-        playing = false;
-        runImg = new ImageIcon("resources/Running.gif");
-        pauseImg = new ImageIcon("resources/stamp.gif");
-
+        this.running = false;
+        this.timerRunning = false;
+        this.selected = null;
+        this.deaf = false;
+        this.record = true;
+        this.delay = 25;// default - Update Speed
+        this.windMaxKPH = 160;
+        this.windMaxMPH = 100;
+        this.convertion = (float)1.60934;
+        this.metric = true;
+        this.pathFrames = new ArrayList<BufferedImage>();
+        this.burntFrames = new ArrayList<BufferedImage>();
+        //this.fireReset = false;
+        this.firebreakMode = false;
+        this.playing = false;
+        this.runImg = new ImageIcon("resources/Running.gif");
+        this.pauseImg = new ImageIcon("resources/stamp.gif");
     }
 
     public void initController() {
@@ -69,6 +73,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getBackBtn().addActionListener(e -> closeFireSim());
         gui.getChkShowPath().addActionListener(e -> showPath());
         gui.getChkShowBurnt().addActionListener(e -> showBurnt());
+        gui.getChkFirebreak().addItemListener(e -> setupFirebreak());
+        gui.getUndoBtn().addActionListener(e -> removeFirebreak());
         gui.getPauseBtn().addActionListener(e -> pauseFireSim());
         gui.getLoadBtn().addActionListener(e -> loadFiles());
         gui.getResetBtn().addActionListener(e -> resetFireSim());
@@ -101,6 +107,53 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.addMouseMotionListener(this);
         image.addMouseWheelListener(this);
         initView();
+    }
+
+    public void removeFirebreak(){
+        int latest = Firebreak.getBreakList().size() -1;
+        if(latest < 0) return;
+        Firebreak f = Firebreak.getBreakList().get(latest);
+        for(int[] i: f.getIDList()){
+            fire.restorePlant(i[0], i[1]);
+        }
+        Species[] slist = PlantLayer.getAllSpecies();
+        for(int j = 0; j < f.getIDList().size(); ++j){
+            int speciesid = f.getIDList().get(j)[0];
+            int plantid = f.getIDList().get(j)[1];
+            if(f.getLayers().get(j) == true){       
+                slist[speciesid].getCanopyPlants()[plantid].decFirebreak();
+            }else{
+                slist[speciesid].getUnderPlants()[plantid].decFirebreak();
+            }
+        }
+        Firebreak.removeLatest();
+        fire.clearGrid();
+        fire.genGrid();
+        image.deriveImage();
+        image.repaint();
+    }
+
+    public void setupFirebreak(){
+        if(gui.getChkFirebreak().isSelected()){
+            firebreakMode = true;
+            gui.getUndoBtn().setEnabled(true);
+            gui.getPauseBtn().setEnabled(false);
+            gui.getRenderBtn().setEnabled(false);
+            gui.getResetBtn().setEnabled(false);
+            gui.getBackBtn().setEnabled(false);
+            fire.deriveFireImage();
+            image.setFire(fire.getImage());
+            image.setBurnt(fire.getBurntImage());
+            image.repaint();
+        }else{
+            firebreakMode = false;
+            gui.getUndoBtn().setEnabled(false);
+            gui.getPauseBtn().setEnabled(true);
+            gui.getRenderBtn().setEnabled(true);
+            gui.getResetBtn().setEnabled(true);
+            gui.getBackBtn().setEnabled(true); 
+        }
+
     }
 
     public void closeScrub(){
@@ -246,6 +299,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void resetFireSim() {
         if (running) pauseFireSim();
         fire.clearGrid();
+        fire.genGrid();
         fire.deriveFireImage();
         BufferedImage updatedFireImage = fire.getImage();
         image.setFire(updatedFireImage);
@@ -286,9 +340,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void openFireSim() {
         gui.getChkRecord().setVisible(true);
         gui.getCloseRender().setEnabled(false);
-
         gui.getTabPane().setSelectedIndex(1);
+        gui.getTabPane().setEnabled(false);
         gui.getFireBtn().setVisible(false);
+        gui.getChkFirebreak().setVisible(true);
+        gui.getUndoBtn().setVisible(true);
         gui.getPauseBtn().setVisible(true);
         gui.getBackBtn().setVisible(true);
         gui.getResetBtn().setVisible(true);
@@ -314,8 +370,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getCloseRender().setEnabled(false);
 
         gui.getTabPane().setSelectedIndex(0);
-
+        gui.getTabPane().setEnabled(true);
         gui.getFireBtn().setVisible(true);
+        gui.getChkFirebreak().setVisible(false);
+        gui.getUndoBtn().setVisible(false);
         gui.getBackBtn().setVisible(false);
         gui.getResetBtn().setVisible(false);
         gui.getRenderBtn().setVisible(false);
@@ -423,9 +481,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 if (running) {
                     BufferedImage updatedFireImage = fire.getImage();
                     BufferedImage updatedBurnImage = fire.getBurntImage();
-
                     if (frames<=400 && (first)){
-                    storeImage(updatedFireImage,updatedBurnImage);
+                        storeImage(updatedFireImage,updatedBurnImage);
                     }else{
                         System.out.println("Simulation Render Complete (No more can be recorded)");
                         captureTimer.cancel();
@@ -677,146 +734,12 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.repaint();
     }
 
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-        if(fireMode) return;
-        //
-        double multiplier = image.getZoomMult();
-        if (e.getWheelRotation() < 0) { // Zoom in
-            multiplier *= 1.1; // Adjust for smoothness
-            image.setZoomMult(multiplier);
+    public void updateFireGrid(){
+        fire.clearGrid();
+        for(int[] i: fb.getIDList()){
+            fire.removePlant(i[0], i[1]);
         }
-        if (e.getWheelRotation() > 0) { // Zoom out
-            if(image.getZoomMult() == 1.0) return;
-            multiplier /= 1.1; // Adjust for smoothness
-            if (multiplier < 1)
-                multiplier = 1;
-            image.setZoomMult(multiplier);
-
-        }
-        image.setZoom(true);
-        image.calculateView();
-        image.deriveImage();
-        updateFilterSpeciesCounts();
-        if(selected != null) image.displayPlant(selected, getViewRadius());
-        image.repaint();
-        gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
-
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        Point cursor = e.getLocationOnScreen();
-        image.setXDiff(cursor.x - image.getStartX());
-        image.setYDiff(cursor.y - image.getStartY());
-        image.setDragger(true);
-        if(fireMode){
-            image.drawFirebreak();
-            image.repaint();
-        }else{
-            if(image.getZoomMult()==1.0) return;
-            image.calculateView();
-            image.deriveImage();
-            updateFilterSpeciesCounts();
-            if(selected != null) image.displayPlant(selected, getViewRadius());
-            image.repaint();
-            gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
-        }
-
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        gui.getSpeciesToggle().setEnabled(true);
-        Point click = e.getPoint();
-        int xPos =0;
-        int yPos=0;
-        double rad = 0.0;
-        Boolean clicked=false;
-        // Fire Placement:
-        if (fireMode) {
-            //fire.addFire(click.x, click.y);
-
-            Species[] list = PlantLayer.getAllSpecies();
-
-            for (int p = PlantLayer.getPlantList().size()-1; p >= 0; --p) {
-                Plant plant = PlantLayer.getPlantList().get(p);
-                // Check if species is not currently filtered
-                if (list[plant.getSpeciesID()].getFilter() && plant.getFilter() && plant.getCanopyFlag() && plant.getHeightFlag()) {
-                    if (insideCanopy(click, plant)) {
-                        // Will be lowest plant
-                        rad = plant.getCanopy();
-                        xPos = plant.getX();
-                        yPos = plant.getY();
-                        clicked=true;
-                        break;
-                    }
-                }
-
-            }
-
-            if (clicked){
-                first=true;
-                fire.addFire(xPos, yPos,rad);
-
-            }
-
-            BufferedImage updatedFireImage = fire.getImage();
-            BufferedImage burntImage = fire.getBurntImage();
-
-            image.setFire(updatedFireImage);
-            image.setBurnt(burntImage);
-
-            // image.deriveImage();
-            image.repaint();
-            System.out.println("Fire Added");
-
-        } else {
-            gui.getSpeciesToggle().setSelected(false);
-            int id = -1;
-            Species[] list = PlantLayer.getAllSpecies();
-            for (int p = PlantLayer.getPlantList().size()-1; p >= 0; --p) {
-                Plant plant = PlantLayer.getPlantList().get(p);
-                // Check if species is not currently filtered
-                if (list[plant.getSpeciesID()].getFilter() && plant.getFilter() && plant.getCanopyFlag() && plant.getHeightFlag()) {
-                    if((image.getShowCanopy() && plant.getLayer()) || (image.getShowUndergrowth() && !plant.getLayer())){ 
-                        if (insideCanopy(click, plant)) {
-                            // Will be lowest plant
-                            selected = plant;
-                            id = plant.getSpeciesID();
-                            image.displayPlant(selected, getViewRadius());
-                            image.repaint();
-                            break;
-                        }
-                    }
-                }
-
-            }
-            if (id > -1) {
-                // Species[] specieslist = PlantLayer.getAllSpecies();
-                // gui.setSpeciesDetails(specieslist[id].toString());
-                setPlantDesc();
-                // gui.setSpeciesDetails(specieslist[id].toString());
-                gui.getTabPane().setSelectedIndex(0);
-                gui.getChkSelectRadius().setEnabled(true);
-            } else {            
-                deaf = true;          
-                gui.getSpeciesToggle().setEnabled(false);
-                gui.getChkSelectRadius().setEnabled(false);
-                gui.getChkSelectRadius().setSelected(false);
-                gui.getRadSlider().setEnabled(false);             
-                gui.getRadSlider().setValue(1024);
-                deaf = false;
-                image.displayPlant(selected, getViewRadius());
-                selected = null;
-                image.resetDetails();
-                resetDesc();
-                resetSpeciesColours();              
-            }
-            image.displayPlant(selected, getViewRadius());
-            image.deriveImage();
-            image.repaint();
-        }
+        fire.genGrid();
     }
 
     public void extractWindMetrics(){
@@ -961,9 +884,154 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        if(fireMode) return;
+        //
+        double multiplier = image.getZoomMult();
+        if (e.getWheelRotation() < 0) { // Zoom in
+            multiplier *= 1.1; // Adjust for smoothness
+            image.setZoomMult(multiplier);
+        }
+        if (e.getWheelRotation() > 0) { // Zoom out
+            if(image.getZoomMult() == 1.0) return;
+            multiplier /= 1.1; // Adjust for smoothness
+            if (multiplier < 1)
+                multiplier = 1;
+            image.setZoomMult(multiplier);
+
+        }
+        image.setZoom(true);
+        image.calculateView();
+        image.deriveImage();
+        updateFilterSpeciesCounts();
+        if(selected != null) image.displayPlant(selected, getViewRadius());
+        image.repaint();
+        gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        Point cursor = e.getLocationOnScreen();
+        image.setXDiff(cursor.x - image.getStartX());
+        image.setYDiff(cursor.y - image.getStartY());
+        image.setDragger(true);
+        if(fireMode){
+            if(!firebreakMode) return;
+            image.drawFirebreak(fb);
+            image.repaint();
+        }else{
+            if(image.getZoomMult()==1.0) return;
+            image.calculateView();
+            image.deriveImage();
+            updateFilterSpeciesCounts();
+            if(selected != null) image.displayPlant(selected, getViewRadius());
+            image.repaint();
+            gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
+        }
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        gui.getSpeciesToggle().setEnabled(true);
+        Point click = e.getPoint();
+        int xPos =0;
+        int yPos=0;
+        double rad = 0.0;
+        Boolean clicked=false;
+        // Fire Placement:
+        if (fireMode) {
+            if(firebreakMode) return;
+            //fire.addFire(click.x, click.y);
+
+            Species[] list = PlantLayer.getAllSpecies();
+
+            for (int p = PlantLayer.getPlantList().size()-1; p >= 0; --p) {
+                Plant plant = PlantLayer.getPlantList().get(p);
+                // Check if species is not currently filtered
+                if (list[plant.getSpeciesID()].getFilter() && plant.getFilter() && plant.getCanopyFlag() && plant.getHeightFlag()) {
+                    if (insideCanopy(click, plant)) {
+                        // Will be lowest plant
+                        rad = plant.getCanopy();
+                        xPos = plant.getX();
+                        yPos = plant.getY();
+                        clicked=true;
+                        break;
+                    }
+                }
+
+            }
+
+            if (clicked){
+                first=true;
+                fire.addFire(xPos, yPos,rad);
+
+            }
+
+            BufferedImage updatedFireImage = fire.getImage();
+            BufferedImage burntImage = fire.getBurntImage();
+
+            image.setFire(updatedFireImage);
+            image.setBurnt(burntImage);
+
+            // image.deriveImage();
+            image.repaint();
+            System.out.println("Fire Added");
+
+        } else {
+            gui.getSpeciesToggle().setSelected(false);
+            int id = -1;
+            Species[] list = PlantLayer.getAllSpecies();
+            for (int p = PlantLayer.getPlantList().size()-1; p >= 0; --p) {
+                Plant plant = PlantLayer.getPlantList().get(p);
+                // Check if species is not currently filtered
+                if (list[plant.getSpeciesID()].getFilter() && plant.getFilter() && plant.getCanopyFlag() && plant.getHeightFlag()) {
+                    if((image.getShowCanopy() && plant.getLayer()) || (image.getShowUndergrowth() && !plant.getLayer())){ 
+                        if (insideCanopy(click, plant)) {
+                            // Will be lowest plant
+                            selected = plant;
+                            id = plant.getSpeciesID();
+                            image.displayPlant(selected, getViewRadius());
+                            image.repaint();
+                            break;
+                        }
+                    }
+                }
+
+            }
+            if (id > -1) {
+                // Species[] specieslist = PlantLayer.getAllSpecies();
+                // gui.setSpeciesDetails(specieslist[id].toString());
+                setPlantDesc();
+                // gui.setSpeciesDetails(specieslist[id].toString());
+                gui.getTabPane().setSelectedIndex(0);
+                gui.getChkSelectRadius().setEnabled(true);
+            } else {            
+                deaf = true;          
+                gui.getSpeciesToggle().setEnabled(false);
+                gui.getChkSelectRadius().setEnabled(false);
+                gui.getChkSelectRadius().setSelected(false);
+                gui.getRadSlider().setEnabled(false);             
+                gui.getRadSlider().setValue(1024);
+                deaf = false;
+                image.displayPlant(selected, getViewRadius());
+                selected = null;
+                image.resetDetails();
+                resetDesc();
+                resetSpeciesColours();              
+            }
+            image.displayPlant(selected, getViewRadius());
+            image.deriveImage();
+            image.repaint();
+        }
+    }
+
+    @Override
     public void mousePressed(MouseEvent e) {
         image.setReleased(false);
         image.setStartPoint(MouseInfo.getPointerInfo().getLocation());
+        if(firebreakMode) fb = new Firebreak();
     }
 
     @Override
@@ -971,7 +1039,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         if(image.getDragger()){
             image.setReleased(true);
             if(fireMode){
-                image.drawFirebreak();
+                if(!firebreakMode) return;
+                image.drawFirebreak(fb);
+                image.deriveImage();
+                updateFireGrid();
             }else{
                 image.calculateView();
                 image.deriveImage();

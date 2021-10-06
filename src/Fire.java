@@ -62,10 +62,10 @@ public class Fire {
     public void genGrid() {
         for (int x = 0; x < dimX; x++) {
             for (int y = 0; y < dimY; y++) {
-                
                 /*if (underPlants[y][x][1] > -1) {
                     try {
                         int specId = underPlants[y][x][0]; // Species ID
+                        //if(specId == -1) System.out.println("?");
                         int plantID = underPlants[y][x][1]; // Plant ID
 
                         Plant[] uPlants = specieslist[specId].getUnderPlants();
@@ -86,7 +86,34 @@ public class Fire {
                         }
                     } catch (Exception e) {
                     }
+                }else if (underPlants[y][x][1] == -1) {
+                    System.out.println("in under -1");
+                    try {
+                        int specId = underPlants[y][x][0]; // Species ID
+                        //if(specId == -1) System.out.println("?");
+                        int plantID = underPlants[y][x][1]; // Plant ID
 
+                        Plant[] uPlants = specieslist[specId].getCanopyPlants();
+                        double rad = uPlants[plantID].getCanopy();
+
+                        double temp = Math.round(rad);
+                        int boundary = (int) temp + 1;
+
+                        for (int j = y - boundary; j < (y + boundary + 1); j++) {
+                            for (int i = x - boundary; i < (x + boundary + 1); i++) {
+                                if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
+                                    double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
+                                    if (dist <= rad) {
+                                        plantGrid[i][j] = 0;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                    }
+                }else{System.out.println("Weird edge case");}
+                if (canopyPlants[y][x][1] > -1){
+                    update = 1;
                 } */
                 if (canopyPlants[y][x][1] > -1) {
                     try {
@@ -111,7 +138,6 @@ public class Fire {
                         }
                     } catch (Exception e) {
                     }
-
                 }
             }
         }
@@ -170,16 +196,17 @@ public class Fire {
             for (int y = 0; y < dimY; y++) {
                 fireGrid[x][y] = 0;
                 burntPlants[x][y] = 0;
-                if (plantGrid[x][y] == 2) {
+                plantGrid[x][y] = 0;
+                /*if (plantGrid[x][y] == 2) {
                     plantGrid[x][y] = 1;
-                }
+                }*/
             }
         }
         System.out.println("Reset Simulation");
     }
 
     // Sets a tree on fire (at the root)
-    public void fillTree(int x, int y) {
+    /*public void fillTree(int x, int y) {
         fireGrid[x][y] = 1;
 
         if (underPlants[y][x][1] > 0) {
@@ -227,7 +254,7 @@ public class Fire {
                 }
             }
         }
-    }
+    }*/
 
     // Moves Fire and sets Fire to plants/ground
     public void moveFire(int x, int y) {
@@ -509,5 +536,26 @@ public class Fire {
 
     public void setWindForce(int windSpeed, int windMax){
         this.windForce = (float)(windSpeed / windMax);
+    }
+
+    public void removePlant(int speciesid, int plantid){
+        //System.out.println(speciesid + " " + plantid);
+        try{
+            int x = specieslist[speciesid].getCanopyPlants()[plantid].getX();
+            int y = specieslist[speciesid].getCanopyPlants()[plantid].getY();
+            canopyPlants[y][x][1] = -1;
+        }catch(Exception e){
+            //
+        }
+    }
+
+    public void restorePlant(int speciesid, int plantid){
+        try{
+            int x = specieslist[speciesid].getCanopyPlants()[plantid].getX();
+            int y = specieslist[speciesid].getCanopyPlants()[plantid].getY();
+            canopyPlants[y][x][1] = plantid;
+        }catch(Exception e){
+            //
+        }
     }
 }
