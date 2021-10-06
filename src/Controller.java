@@ -120,7 +120,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
       JLabel imgLabel = new JLabel();
 
       try{
-      ImageIcon path = new ImageIcon("resources/plants/enlarged"+nm+".png");
+      ImageIcon path = new ImageIcon("resources/enlarged/"+nm+"E.png");
       imgLabel.setIcon(path);
       enlargedImage.add(imgLabel);
       enlargedImage.pack();
