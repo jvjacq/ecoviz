@@ -24,7 +24,7 @@ public class Gui extends JPanel{
     private JFileChooser fChooser;
     private JFrame frame;
     private JFrame loadIn;
-    private JMenuItem i1,i2,i3,a1,a2,a3,a4,h1;
+    private JMenuItem i1,i2,i3,a1,a2,h1;
     private JLabel wDirLbl, wSpdLbl;
     private JSlider wDirSlider, wSpdSlider, spdSlider;
     private ImagePanel mainPanel;
@@ -181,14 +181,6 @@ public class Gui extends JPanel{
 
     public JMenuItem getMenu5() {
         return this.a2;
-    }
-
-    public JMenuItem getMenu6() {
-        return this.a3;
-    }
-
-    public JMenuItem getMenu7() {
-        return this.a4;
     }
 
     public JButton getCloseRender(){
