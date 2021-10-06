@@ -116,6 +116,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void enlargedImage(){
       JFrame enlargedImage = new JFrame();
+      enlargedImage.setLocationRelativeTo(null);
       enlargedImage.setVisible(true);
       JLabel imgLabel = new JLabel();
 
