@@ -1042,6 +1042,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         //image.repaint();
     }
 
+    //==================================================================
+    //  Overrriden methods
+    //==================================================================
+
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         if(fireMode) return;

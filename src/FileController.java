@@ -12,15 +12,22 @@ import java.awt.Color;
 
 public class FileController implements Runnable{
 
+    //Records total planst per pdb file
     private int totalPlants;
+    //Used to scale all images up to 1024x1024 pixels
     private float scale;
+    //Records max height and max radius across all plants
     private static float MAXHeight, MAXRadius;
+
     private int totalSpecies;
     private static float gridSpacing;
 
+    //Variables to be used by a Thread passed a Filcontroller class
     private String threadFile;
     private PlantLayer threadLayer;
     private boolean threadCanopy;
+
+    //Predefined colour list, to allow for contrast/remove clashing colours
     private Color[] colourSpread = {            
         new Color(61,153,153,127),
         new Color(91,229,229,127),
@@ -53,32 +60,14 @@ public class FileController implements Runnable{
         new Color(153,61,95,127),
         new Color(229,91,143,127),
         new Color(153,78,61,127)};
-
-    public static float getMaxHeight(){
-        return FileController.MAXHeight;
-    }
-
-    public static float getMaxRadius(){
-        return FileController.MAXRadius;
-    }
-
-    public int getTotalSpecies(){
-        return this.totalSpecies;
-    }
-
-    synchronized public static void compareAndSetMaxHeight(float f){
-        if(MAXHeight < f) FileController.MAXHeight = f;
-    }
-
-    synchronized public static void compareAndSetMaxRadius(float f){
-        if(MAXRadius < f) FileController.MAXRadius = f;
-    }
-
+    
+        //Default constructor
     public FileController(){
         MAXHeight = 0;
         MAXRadius = 0;
     }
 
+    //Constructor used when Thread created (When class to be passed to a Thread)
     public FileController(String filename, PlantLayer layer, boolean canopy){
         threadFile = filename;
         threadLayer = layer;
@@ -87,6 +76,7 @@ public class FileController implements Runnable{
         MAXRadius = 0;       
     }
 
+    //Validates that the correct files have been chosen, based on their extensions.
     public boolean validateFiles(File[] list, String[] filenames){
         boolean elv = false, spc = false, undergrowth = false, canopy = false;
         for(File file: list){
@@ -123,13 +113,16 @@ public class FileController implements Runnable{
 
         int baseX = Integer.parseInt(scanner.next());
         int baseY = Integer.parseInt(scanner.next());
+        //Records original dimensions of images (in pixels, not metres)
         Terrain.setBaseX(baseX);
         Terrain.setBaseY(baseY);
         
+        //Sets new dimensions to 1024x1024 (scale up smaller images)
         scale = 1024/baseX;
         int dimX = Math.round(baseX * scale);
         int dimY = Math.round(baseY * scale);
         
+        //Dimensions to be used for every image from now on
         Terrain.setDimX(dimX);
         Terrain.setDimY(dimY);
 
@@ -149,7 +142,7 @@ public class FileController implements Runnable{
         terrain.setLatitude(latitude);
         terrain.setElevations(elevations);
 
-        System.out.println("Elevation File has been read...");
+        System.out.println("Elevation File has been read.");
         scanner.close();
     }
 
@@ -157,6 +150,7 @@ public class FileController implements Runnable{
     //      Read in Plant layer
     //========================================================================
     public void readLayer(PlantLayer layer, String filename, boolean bCanopy) throws FileNotFoundException{
+        //bCanopy represents layer - True:canopy, False:Undergrowth
         File file = new File(filename);
         Scanner filein = new Scanner(file);
 
@@ -165,28 +159,31 @@ public class FileController implements Runnable{
         int numSpecies = filein.nextInt();
         System.out.println(numSpecies);
         layer.setNumSpecies(numSpecies);
-        //set location array based on dimensions
+        //Set location ids array based on dimensions
         layer.setLocations(Terrain.getDimX(), Terrain.getDimY());
         Species[] list = PlantLayer.getAllSpecies();
 
         for (int i=0;i<numSpecies;++i){
-            //Species average Details:
+            //Species average details:
             int speciesID =  filein.nextInt();
             float minHeight = Float.parseFloat( filein.next() );
             float maxHeight = Float.parseFloat(filein.next() );
             float avgRatio = Float.parseFloat(filein.next() );
             int numPlants = filein.nextInt();
-            
+
             totalPlants += numPlants;
             compareAndSetMaxHeight(maxHeight);
             
+            //Averages species details across both plant layers (canopy/undergrowth files)
             if((list[speciesID].getMinHeight() == -1) || (list[speciesID].getMinHeight() > minHeight)) list[speciesID].setMinHeight(minHeight);                            
             if((list[speciesID].getMaxHeight() == -1) || (list[speciesID].getMaxHeight() < maxHeight)) list[speciesID].setMaxHeight(maxHeight);            
             list[speciesID].setRatio((avgRatio + list[speciesID].getAvgRatio()) /2) ;
             list[speciesID].setNumPlants(list[speciesID].getNumPlants() + numPlants);
             
+            //Create new empty plant list
             Plant[] plantlist = new Plant[numPlants];
 
+            //Loop for each new plant - extract information, store it in a new plant object and then add plant object to list
             for (int id = 0; id < numPlants;++id){
                 float height, canopy;
                 int xpos, ypos, zpos;
@@ -206,10 +203,11 @@ public class FileController implements Runnable{
 
                 compareAndSetMaxRadius(canopy);
             }
+            //Set species plantlist based on which layer being read (canopy: true/ undergrowth: false)
             if(bCanopy) list[speciesID].setCanopyPlants(plantlist);
             else list[speciesID].setUnderPlants(plantlist);
         }
-        System.out.println("Plant database file read in successfully " + totalPlants);
+        System.out.println("Plant database file read in successfully: " + totalPlants + " plants.");
         filein.close();
     }
 
@@ -220,6 +218,7 @@ public class FileController implements Runnable{
         File file = new File(filename);
         Scanner filein = new Scanner(file);
 
+        //Quick initial run over file to determine size of specieslist
         totalSpecies = 0;
         while(filein.hasNextLine()){
             ++totalSpecies;
@@ -231,7 +230,7 @@ public class FileController implements Runnable{
         filein = new Scanner(file);
 
         for(int l = 0; l < totalSpecies; ++l){
-
+            //Parse line - separating species common name and latin name
             String[] names = new String[2];
             int id = filein.nextInt();
             String line = filein.nextLine();
@@ -243,16 +242,46 @@ public class FileController implements Runnable{
             names[1] = line.substring(0,line.length()-2);	  
             Color col = colourSpread[id];
 
+            //New species object added to overall specieslist
             Species species = new Species(id, names[0], names[1], col);
             specieslist[id] = species;
         }
         filein.close();
-        PlantLayer.setAllSpecies(specieslist);
+        PlantLayer.setAllSpecies(specieslist); //Static species list referenced by all classes after this point
         System.out.println("Species file processed.");
 
+        //Returns total number of species to be used in creating filter checkboxes etc.
         return totalSpecies;
     }
 
+    //Accessor methods
+    public static float getMaxHeight(){
+        return FileController.MAXHeight;
+    }
+
+    public static float getMaxRadius(){
+        return FileController.MAXRadius;
+    }
+
+    public int getTotalSpecies(){
+        return this.totalSpecies;
+    }
+
+    //Used to compare previous max height to new one and update if necessary
+    synchronized public static void compareAndSetMaxHeight(float f){
+        if(MAXHeight < f) FileController.MAXHeight = f;
+    }
+
+    //Used to compare previous max radius to new one and update if necessary
+    synchronized public static void compareAndSetMaxRadius(float f){
+        if(MAXRadius < f) FileController.MAXRadius = f;
+    }
+
+    //==================================================================
+    //  Overrriden methods
+    //==================================================================
+
+    //Run method for use in concurrently loading the two pdb files (one read in a separate FileController thread)
     @Override
     public void run() {
         try{
@@ -260,7 +289,7 @@ public class FileController implements Runnable{
         }catch(FileNotFoundException e){
             System.out.println("Thread read failed.");
         }finally{
-            System.out.println("Thread terminated.");
+            System.out.println("Reading thread terminated.");
         }
     }
 }

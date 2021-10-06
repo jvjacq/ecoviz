@@ -16,14 +16,19 @@ public class Species {
     private float maxHeight;
     private float avgRatio;
     private int numPlants;
+    //Plant list specific to each species (indexed by plantID)
     private Plant[] canopy;
     private Plant[] undergrowth;
+    //Colour of species as displayed on Viz (can be changed)
     private Color colour;
+    //Stores previous colour in case a colour revert is required (i.e species selection)
     private Color prevColour;
+    //Set if species filter checkbox is ticked/currently selected
     private boolean filter;
 
 
     public Species(int id, String common, String latin, Color colour){
+        //Default values/parameters
         this.speciesid = id;
         this.commonName = common;
         this.latinName = latin;
@@ -37,7 +42,6 @@ public class Species {
     }
 
     //Mutator Methods:
-
     public void setCommon(String name){
         this.commonName = name;
     }
