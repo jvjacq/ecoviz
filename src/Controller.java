@@ -36,6 +36,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private ArrayList<BufferedImage> pathFrames,burntFrames;
     private int frames;
     private boolean playing;
+    private boolean record;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -48,6 +49,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         timerRunning = false;
         selected = null;
         deaf = false;
+        record = true;
         delay = 25;// default - Update Speed
         windMaxKPH = 160;
         windMaxMPH = 100;
@@ -121,6 +123,17 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void ScrubbingUI(){
+
+        if(record){
+            record=false;
+            captureTimer.schedule(task3,0,50);
+            gui.getCloseRender().setText("End Record (closes session)");
+            gui.getCloseRender().setBackground(new Color(156, 58, 34));
+        } else{
+            
+            task3.cancel();
+            captureTimer.cancel();
+            captureTimer.purge();
         playRender();
 
         gui.getEndSession().setVisible(true);
@@ -137,7 +150,14 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         gui.getScrubber().setMaximum(burntFrames.size()-1);
         gui.getScrubber().setValue(0);
-        System.out.println("Simulation Ended, Showing the Final Render");
+
+        record=true;
+        gui.getCloseRender().setText("Record");
+        gui.getCloseRender().setBackground(new Color(44, 105, 122));
+
+
+        System.out.println("Render Session Complete");
+        }
     }
 
     public void playRButton(){
@@ -361,7 +381,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             @Override
             public void run() {
                 if (running) {
-                    // delay = gui.getDelay();
                     fire.simulate(0, (Terrain.getDimX() * Terrain.getDimY())); // Run simulation on all
                     try {
                         Thread.sleep(delay);
@@ -418,7 +437,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         timer.schedule(task, 0, 1);
         timerDerive.schedule(task2,0,1);
-        captureTimer.schedule(task3,0,50);
+        //captureTimer.schedule(task3,0,50);
 
         gui.getRenderBtn().setEnabled(false);
     }

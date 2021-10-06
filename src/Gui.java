@@ -407,7 +407,7 @@ public class Gui extends JPanel{
         ImageIcon path2 = new ImageIcon("resources/stamp.gif");
         stamp.setIcon(path2);
 
-        btnCloseRender = new JButton("Generate Render (Closes Sim)");
+        btnCloseRender = new JButton("Record");
 
         btnCloseRender.setVisible(false);
         btnCloseRender.setBackground(new Color(44, 105, 122));
