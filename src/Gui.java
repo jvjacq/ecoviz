@@ -50,7 +50,7 @@ public class Gui extends JPanel{
     private JLabel fontExample;
     private JTextArea plantDescription;
     private JLabel config;
-    private miniMap mini;
+    private MiniMap mini;
     private JCheckBox chkUnderGrowth,chkCanopy,chkMetric;
     private JLabel lblSpeed, compass;
     private ImageIcon path3;
@@ -221,7 +221,7 @@ public class Gui extends JPanel{
         return this.mainPanel;
     }
 
-    public miniMap getMini() {
+    public MiniMap getMini() {
         return this.mini;
     }
 
@@ -746,7 +746,7 @@ public class Gui extends JPanel{
         ////********************************************************** */
             
         //DRAW MINIMAP
-        mini = new miniMap(mainPanel);
+        mini = new MiniMap(mainPanel);
         mini.setPreferredSize(new Dimension(200, 200));
         mini.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         mini.setOpaque(false);
