@@ -15,9 +15,7 @@ import java.text.NumberFormat;
 import java.util.Hashtable;
 import java.util.Locale;
 import javax.swing.text.NumberFormatter;
-
 import com.formdev.flatlaf.*;
-//import com.jidesoft.swing.*;
 
 public class Gui extends JPanel{
 
