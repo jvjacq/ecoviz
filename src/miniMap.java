@@ -23,21 +23,6 @@ public class MiniMap extends JPanel{
 	
 	private int tlx, tly, boxdimX, boxdimY;
 
-
-	public MiniMap(BufferedImage img, BufferedImage layer1, BufferedImage layer0){
-		//reset constructor
-		//canopy = layer1;
-		//undergrowth = layer0;
-		//terrain = img;
-		this.tlx = 0;
-		this.tly = 0;
-		//this.boxdimX = Terrain.getDimX();
-		//this.boxdimY = Terrain.getDimY();
-		
-		//resize minimap
-		miniature();
-	}
-
 	public MiniMap(ImagePanel image){
 		this.image = image;
 	}
