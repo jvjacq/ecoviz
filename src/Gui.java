@@ -31,7 +31,7 @@ public class Gui extends JPanel{
     private JMenuItem i1,i2,i3,a1,a2,a3,a4,h1;
     private JLabel wDirLbl, wSpdLbl;
     private JSlider wDirSlider, wSpdSlider, spdSlider;
-
+    private JLabel plantImage;
     private ImagePanel mainPanel;
     private JButton btnFire;
     private JButton btnBack;
@@ -107,6 +107,10 @@ public class Gui extends JPanel{
 
     public JMenuItem getHelp(){
         return this.h1;
+    }
+
+    public JLabel getPlantImage(){
+        return this.plantImage;
     }
 
     public JLabel getStamp(){
@@ -602,10 +606,21 @@ public class Gui extends JPanel{
         chkPath = new JCheckBox("Show Path of Fire",true);
         chkBurnt = new JCheckBox("Show Burnt Trees",true);
         
+        JPanel pnlAll = new JPanel();
+        pnlAll.setLayout(new GridLayout(0,2));
         speciesToggle = new JCheckBox("Full species details");
         speciesToggle.setEnabled(false);
         speciesToggle.setSelected(false);
-        pnlDetails.add(speciesToggle);
+
+        plantImage = new JLabel();
+        plantImage.setVisible(false);
+        //plantPath = new ImageIcon("resources/North.png");
+        //compass.setIcon(path3);
+        pnlAll.add(plantImage);
+        pnlAll.add(speciesToggle);
+
+        pnlDetails.add(pnlAll);
+
         // pnlDetails.add(plantDescription);
 
         tabbedPane.addTab("Details", null, pnlDetails, "Shows Details on Demand");

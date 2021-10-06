@@ -824,18 +824,39 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }
     }
 
+
+
     public void speciesDetails(){
         if(selected != null){
             if(gui.getSpeciesToggle().isSelected()){
                 int id = selected.getSpeciesID();
                 changeSpeciesColour(id);
                 setSpeciesDesc(id);
+                gui.getPlantImage().setVisible(true);
+
             }else{
+                gui.getPlantImage().setVisible(false);
+
                 setPlantDesc();
                 resetSpeciesColours();
             }
             image.deriveImage();
             image.repaint();
+        }
+    }
+
+    public void setPlantImage(String name){
+        name = name.replace("/","");
+        name = name.replace(" ","");
+
+        System.out.println(name);
+
+        try{
+            System.out.println("Showing Image");
+        ImageIcon path = new ImageIcon("resources/plants/"+name+".png");
+        gui.getPlantImage().setIcon(path);
+        } catch (Exception e){
+
         }
     }
 
@@ -845,6 +866,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getAvTitle().setText("Avg. Radius-Height ratio:");
         Species[] specieslist = PlantLayer.getAllSpecies();
         gui.setCommon(specieslist[id].getCommon());
+        setPlantImage(specieslist[id].getCommon());
+
         gui.setLatin(specieslist[id].getLatin());
         gui.setTallest(round(Float.toString(specieslist[id].getMaxHeight())));
         gui.setShortest(round(Float.toString(specieslist[id].getMinHeight())));
@@ -932,6 +955,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        gui.getPlantImage().setVisible(false);
+
         gui.getSpeciesToggle().setEnabled(true);
         Point click = e.getPoint();
         int xPos =0;
@@ -979,6 +1004,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         } else {
             gui.getSpeciesToggle().setSelected(false);
+
             int id = -1;
             Species[] list = PlantLayer.getAllSpecies();
             for (int p = PlantLayer.getPlantList().size()-1; p >= 0; --p) {
@@ -1019,6 +1045,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 resetDesc();
                 resetSpeciesColours();              
             }
+
             image.displayPlant(selected, getViewRadius());
             image.deriveImage();
             image.repaint();
