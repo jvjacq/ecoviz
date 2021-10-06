@@ -7,16 +7,12 @@
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Hashtable;
 import java.util.Locale;
-import java.awt.Dimension;
-import java.awt.Font;
 import javax.swing.text.NumberFormatter;
 
 import com.formdev.flatlaf.*;
@@ -28,7 +24,7 @@ public class Gui extends JPanel{
     private JFileChooser fChooser;
     private JFrame frame;
     private JFrame loadIn;
-    private JMenuItem i1,i2,i3,a1,a2,a3,a4,h1;
+    private JMenuItem i1,i2,i3,a1,a2,h1;
     private JLabel wDirLbl, wSpdLbl;
     private JSlider wDirSlider, wSpdSlider, spdSlider;
     private ImagePanel mainPanel;
@@ -185,14 +181,6 @@ public class Gui extends JPanel{
 
     public JMenuItem getMenu5() {
         return this.a2;
-    }
-
-    public JMenuItem getMenu6() {
-        return this.a3;
-    }
-
-    public JMenuItem getMenu7() {
-        return this.a4;
     }
 
     public JButton getCloseRender(){
@@ -380,7 +368,7 @@ public class Gui extends JPanel{
         loadIn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JLabel loading = new JLabel();
-        ImageIcon path = new ImageIcon("resources/ECOVIZ.gif");
+        ImageIcon path = new ImageIcon("ecoviz/resources/ECOVIZ.gif");
         loading.setIcon(path);
         fChooser = new JFileChooser();
         fChooser.setMultiSelectionEnabled(true);
@@ -400,8 +388,10 @@ public class Gui extends JPanel{
         // Frame:
         // ======================================================================
         frame = new JFrame("EcoViz");
-
-        // frame.setSize(500,500);
+        Image frameIcon = Toolkit.getDefaultToolkit().getImage("ecoviz/resources/frameIcon.png");
+        frame.setIconImage(frameIcon);
+        loadIn.setIconImage(frameIcon);
+        //frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // ======================================================================
@@ -412,7 +402,6 @@ public class Gui extends JPanel{
         mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 
         
-
         pnlWest = new JPanel();
         pnlWest.add(mainPanel);
 
@@ -438,7 +427,7 @@ public class Gui extends JPanel{
 
         // Add Components
         stamp = new JLabel();
-        ImageIcon path2 = new ImageIcon("resources/stamp.gif");
+        ImageIcon path2 = new ImageIcon("ecoviz/resources/stamp.gif");
         stamp.setIcon(path2);
 
         btnCloseRender = new JButton("Record");
@@ -655,7 +644,7 @@ public class Gui extends JPanel{
 
         //Configurations:
         compass = new JLabel();
-        path3 = new ImageIcon("resources/compass/North.png");
+        path3 = new ImageIcon("ecoviz/resources/compass/North.png");
         compass.setIcon(path3);
         //
         pnlConfig = new JPanel();
@@ -791,8 +780,6 @@ public class Gui extends JPanel{
 
         a1 = new JMenuItem("Dark Mode");
         a2 = new JMenuItem("Light Mode");
-        a3 = new JMenuItem("Cosmo");
-        a4 = new JMenuItem("Forest");
 
         JMenu m2 = new JMenu("Help");
         h1 = new JMenuItem("Manual");
@@ -800,8 +787,6 @@ public class Gui extends JPanel{
 
         m3.add(a1);
         m3.add(a2);
-        m3.add(a3);
-        m3.add(a4);
 
         mb.add(m1);
         mb.add(m2);
@@ -829,7 +814,7 @@ public class Gui extends JPanel{
         frame.setLocationRelativeTo(null);
         // frame.setVisible(true);
         // loadIn.setVisible(true);
-
+        
     }
     // END OF CONSTRUCTOR
 
@@ -886,6 +871,8 @@ public class Gui extends JPanel{
     //////
     public void exportView() {
         JFrame popup = new JFrame();
+        Image frameIcon = Toolkit.getDefaultToolkit().getImage("ecoviz/resources/frameIcon.png");
+        popup.setIconImage(frameIcon);
         String name = JOptionPane.showInputDialog(popup, "Save As:");
         mainPanel.exportImage(name);
     }
@@ -928,6 +915,8 @@ public class Gui extends JPanel{
 
     public boolean showChooser() {
         JFrame fr = new JFrame();
+        Image frameIcon = Toolkit.getDefaultToolkit().getImage("ecoviz/resources/frameIcon.png");
+        fr.setIconImage(frameIcon);
         return fChooser.showOpenDialog(fr) == JFileChooser.APPROVE_OPTION;
     }
 }
