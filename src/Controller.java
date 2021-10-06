@@ -702,7 +702,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             String current = gui.getFilterList()[i].getText();
             int bracket = current.indexOf("(");
             if(bracket != -1) current = current.substring(0,bracket-1);
-            gui.getFilterList()[i].setText(current + " (" + speciesCounts[i] + ")");
+            current += " (" + speciesCounts[i] + ")";
+            if(selected != null){ if(i == selected.getSpeciesID()) current += "*";}
+            gui.getFilterList()[i].setText(current);
         }
     }
 
@@ -1022,6 +1024,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 resetDesc();
                 resetSpeciesColours();              
             }
+            updateFilterSpeciesCounts();
             image.displayPlant(selected, getViewRadius());
             image.deriveImage();
             image.repaint();
