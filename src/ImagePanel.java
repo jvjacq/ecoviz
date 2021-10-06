@@ -1,5 +1,6 @@
 /*
 * File: ImgPanel.java
+* MVC: View
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
 * Last edited: 06/10/2021
 * Status: Complete
