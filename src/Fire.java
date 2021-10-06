@@ -8,15 +8,16 @@
 
 import java.awt.image.BufferedImage;
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.lang.Math;
 import java.util.ArrayList;
 
 public class Fire {
+    //Dimensions of all grids
     private int dimX;
     private int dimY;
+    //Wind direction 1 - 8 representing (North, North East, etc.)
     private int windDirection;
-    private float windForce;
+    private float windForce;    
     private int[][] fireGrid,plantGrid,burntPlants;
     private int[][][] underPlants, canopyPlants;
     private int[] traversal;
@@ -38,11 +39,11 @@ public class Fire {
         this.underPlants = plantGrid1;
         this.canopyPlants = plantGrid2;
 
-        // Global Variables
-        chance = 25; // Chance of fire moving on ground
-        windChance = 50;
-        windDirection = 1;
-        windForce = 0;
+        // Global Variables - default values
+        chance = 33; // Chance of fire moving on ground
+        windChance = 50; // Chance of wind influencing fire spread 
+        windDirection = 1;  //North
+        windForce = 0; // Fraction of total possible speed
         specieslist = PlantLayer.getAllSpecies();
         ashColor = new Color(235, 137, 52);
         burntColor = new Color(194, 34, 2);
@@ -57,66 +58,14 @@ public class Fire {
 
         // Create randomly permuted list of indices for traversal
         genPermute();
+        //Generate grid for fire to check/spread over
         genGrid();
     }
 
-    // Populates a grid of the trees on the map
+    // Populates a grid of the trees (represented as 1s) on the map (plantGrid)
     public void genGrid() {
         for (int x = 0; x < dimX; x++) {
             for (int y = 0; y < dimY; y++) {
-                /*if (underPlants[y][x][1] > -1) {
-                    try {
-                        int specId = underPlants[y][x][0]; // Species ID
-                        //if(specId == -1) System.out.println("?");
-                        int plantID = underPlants[y][x][1]; // Plant ID
-
-                        Plant[] uPlants = specieslist[specId].getUnderPlants();
-                        double rad = uPlants[plantID].getCanopy();
-
-                        double temp = Math.round(rad);
-                        int boundary = (int) temp + 1;
-
-                        for (int j = y - boundary; j < (y + boundary + 1); j++) {
-                            for (int i = x - boundary; i < (x + boundary + 1); i++) {
-                                if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
-                                    double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
-                                    if (dist <= rad) {
-                                        plantGrid[i][j] = 1;
-                                    }
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                    }
-                }else if (underPlants[y][x][1] == -1) {
-                    System.out.println("in under -1");
-                    try {
-                        int specId = underPlants[y][x][0]; // Species ID
-                        //if(specId == -1) System.out.println("?");
-                        int plantID = underPlants[y][x][1]; // Plant ID
-
-                        Plant[] uPlants = specieslist[specId].getCanopyPlants();
-                        double rad = uPlants[plantID].getCanopy();
-
-                        double temp = Math.round(rad);
-                        int boundary = (int) temp + 1;
-
-                        for (int j = y - boundary; j < (y + boundary + 1); j++) {
-                            for (int i = x - boundary; i < (x + boundary + 1); i++) {
-                                if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
-                                    double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
-                                    if (dist <= rad) {
-                                        plantGrid[i][j] = 0;
-                                    }
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                    }
-                }else{System.out.println("Weird edge case");}
-                if (canopyPlants[y][x][1] > -1){
-                    update = 1;
-                } */
                 if (canopyPlants[x][y][1] > -1) {
                     try {
                         int specId = canopyPlants[x][y][0]; // Species ID
@@ -171,8 +120,7 @@ public class Fire {
     // Add fire from user input
     public void addFire(int x, int y, double rad) {
         // Add Fire To grid
-        try {
-            
+        try {           
             double temp = Math.round(rad);
             int boundary = (int) temp + 1;
 
@@ -192,73 +140,19 @@ public class Fire {
         deriveFireImage();
     }
 
-    // Reset the simulation
+    //Reset the simulation - all grid values 0
     public void clearGrid() {
         for (int x = 0; x < dimX; x++) {
             for (int y = 0; y < dimY; y++) {
                 fireGrid[x][y] = 0;
                 burntPlants[x][y] = 0;
                 plantGrid[x][y] = 0;
-                /*if (plantGrid[x][y] == 2) {
-                    plantGrid[x][y] = 1;
-                }*/
             }
         }
         System.out.println("Reset Simulation");
     }
 
-    // Sets a tree on fire (at the root)
-    /*public void fillTree(int x, int y) {
-        fireGrid[x][y] = 1;
-
-        if (underPlants[y][x][1] > 0) {
-            int specId = underPlants[y][x][0]; // Species ID
-            int plantID = underPlants[y][x][1]; // Plant ID
-
-            Plant[] uPlants = specieslist[specId].getCanopyPlants();
-            double rad = uPlants[plantID].getCanopy();
-
-            double temp = Math.round(rad);
-            int boundary = (int) temp + 1;
-
-            for (int j = y - boundary; j < (y + boundary + 1); j++) {
-                for (int i = x - boundary; i < (x + boundary + 1); i++) {
-                    if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
-                        double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
-                        if (dist <= rad && fireGrid[i][j] == 0) {
-                            this.fireGrid[i][j] = 1;
-                            burntPlants[i][j] = 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (canopyPlants[y][x][1] > 0) {
-            int specId = canopyPlants[y][x][0]; // Species ID
-            int plantID = canopyPlants[y][x][1]; // Plant ID
-
-            Plant[] cPlants = specieslist[specId].getCanopyPlants();
-            double rad = cPlants[plantID].getCanopy();
-
-            double temp = Math.round(rad);
-            int boundary = (int) temp + 1;
-
-            for (int j = y - boundary; j < (y + boundary + 1); j++) {
-                for (int i = x - boundary; i < (x + boundary + 1); i++) {
-                    if (j < Terrain.getDimY() && j > 0 && i < Terrain.getDimX() && i > 0) {
-                        double dist = Math.sqrt(Math.pow((x - i), 2) + Math.pow((y - j), 2));
-                        if (dist <= rad) {
-                            this.fireGrid[i][j] = 1;
-                            burntPlants[i][j] = 1;
-                        }
-                    }
-                }
-            }
-        }
-    }*/
-
-    // Moves Fire and sets Fire to plants/ground
+    // Moves Fire and sets Fire to plants/ground, based on set chance and wind
     public void moveFire(int x, int y) {
         double rand = Math.random() * 100;
         fireGrid[x][y] = 2; // ASH cant move anymore
@@ -274,7 +168,7 @@ public class Fire {
                     if (windDirection == 1 && windForce > 0){ 
                         windChance = chance + chance*windForce;
                     if (rand < windChance) fireGrid[x][y - 1] = 1; // FIRE
-                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                    }
                 }
 
                 if (plantGrid[x + 1][y - 1] == 1 && fireGrid[x + 1][y - 1] != 2) { // North East
@@ -287,7 +181,7 @@ public class Fire {
                     if (windDirection == 2 && windForce > 0){
                         windChance = chance + chance*windForce;
                     if (rand < windChance) fireGrid[x + 1][y - 1] = 1; // FIRE
-                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                    }
                 }
 
                 if (plantGrid[x + 1][y] == 1 && fireGrid[x + 1][y] != 2) { // East
@@ -300,7 +194,7 @@ public class Fire {
                     if (windDirection == 3 && windForce > 0){
                         windChance = chance + chance*windForce;
                     if (rand < windChance) fireGrid[x + 1][y] = 1;
-                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                    }
                 }
 
                 if (plantGrid[x + 1][y + 1] == 1 && fireGrid[x + 1][y + 1] != 2) { // South East
@@ -313,7 +207,7 @@ public class Fire {
                     if (windDirection == 4 && windForce > 0){
                         windChance = chance + chance*windForce;
                     if (rand < windChance) fireGrid[x + 1][y + 1] = 1;
-                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                    }
                 }
 
                 if (plantGrid[x][y + 1] == 1 && fireGrid[x][y + 1] != 2) { // South
@@ -325,7 +219,7 @@ public class Fire {
                     if (windDirection == 5 && windForce > 0){
                         windChance = chance + chance*windForce;
                     if (rand < windChance) fireGrid[x][y + 1] = 1; // FIRE
-                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                    }
                 }
 
                 if (plantGrid[x - 1][y + 1] == 1 && fireGrid[x - 1][y + 1] != 2) { // South West
@@ -338,7 +232,7 @@ public class Fire {
                     if (windDirection == 6 && windForce > 0){
                         windChance = chance + chance*windForce;
                     if (rand < windChance) fireGrid[x - 1][y + 1] = 1; // FIRE
-                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                    }
                 }
 
                 if (plantGrid[x - 1][y] == 1 && fireGrid[x - 1][y] != 2) { // West
@@ -351,7 +245,7 @@ public class Fire {
                     if (windDirection == 7 && windForce > 0){
                         windChance = chance + chance*windForce;
                     if (rand < windChance) fireGrid[x - 1][y] = 1; // FIRE
-                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                    }
                 }
 
                 if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) { // North West
@@ -364,92 +258,8 @@ public class Fire {
                     if (windDirection == 8 && windForce > 0){
                         windChance = chance + chance*windForce;
                     if (rand < windChance) fireGrid[x - 1][y - 1] = 1; // FIRE
-                    } //else if (rand < chance) fireGrid[x][y - 1] = 1; // FIRE
+                    }
                 }
-
-
-
-
-
-                ////////////////
-                // if (plantGrid[y - 1][x] == 1 && fireGrid[x - 1][y] != 2) { // West
-                //     // 100% chance of fire spread
-                //     plantGrid[x - 1][y] = 2; // FIRE
-                //     fireGrid[x - 1][y] = 1; // FIRE
-
-                // } else if (windDirection == 7 && rand < (chance + chance*windForce) && fireGrid[x - 1][y] != 2) {
-                //     // 20% chance of fire spread + wind force
-                //     fireGrid[x - 1][y] = 1; // FIRE
-                // }
-
-                // if (plantGrid[x + 1][y] == 1 && fireGrid[x + 1][y] != 2) { // East
-                //     // 100% chance of fire spread
-                //     plantGrid[x + 1][y] = 2;
-                //     fireGrid[x + 1][y] = 1;
-
-                // } else if (windDirection == 3 && rand < (chance + chance*windForce) && fireGrid[x + 1][y] != 2) {
-                //     // 20% chance of fire spread + wind force
-                //     fireGrid[x + 1][y] = 1;
-                // }
-
-                // if (plantGrid[x + 1][y + 1] == 1 && fireGrid[x + 1][y + 1] != 2) { // South East
-                //     // 100% chance of fire spread
-                //     plantGrid[x + 1][y + 1] = 2;
-                //     fireGrid[x + 1][y + 1] = 1;
-
-                // } else if (windDirection == 4 && rand < (chance + chance*windForce) && fireGrid[x + 1][y + 1] != 2) {
-                //     // 20% chance of fire spread + wind force
-                //     fireGrid[x + 1][y + 1] = 1;
-                // }
-
-                // if (plantGrid[x][y + 1] == 1 && fireGrid[x][y + 1] != 2) { // South
-                //     plantGrid[x][y + 1] = 2;
-                //     fireGrid[x][y + 1] = 1; // FIRE
-
-                // } else if (windDirection == 5 && rand < (chance + chance*windForce) && fireGrid[x][y + 1] != 2) {
-                //     // 20% chance of fire spread + wind force
-                //     fireGrid[x][y + 1] = 1; // FIRE
-                // }
-
-                // if (plantGrid[x - 1][y + 1] == 1 && fireGrid[x - 1][y + 1] != 2) { // South West
-                //     // 100% chance of fire spread
-                //     plantGrid[x - 1][y + 1] = 2;
-                //     fireGrid[x - 1][y + 1] = 1; // FIRE
-
-                // } else if (windDirection == 6 && rand < (chance + chance*windForce) && fireGrid[x - 1][y + 1] != 2) {
-                //     // 20% chance of fire spread + wind force
-                //     fireGrid[x - 1][y + 1] = 1; // FIRE
-                // }
-
-                // if (plantGrid[x - 1][y - 1] == 1 && fireGrid[x - 1][y - 1] != 2) { // North West
-                //     // 100% chance of fire spread
-                //     plantGrid[x - 1][y - 1] = 2;
-                //     fireGrid[x - 1][y - 1] = 1; // FIRE
-
-                // } else if (windDirection == 8 && rand < (chance + chance*windForce) && fireGrid[x - 1][y - 1] != 2) {
-                //     // 20% chance of fire spread + wind force
-                //     fireGrid[x - 1][y - 1] = 1; // FIRE
-                // }
-
-                // if (plantGrid[x + 1][y - 1] == 1 && fireGrid[x + 1][y - 1] != 2) { // North East
-                //     // 100% chance of fire spread
-                //     plantGrid[x + 1][y - 1] = 2;
-                //     fireGrid[x + 1][y - 1] = 1; // FIRE
-
-                // } else if (windDirection == 2 && rand < (chance + chance*windForce) && fireGrid[x + 1][y - 1] != 2) {
-                //     // 20% chance of fire spread + wind force
-                //     fireGrid[x + 1][y - 1] = 1; // FIRE
-                // }
-
-                // if (plantGrid[x][y - 1] == 1 && fireGrid[x][y - 1] != 2) { // North
-                //     // 100% chance of fire spread
-                //     plantGrid[x][y - 1] = 2;
-                //     fireGrid[x][y - 1] = 1; // FIRE
-
-                // } else if (windDirection == 1 && rand < (chance + chance*windForce) && fireGrid[x][y - 1] != 2) {
-                //     // 20% chance of fire spread + wind force
-                //     fireGrid[x][y - 1] = 1; // FIRE
-                // }
             } catch (Exception e) {
             }
         }
@@ -458,31 +268,26 @@ public class Fire {
     // Draw graphics on the bufferedImages
     public void deriveFireImage() {
         fireImage = new BufferedImage(dimX, dimY, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = fireImage.createGraphics();
 
         if (showPath) {
             for (int x = 0; x < dimX; x++) {
                 for (int y = 0; y < dimY; y++) {
                     if (fireGrid[x][y] == 1) {
-                        g2d.setColor(igniteColor);
-                        g2d.fillRect(x, y, 1, 1);
+                        fireImage.setRGB(x, y, igniteColor.getRGB());
                     } else if (fireGrid[x][y] == 2 && plantGrid[x][y] == 0) {
-                        g2d.setColor(ashColor);
-                        g2d.fillRect(x, y, 1, 1);
+                        fireImage.setRGB(x, y, ashColor.getRGB());
                     }
                 }
             }
         }
 
         burntImage = new BufferedImage(dimX, dimY, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d_burnt = burntImage.createGraphics();
-        g2d_burnt.setColor(burntColor);
 
         if (showBurnt) {
             for (int x = 0; x < dimX; x++) {
                 for (int y = 0; y < dimY; y++) {
                     if (plantGrid[x][y] == 2) {
-                        g2d_burnt.fillRect(x, y, 1, 1);
+                        fireImage.setRGB(x, y, burntColor.getRGB());
                     }
                 }
             }
@@ -524,6 +329,7 @@ public class Fire {
         return dimX * dimY;
     }
 
+    //Mutator methods
     public void setShowPath(Boolean b) {
         showPath = b;
     }
@@ -541,7 +347,6 @@ public class Fire {
     }
 
     public void removePlant(int speciesid, int plantid){
-        //System.out.println(speciesid + " " + plantid);
         try{
             int x = specieslist[speciesid].getCanopyPlants()[plantid].getX();
             int y = specieslist[speciesid].getCanopyPlants()[plantid].getY();
