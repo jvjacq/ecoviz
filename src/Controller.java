@@ -40,6 +40,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean firebreakMode;
     private boolean playing;
     private boolean record;
+    private Thread mousecapture;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -88,7 +89,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getScrubber().addChangeListener(e -> iterateImages());
         gui.getEndSession().addActionListener(e -> closeScrub());
         gui.getPlayR().addActionListener(e -> playRButton());
-
+        gui.getScrubSpeed().addChangeListener(e -> scrubSpeed());
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
@@ -112,6 +113,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void removeFirebreak(){
         int latest = Firebreak.getBreakList().size() -1;
         if(latest < 0) return;
+            
+        
         Firebreak f = Firebreak.getBreakList().get(latest);
         for(int[] i: f.getIDList()){
             fire.restorePlant(i[0], i[1]);
@@ -127,6 +130,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             }
         }
         Firebreak.removeLatest();
+        if(latest < 1) gui.getUndoBtn().setEnabled(false);
         fire.clearGrid();
         fire.genGrid();
         image.deriveImage();
@@ -136,7 +140,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void setupFirebreak(){
         if(gui.getChkFirebreak().isSelected()){
             firebreakMode = true;
-            gui.getUndoBtn().setEnabled(true);
+            //gui.getUndoBtn().setEnabled(true);
             gui.getPauseBtn().setEnabled(false);
             gui.getRenderBtn().setEnabled(false);
             gui.getResetBtn().setEnabled(false);
@@ -147,7 +151,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             image.repaint();
         }else{
             firebreakMode = false;
-            gui.getUndoBtn().setEnabled(false);
+            //gui.getUndoBtn().setEnabled(false);
             gui.getPauseBtn().setEnabled(true);
             gui.getRenderBtn().setEnabled(true);
             gui.getResetBtn().setEnabled(true);
@@ -157,6 +161,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeScrub(){
+        gui.getScrubSpeed().setEnabled(false);
+
         iterate.cancel();
         playing=false;
         iterator.cancel();
@@ -175,13 +181,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     }
 
-    
-
     public void ScrubbingUI(){
-
+        gui.getScrubSpeed().setEnabled(true);
         if(record){
             record=false;
-            captureTimer.schedule(task3,0,100);
+            captureTimer.schedule(task3,0,125);
             gui.getCloseRender().setText("End Record (closes session)");
             gui.getCloseRender().setBackground(new Color(156, 58, 34));
         } else{
@@ -189,7 +193,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             task3.cancel();
             captureTimer.cancel();
             captureTimer.purge();
-        playRender();
+        playRender(25);
 
         gui.getEndSession().setVisible(true);
         gui.getStamp().setIcon(pauseImg);
@@ -225,7 +229,23 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }
     };
 
-    public void playRender(){
+    public void scrubSpeed(){
+        iterate.cancel();
+        iterator.cancel();
+        iterator.purge();
+
+        if (gui.getScrubSpeed().getValue() == 1){
+            playRender(200);
+            gui.setSpeedLbl("Scrubbing Speed: SLOW");
+        }
+        else{
+            playRender(25);
+            gui.setSpeedLbl("Scrubbing Speed: FAST");
+
+        }
+    }
+
+    public void playRender(int speed){
         iterator = new Timer();
 
         iterate = new TimerTask() {
@@ -238,12 +258,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
                 if (prev!=pathFrames.size()){
                     gui.getScrubber().setValue(prev+1);
+                    
                 }
             }
         }
         };
 
-        iterator.schedule(iterate,0, 25);
+        iterator.schedule(iterate,0, speed);
 
 
 
@@ -364,6 +385,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeFireSim() {
+
         first=false;
         gui.getChkRecord().setVisible(false);
 
@@ -481,7 +503,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 if (running) {
                     BufferedImage updatedFireImage = fire.getImage();
                     BufferedImage updatedBurnImage = fire.getBurntImage();
-                    if (frames<=200 && (first)){
+
+                    if (frames<=150 && (first)){
                         storeImage(updatedFireImage,updatedBurnImage);
                     }else{
                         System.out.println("Simulation Render Complete (No more can be recorded)");
@@ -702,7 +725,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             String current = gui.getFilterList()[i].getText();
             int bracket = current.indexOf("(");
             if(bracket != -1) current = current.substring(0,bracket-1);
-            gui.getFilterList()[i].setText(current + " (" + speciesCounts[i] + ")");
+            current += " (" + speciesCounts[i] + ")";
+            if(selected != null){ if(i == selected.getSpeciesID()) current += "*";}
+            gui.getFilterList()[i].setText(current);
         }
     }
 
@@ -745,30 +770,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void extractWindMetrics(){
         if (gui.getChkMetric().isSelected()) gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" KPH");
         else gui.setWindSpdLbl("Wind Speed: "+Integer.toString(gui.getWindSpd())+" MPH");
-        gui.setSpeedLbl("Simulation Speed: x"+Integer.toString(gui.getSimSpeed()));
 
         if (running){
             fire.setWindDirection(gui.getWindDir());
             if (metric) fire.setWindForce(gui.getWindSpd(), windMaxKPH);
             else fire.setWindForce(gui.getWindSpd(), windMaxMPH);
-        }
-        //delay = 75; // default
-        switch(Integer.toString(gui.getSimSpeed())){
-            case "1":
-                delay = 25;
-                break;
-            case "2":
-                delay = 25;
-                break;
-            case "3":
-                delay = 25;
-                break;
-            case "4":
-                delay = 25;
-                break;
-            case "5":
-                delay = 25;
-                break;
         }
         switch(Integer.toString(gui.getWindDir())){
             case "1":
@@ -826,18 +832,39 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }
     }
 
+
+
     public void speciesDetails(){
         if(selected != null){
             if(gui.getSpeciesToggle().isSelected()){
                 int id = selected.getSpeciesID();
                 changeSpeciesColour(id);
                 setSpeciesDesc(id);
+                gui.getPlantImage().setVisible(true);
+
             }else{
+                gui.getPlantImage().setVisible(false);
+
                 setPlantDesc();
                 resetSpeciesColours();
             }
             image.deriveImage();
             image.repaint();
+        }
+    }
+
+    public void setPlantImage(String name){
+        name = name.replace("/","");
+        name = name.replace(" ","");
+
+        System.out.println(name);
+
+        try{
+            System.out.println("Showing Image");
+        ImageIcon path = new ImageIcon("resources/plants/"+name+".png");
+        gui.getPlantImage().setIcon(path);
+        } catch (Exception e){
+
         }
     }
 
@@ -847,6 +874,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getAvTitle().setText("Avg. Radius-Height ratio:");
         Species[] specieslist = PlantLayer.getAllSpecies();
         gui.setCommon(specieslist[id].getCommon());
+        setPlantImage(specieslist[id].getCommon());
+
         gui.setLatin(specieslist[id].getLatin());
         gui.setTallest(round(Float.toString(specieslist[id].getMaxHeight())));
         gui.setShortest(round(Float.toString(specieslist[id].getMinHeight())));
@@ -934,6 +963,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        gui.getPlantImage().setVisible(false);
         gui.getSpeciesToggle().setEnabled(true);
         Point click = e.getPoint();
         int xPos =0;
@@ -981,6 +1011,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         } else {
             gui.getSpeciesToggle().setSelected(false);
+
             int id = -1;
             Species[] list = PlantLayer.getAllSpecies();
             for (int p = PlantLayer.getPlantList().size()-1; p >= 0; --p) {
@@ -1021,6 +1052,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 resetDesc();
                 resetSpeciesColours();              
             }
+
+            updateFilterSpeciesCounts();
             image.displayPlant(selected, getViewRadius());
             image.deriveImage();
             image.repaint();
@@ -1043,6 +1076,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 image.drawFirebreak(fb);
                 image.deriveImage();
                 updateFireGrid();
+                gui.getUndoBtn().setEnabled(true);
             }else{
                 image.calculateView();
                 image.deriveImage();
@@ -1061,13 +1095,29 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //
-
+        mousecapture = new Thread(){
+            @Override
+            public void run(){
+                while(true){
+                    try{
+                        Thread.sleep(0);
+                    }catch(InterruptedException e){
+                        System.out.println("Mouse exited");
+                        gui.setMousePositions(0,0);
+                        break;
+                    }
+                    int x = (int)Math.round(MouseInfo.getPointerInfo().getLocation().getX()-image.getLocationOnScreen().getX());
+                    int y = (int)Math.round(MouseInfo.getPointerInfo().getLocation().getY()-image.getLocationOnScreen().getY());
+                    gui.setMousePositions(x,y);
+                }
+            }
+        };
+        mousecapture.start();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //
+        mousecapture.interrupt();
     }
 
     public String round(String f){
