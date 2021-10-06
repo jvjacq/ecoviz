@@ -59,6 +59,7 @@ public class Gui extends JPanel{
     private JTabbedPane tabbedPane;
     private JCheckBox speciesToggle;
     private JCheckBox chkRecord;
+    private JPanel pnlFirebreak;
 
     private JButton playR;
     private String common;
@@ -234,6 +235,10 @@ public class Gui extends JPanel{
 
     public JPanel getFilterPanel() {
         return this.pnlFilters;
+    }
+    
+    public JPanel getFireBreakPanel() {
+        return this.pnlFirebreak;
     }
 
     public JCheckBox[] getFilterList() {
@@ -440,7 +445,9 @@ public class Gui extends JPanel{
         pnlSouth.add(chkRecord);
         pnlSouth.add(btnFire);
         //
-        JPanel pnlFirebreak = new JPanel();
+        pnlFirebreak = new JPanel();
+        pnlFirebreak.setVisible(false);
+
         pnlFirebreak.setLayout(new GridLayout(0,2));
         chkFirebreak = new JCheckBox("");
         //chkFirebreak.setEnabled(false);
@@ -451,6 +458,7 @@ public class Gui extends JPanel{
         pnlFirebreak.add(chkFirebreak);
         pnlFirebreak.add(btnUndo);
         pnlSouth.add(pnlFirebreak);
+        
         //
         pnlSouth.add(btnRender);
         pnlSouth.add(btnPause);
