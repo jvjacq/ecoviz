@@ -3,6 +3,7 @@ import org.junit.Test;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JCheckBox;
@@ -16,13 +17,49 @@ public class JUnitTests {
 	}
 
 	@Test //Incomplete
-	public void testFileController(){
+	public void testFileController() throws FileNotFoundException{
 		//Class : FileController.java
+		//pre-requisites:
+		Terrain terrain = new Terrain();
+		Terrain.setDimX(256);
+		Terrain.setDimY(256);
+		Terrain.setBaseX(256);
+		Terrain.setBaseY(256);
+		PlantLayer plantLayer = new PlantLayer();
+
+
+		String testSFile = "data/test-256.spc.txt";
+		String testCFile = "data/test-256_canopy.pdb";
+		FileController fileController = new FileController();
+
+		//readSpecies
+		fileController.readSpecies(testSFile);
+
+		//readCanopy
+		fileController.readLayer(plantLayer, "data/test-256_canopy.pdb", true);
+
 	}
 
 	@Test //Incomplete
 	public void testFire(){
 		//Class : Fire.java
+		int dimX = 2;
+		int dimY = 2;
+		int[][][] idLocOver = new int[2][2][2];
+		int[][][] idLocUnder = new int[2][2][2];
+
+		idLocOver[0][0][0]=0;idLocOver[0][0][1]=0;
+		idLocOver[0][1][0]=1;idLocOver[0][1][1]=1;
+		idLocOver[1][1][0]=2;idLocOver[1][1][1]=2;
+		idLocOver[1][0][0]=3;idLocOver[1][0][1]=3;
+
+		Fire fire = new Fire(dimX, dimY, idLocOver, idLocUnder);
+
+			//getDim
+			assertEquals(4,fire.getDim());
+			assertFalse(fire.isFire(1, 0));
+		
+
 	}
 
 	@Test //Incomplete
@@ -573,6 +610,7 @@ public class JUnitTests {
 				assertEquals(testNewFilter, newFilter);
 
 	}
+
 
 	@Test
 	public void testTerrain() {
