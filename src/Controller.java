@@ -46,6 +46,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean record;
     private Thread mousecapture;
     private Color speciesColour;
+    private boolean scrubUI;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -224,6 +225,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getScrubber().setVisible(false);
         gui.getEndSession().setVisible(false);
         gui.getFireBtn().setVisible(true);
+        scrubUI=false;
         closeFireSim();
 
         resetFrames();
@@ -233,6 +235,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void ScrubbingUI(){
+        scrubUI=true;
         gui.getScrubSpeed().setEnabled(true);
         if(record){
             record=false;
@@ -459,7 +462,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getChkShowBurnt().setVisible(false);
         gui.getChkShowPath().setVisible(false);
 
-        fireMode = false;
+        if (!scrubUI){fireMode = false;}
+        
         if (timerRunning){
             task.cancel();
             task2.cancel();
