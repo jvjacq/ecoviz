@@ -694,6 +694,8 @@ public class Gui extends JPanel{
         NumberFormat format = DecimalFormat.getInstance(Locale.UK);
         format.setMinimumFractionDigits(2);
         format.setMaximumFractionDigits(2);
+        format.setMinimumIntegerDigits(2);
+        format.setMaximumIntegerDigits(2);
         NumberFormatter nf = new NumberFormatter(format);
         nf.setOverwriteMode(true);
         nf.setAllowsInvalid(false);
