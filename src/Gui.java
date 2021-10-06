@@ -13,9 +13,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Hashtable;
 import java.util.Locale;
-
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import javax.swing.text.NumberFormatter;
 
 import com.formdev.flatlaf.*;
@@ -791,8 +788,6 @@ public class Gui extends JPanel{
 
         a1 = new JMenuItem("Dark Mode");
         a2 = new JMenuItem("Light Mode");
-        a3 = new JMenuItem("Cosmo");
-        a4 = new JMenuItem("Forest");
 
         JMenu m2 = new JMenu("Help");
         h1 = new JMenuItem("Manual");
@@ -800,8 +795,6 @@ public class Gui extends JPanel{
 
         m3.add(a1);
         m3.add(a2);
-        m3.add(a3);
-        m3.add(a4);
 
         mb.add(m1);
         mb.add(m2);
