@@ -638,6 +638,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getMain().pack();
         gui.getMain().setLocationRelativeTo(null);
         gui.getMain().setVisible(true);
+
+        image.repaint();
     }
 
     public void addSpeciesFilters() {
