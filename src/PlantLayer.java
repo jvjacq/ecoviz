@@ -77,7 +77,7 @@ public class PlantLayer{
     }
 
     public int[] getPlantAtLocation(int x, int y){
-      return this.idLocations[y][x];
+      return this.idLocations[x][y];
     }
     
     /*public Species[] getSpeciesList(){
