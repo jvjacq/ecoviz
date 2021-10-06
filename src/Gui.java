@@ -612,7 +612,7 @@ public class Gui extends JPanel{
         
         JPanel pnlAll = new JPanel();
         pnlAll.setLayout(new GridLayout(0,2));
-        speciesToggle = new JCheckBox("Full species details");
+        speciesToggle = new JCheckBox("Full Details");
         speciesToggle.setEnabled(false);
         speciesToggle.setSelected(false);
 
