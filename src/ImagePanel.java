@@ -49,6 +49,7 @@ public class ImagePanel extends JPanel{
 	private int circles;
 	private int[] plantsInView;
 	private int selectRad, selectX, selectY;
+	private Color speciesColour;
 
 	public ImagePanel(){
 		this.zoomMultiplier = 1;
@@ -60,6 +61,7 @@ public class ImagePanel extends JPanel{
 		this.yOffset = 0;
 		this.selectRad = -1;
 		this.canopy = null;
+		this.speciesColour = Color.BLACK;
 	}
 
 	//Accessor methods
@@ -181,6 +183,10 @@ public class ImagePanel extends JPanel{
 		} 
 	}
 
+	public void setSpeciesColor(Color c){
+		this.speciesColour = c;
+	}
+
 	public void reset(){
 		this.zoomMultiplier = 1;
 		this.prevZoomMultiplier = 1;
@@ -193,6 +199,7 @@ public class ImagePanel extends JPanel{
 		this.toplefty = 0;
 		this.selectRad = -1;
 		this.canopy = null;
+		this.speciesColour = Color.BLACK;
 	}
 
 	
@@ -476,7 +483,7 @@ public class ImagePanel extends JPanel{
 			selectY = -1;
 			return;
 		}
-		imgGraphics.setColor(Color.BLACK);
+		imgGraphics.setColor(speciesColour);
 		int x = plant.getX();
 		int y = plant.getY();
 		double rad = plant.getCanopy();
@@ -487,6 +494,7 @@ public class ImagePanel extends JPanel{
 		this.selectX = x;
 		this.selectY = y;
 		if(radius != -1){
+			imgGraphics.setColor(Color.BLACK);
 			imgGraphics.drawOval((int)Math.round((x-radius-topleftx)*zoomMultiplier), (int)Math.round((y-radius-toplefty)*zoomMultiplier), (int)Math.round(radius*2*zoomMultiplier), (int)Math.round(radius*2*zoomMultiplier));
 		}
 	}
