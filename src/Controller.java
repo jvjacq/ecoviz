@@ -781,8 +781,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.deriveImage();
         updateFilterSpeciesCounts();
         image.repaint();
-        //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
-        
+        //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());        
     }
 
     public void updateFilterSpeciesCounts(){
