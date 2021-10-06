@@ -423,7 +423,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getTabPane().setEnabled(false);
         gui.getFireBtn().setVisible(false);
         gui.getChkFirebreak().setVisible(true);
-        gui.getChkFirebreak().setEnabled(true);
         gui.getUndoBtn().setVisible(true);
         gui.getPauseBtn().setVisible(true);
         gui.getBackBtn().setVisible(true);
@@ -507,7 +506,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void renderFireSim() { // Single use
         frames=0;
-        gui.getChkFirebreak().setEnabled(false);
         gui.getCloseRender().setEnabled(true);
         System.out.println("Running the Fire Simulation");
         gui.getPauseBtn().setEnabled(true);
@@ -791,7 +789,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.deriveImage();
         updateFilterSpeciesCounts();
         image.repaint();
-        //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());        
+        //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
+        
     }
 
     public void updateFilterSpeciesCounts(){
