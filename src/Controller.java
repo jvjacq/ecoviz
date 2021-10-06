@@ -634,6 +634,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             System.out.println("Cancelled by the user.");
         }
         //System.out.println(FileController.getMaxHeight() + " " + FileController.getMaxRadius());
+
+        //Starts the application maximised
+        gui.getMain().setExtendedState(gui.getMain().getExtendedState() | JFrame.MAXIMIZED_BOTH);
     }
 
     private boolean insideCanopy(Point point, Plant plant) {

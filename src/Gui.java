@@ -17,6 +17,10 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.awt.Dimension;
 import java.awt.Font;
+
+
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import javax.swing.text.NumberFormatter;
 
 import com.formdev.flatlaf.*;
@@ -401,7 +405,7 @@ public class Gui extends JPanel{
         // ======================================================================
         frame = new JFrame("EcoViz");
 
-        // frame.setSize(500,500);
+        //frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // ======================================================================
@@ -412,7 +416,6 @@ public class Gui extends JPanel{
         mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 
         
-
         pnlWest = new JPanel();
         pnlWest.add(mainPanel);
 
@@ -829,7 +832,7 @@ public class Gui extends JPanel{
         frame.setLocationRelativeTo(null);
         // frame.setVisible(true);
         // loadIn.setVisible(true);
-
+        
     }
     // END OF CONSTRUCTOR
 
