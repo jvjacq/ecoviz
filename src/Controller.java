@@ -70,8 +70,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         //this.fireReset = false;
         this.firebreakMode = false;
         this.playing = false;
-        this.runImg = new ImageIcon("ecoviz/resources/Running.gif");
-        this.pauseImg = new ImageIcon("ecoviz/resources/stamp.gif");
+        this.runImg = new ImageIcon("resources/Running.gif");
+        this.pauseImg = new ImageIcon("resources/stamp.gif");
         this.speciesColour = Color.BLACK;
     }
 
@@ -133,7 +133,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         JLabel imgLabel = new JLabel();
 
         try{
-        ImageIcon path = new ImageIcon("ecoviz/resources/enlarged/"+nm+"E.png");
+        ImageIcon path = new ImageIcon("resources/enlarged/"+nm+"E.png");
         imgLabel.setIcon(path);
         enlargedImage.add(imgLabel);
         enlargedImage.pack();
@@ -153,7 +153,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         try{
             System.out.println("Showing Image");
-        ImageIcon path = new ImageIcon("ecoviz/resources/plants/"+nm+".png");
+        ImageIcon path = new ImageIcon("resources/plants/"+nm+".png");
        //gui.getPlantImage().setIcon(path);
         gui.getEnlarge().setIcon(path);
 
@@ -889,7 +889,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void moveCompass(String direction){
-        String path = "ecoviz/resources/compass/" + direction + ".png";
+        String path = "resources/compass/" + direction + ".png";
         gui.setCompassPath(path);
         gui.setCompassIcon();
     }
