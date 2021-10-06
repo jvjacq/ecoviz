@@ -18,6 +18,7 @@ public class FileController implements Runnable{
     private float scale;
     private static float MAXHeight, MAXRadius;
     private int totalSpecies;
+    private static float gridSpacing;
 
     private String threadFile;
     private PlantLayer threadLayer;
@@ -175,7 +176,7 @@ public class FileController implements Runnable{
         Terrain.setDimX(dimX);
         Terrain.setDimY(dimY);
 
-        float gridSpacing = Float.parseFloat(scanner.next());
+        gridSpacing = Float.parseFloat(scanner.next());
         float latitude = Float.parseFloat(scanner.next());
         double[][] elevations = new double[dimY][dimX];
 
@@ -234,8 +235,8 @@ public class FileController implements Runnable{
             for (int id = 0; id < numPlants;++id){
                 float height, canopy;
                 int xpos, ypos, zpos;
-                xpos = (int)Math.round(Float.parseFloat(filein.next())/0.9144*scale);
-                ypos = (int)Math.round(Float.parseFloat(filein.next())/0.9144*scale);
+                xpos = (int)Math.round(Float.parseFloat(filein.next())/gridSpacing*scale);
+                ypos = (int)Math.round(Float.parseFloat(filein.next())/gridSpacing*scale);
                 zpos = Math.round(Float.parseFloat(filein.next()));  //Intentionally unused
                 zpos = 1*zpos; //irrelevant, just removed VSCode warning
                 height = Float.parseFloat(filein.next());
