@@ -40,6 +40,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean firebreakMode;
     private boolean playing;
     private boolean record;
+    private Thread mousecapture;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -1066,13 +1067,29 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //
-
+        mousecapture = new Thread(){
+            @Override
+            public void run(){
+                while(true){
+                    try{
+                        Thread.sleep(0);
+                    }catch(InterruptedException e){
+                        System.out.println("Mouse exited");
+                        gui.setMousePositions(0,0);
+                        break;
+                    }
+                    int x = (int)Math.round(MouseInfo.getPointerInfo().getLocation().getX()-image.getLocationOnScreen().getX());
+                    int y = (int)Math.round(MouseInfo.getPointerInfo().getLocation().getY()-image.getLocationOnScreen().getY());
+                    gui.setMousePositions(x,y);
+                }
+            }
+        };
+        mousecapture.start();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //
+        mousecapture.interrupt();
     }
 
     public String round(String f){

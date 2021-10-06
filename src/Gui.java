@@ -85,6 +85,7 @@ public class Gui extends JPanel{
     private JSlider radSlider;
     private JCheckBox chkSelectRadius;
     private JSlider scrubber;
+    private JLabel mousex, mousey;
 
 
     //private JSlider sdrViewRadius; 
@@ -346,6 +347,11 @@ public class Gui extends JPanel{
         sliderList[1] = wSpdSlider;
         sliderList[2] = spdSlider;
         return sliderList;
+    }
+
+    public void setMousePositions(int x, int y){
+        this.mousex.setText(" x: " + x);
+        this.mousey.setText(" y: " + y);
     }
 
     public Gui() {
@@ -762,6 +768,15 @@ public class Gui extends JPanel{
         mb.add(m1);
         mb.add(m2);
         mb.add(m3);
+
+        mousex = new JLabel(" x:   ");
+        mousey = new JLabel(" y:   ");
+        JPanel pnlPos = new JPanel();
+        pnlPos.setOpaque(false);
+        pnlPos.setLayout(new GridLayout(0,2));
+        pnlPos.add(mousex);
+        pnlPos.add(mousey);
+        mb.add(pnlPos);
 
         // ======================================================================
         // Adding all to the Frame (ECOVIZ):
