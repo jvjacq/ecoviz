@@ -355,7 +355,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void openFireSim() {
-        gui.getFireBreakPanel().setVisible(true);
         gui.getChkRecord().setVisible(true);
         gui.getCloseRender().setEnabled(false);
         gui.getTabPane().setSelectedIndex(1);
@@ -382,7 +381,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeFireSim() {
-        gui.getFireBreakPanel().setVisible(false);
 
         first=false;
         gui.getChkRecord().setVisible(false);
