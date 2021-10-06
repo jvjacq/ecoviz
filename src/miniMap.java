@@ -13,7 +13,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.*;
 
-public class miniMap extends JPanel{
+public class MiniMap extends JPanel{
 
 	private ImagePanel image;
 	private BufferedImage terrain;
@@ -23,22 +23,7 @@ public class miniMap extends JPanel{
 	
 	private int tlx, tly, boxdimX, boxdimY;
 
-
-	public miniMap(BufferedImage img, BufferedImage layer1, BufferedImage layer0){
-		//reset constructor
-		//canopy = layer1;
-		//undergrowth = layer0;
-		//terrain = img;
-		this.tlx = 0;
-		this.tly = 0;
-		//this.boxdimX = Terrain.getDimX();
-		//this.boxdimY = Terrain.getDimY();
-		
-		//resize minimap
-		miniature();
-	}
-
-	public miniMap(ImagePanel image){
+	public MiniMap(ImagePanel image){
 		this.image = image;
 	}
 
