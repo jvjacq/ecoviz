@@ -21,22 +21,48 @@ public class JUnitTests {
 		//Class : FileController.java
 		//pre-requisites:
 		Terrain terrain = new Terrain();
-		Terrain.setDimX(256);
-		Terrain.setDimY(256);
-		Terrain.setBaseX(256);
-		Terrain.setBaseY(256);
+		
+		PlantLayer canopyLayer = new PlantLayer();
 		PlantLayer plantLayer = new PlantLayer();
-
 
 		String testSFile = "data/test-256.spc.txt";
 		String testCFile = "data/test-256_canopy.pdb";
+		String testUFile = "data/test-256_undergrowth.pdb";
+		String testElvFile = "data/S6000-6000-256.elv";
+
 		FileController fileController = new FileController();
+		
+		//readElevation
+		fileController.readElevation(terrain, testElvFile);
 
 		//readSpecies
 		fileController.readSpecies(testSFile);
 
 		//readCanopy
-		fileController.readLayer(plantLayer, "data/test-256_canopy.pdb", true);
+		fileController.readLayer(canopyLayer, testCFile, true);
+
+		//getTotalSpecies
+		int totSpecies = fileController.getTotalSpecies();
+		assertEquals(5, fileController.getTotalSpecies());
+
+		//readUndergrowth
+		fileController.readLayer(plantLayer, testUFile, false);
+
+		//compareAndSetMaxHeight
+		FileController.compareAndSetMaxHeight(1000.0f);
+		boolean correct =false;
+		if (1000.0f == FileController.getMaxHeight()){
+			correct = true;
+		}
+		assertTrue(correct);
+
+		//compareAndSetMaxRadius
+		FileController.compareAndSetMaxRadius(1000.0f);
+		boolean correct2 =false;
+		if (1000.0f == FileController.getMaxRadius()){
+			correct2 = true;
+		}
+		assertTrue(correct2);
 
 	}
 
