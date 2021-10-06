@@ -31,7 +31,7 @@ public class Gui extends JPanel{
     private JMenuItem i1,i2,i3,a1,a2,a3,a4,h1;
     private JLabel wDirLbl, wSpdLbl;
     private JSlider wDirSlider, wSpdSlider, spdSlider;
-
+    private JLabel plantImage;
     private ImagePanel mainPanel;
     private JButton btnFire;
     private JButton btnBack;
@@ -108,6 +108,10 @@ public class Gui extends JPanel{
 
     public JMenuItem getHelp(){
         return this.h1;
+    }
+
+    public JLabel getPlantImage(){
+        return this.plantImage;
     }
 
     public JLabel getStamp(){
@@ -232,6 +236,8 @@ public class Gui extends JPanel{
     public JPanel getFilterPanel() {
         return this.pnlFilters;
     }
+    
+
 
     public JCheckBox[] getFilterList() {
         return this.filterlist;
@@ -334,8 +340,8 @@ public class Gui extends JPanel{
         this.wSpdSlider.setValue(speed);
     }
 
-    public int getSimSpeed(){
-        return this.spdSlider.getValue();
+    public JSlider getScrubSpeed(){
+        return spdSlider;
     }
     public void setSpeedLbl(String label){
         this.lblSpeed.setText(label);
@@ -454,6 +460,7 @@ public class Gui extends JPanel{
         pnlFirebreak.add(chkFirebreak);
         pnlFirebreak.add(btnUndo);
         pnlSouth.add(pnlFirebreak);
+        
         //
         pnlSouth.add(btnRender);
         pnlSouth.add(btnPause);
@@ -517,10 +524,13 @@ public class Gui extends JPanel{
 
         // ###
         spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
-        spdSlider.setMaximum(5);
-        //spdSlider.setMinimum(1);\
-        spdSlider.setMinimum(5);
-        lblSpeed = new JLabel("Simulation Speed: x1");
+        spdSlider.setValue(2);
+        spdSlider.setEnabled(false);
+        spdSlider.setMaximum(2);
+        spdSlider.setPaintLabels(true);
+        spdSlider.setPaintTicks(true);
+        spdSlider.setMinimum(1);
+        lblSpeed = new JLabel("Scrubbing Speed: FAST");
 
         search = new JTextField(20);
         search.setMaximumSize(search.getPreferredSize());
@@ -606,10 +616,21 @@ public class Gui extends JPanel{
         chkPath = new JCheckBox("Show Path of Fire",true);
         chkBurnt = new JCheckBox("Show Burnt Trees",true);
         
-        speciesToggle = new JCheckBox("Full species details");
+        JPanel pnlAll = new JPanel();
+        pnlAll.setLayout(new GridLayout(0,2));
+        speciesToggle = new JCheckBox("Full Details");
         speciesToggle.setEnabled(false);
         speciesToggle.setSelected(false);
-        pnlDetails.add(speciesToggle);
+
+        plantImage = new JLabel();
+        plantImage.setVisible(false);
+        //plantPath = new ImageIcon("resources/North.png");
+        //compass.setIcon(path3);
+        pnlAll.add(plantImage);
+        pnlAll.add(speciesToggle);
+
+        pnlDetails.add(pnlAll);
+
         // pnlDetails.add(plantDescription);
 
         tabbedPane.addTab("Details", null, pnlDetails, "Shows Details on Demand");
