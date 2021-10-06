@@ -366,15 +366,18 @@ public class ImagePanel extends JPanel{
 			//derivePlants();
 			//graphics2d.drawImage(fire, 0, 0, null);	
 		}else{
-			zoomTerrain = terrain.getSubimage(topleftx, toplefty, newDimX, newDimY);
-			//zoomPlants = canopy.getSubimage(topleftx, toplefty, newDimX, newDimY);
-			AffineTransform at = AffineTransform.getScaleInstance(zoomMultiplier, zoomMultiplier);
-			AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-			BufferedImage scaledT = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
-			//BufferedImage scaledP = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
-			scaledT = ato.filter(zoomTerrain, scaledT);
-			//scaledP = ato.filter(zoomPlants, scaledP);
-			zoomTerrain = scaledT;
+			System.out.println(zoomMultiplier);
+			if(zoomMultiplier < 35.0){
+				zoomTerrain = terrain.getSubimage(topleftx, toplefty, newDimX, newDimY);
+				//zoomPlants = canopy.getSubimage(topleftx, toplefty, newDimX, newDimY);
+				AffineTransform at = AffineTransform.getScaleInstance(zoomMultiplier, zoomMultiplier);
+				AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+				BufferedImage scaledT = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+				//BufferedImage scaledP = new BufferedImage(dimX,dimY,BufferedImage.TYPE_INT_ARGB);
+				scaledT = ato.filter(zoomTerrain, scaledT);
+				//scaledP = ato.filter(zoomPlants, scaledP);
+				zoomTerrain = scaledT;
+			}
 			//zoomPlants = scaledP;
 			/*if(Math.floor(Math.log(zoomMultiplier)/Math.log(1.1f) % 2) == 0.0f){
 				zoomPlants = zoomPlants(topleftx, toplefty, newDimX, newDimY);

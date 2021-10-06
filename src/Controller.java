@@ -969,6 +969,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         double multiplier = image.getZoomMult();
         if (e.getWheelRotation() < 0) { // Zoom in
             multiplier *= 1.1; // Adjust for smoothness
+            if(multiplier > 100) multiplier = 100;
             image.setZoomMult(multiplier);
         }
         if (e.getWheelRotation() > 0) { // Zoom out
