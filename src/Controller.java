@@ -111,7 +111,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void removeFirebreak(){
         int latest = Firebreak.getBreakList().size() -1;
-        if(latest < 0) return;
+        if(latest < 0) gui.getUndoBtn().setEnabled(false);
         Firebreak f = Firebreak.getBreakList().get(latest);
         for(int[] i: f.getIDList()){
             fire.restorePlant(i[0], i[1]);
@@ -147,7 +147,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             image.repaint();
         }else{
             firebreakMode = false;
-            gui.getUndoBtn().setEnabled(false);
+            //gui.getUndoBtn().setEnabled(false);
             gui.getPauseBtn().setEnabled(true);
             gui.getRenderBtn().setEnabled(true);
             gui.getResetBtn().setEnabled(true);
@@ -934,6 +934,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        System.out.println("click");
         gui.getSpeciesToggle().setEnabled(true);
         Point click = e.getPoint();
         int xPos =0;
