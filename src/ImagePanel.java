@@ -59,6 +59,7 @@ public class ImagePanel extends JPanel{
 		this.xOffset = 0;
 		this.yOffset = 0;
 		this.selectRad = -1;
+		this.canopy = null;
 	}
 
 	//Accessor methods
@@ -191,6 +192,7 @@ public class ImagePanel extends JPanel{
 		this.topleftx = 0;
 		this.toplefty = 0;
 		this.selectRad = -1;
+		this.canopy = null;
 	}
 
 	
@@ -297,17 +299,19 @@ public class ImagePanel extends JPanel{
 		super.paintComponent(g);
 		Graphics2D graphics2d = (Graphics2D) g;
 		if (terrain != null) {
-			if(zoom){
-				graphics2d.drawImage(zoomTerrain, 0, 0, null);
-				graphics2d.drawImage(zoomPlants, 0, 0, null);
-				graphics2d.drawImage(fire, 0, 0, null);
-				graphics2d.drawImage(burnt, 0, 0, null);	
+			/*if(zoom){
+					
 			}else{
 				graphics2d.drawImage(terrain, 0, 0, null);
 				graphics2d.drawImage(canopy, 0, 0, null);
 				graphics2d.drawImage(fire, 0, 0, null);	
 				graphics2d.drawImage(burnt, 0, 0, null);	
-			}
+			}*/
+
+			graphics2d.drawImage(zoomTerrain, 0, 0, null);
+			graphics2d.drawImage(zoomPlants, 0, 0, null);
+			graphics2d.drawImage(fire, 0, 0, null);
+			graphics2d.drawImage(burnt, 0, 0, null);
 			if(details != null) graphics2d.drawImage(details,0,0,null);
 			if(firebreakImg != null) graphics2d.drawImage(firebreakImg,0,0,null);
 		}		
@@ -361,8 +365,8 @@ public class ImagePanel extends JPanel{
 		if(zoomMultiplier == 1.0 && prevZoomMultiplier == 1.0){
 			dimX = Math.round(Terrain.getDimX());
 			dimY = Math.round(Terrain.getDimY());
-			canopy = zoomPlants(0,0,dimX,dimY);
-			zoomPlants = canopy;
+			zoomPlants = zoomPlants(0,0,dimX,dimY);
+			if(canopy == null) canopy = zoomPlants;
 			//derivePlants();
 			//graphics2d.drawImage(fire, 0, 0, null);	
 		}else{
