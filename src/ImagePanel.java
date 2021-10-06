@@ -366,7 +366,6 @@ public class ImagePanel extends JPanel{
 			//derivePlants();
 			//graphics2d.drawImage(fire, 0, 0, null);	
 		}else{
-			System.out.println(zoomMultiplier);
 			if(zoomMultiplier < 35.0){
 				zoomTerrain = terrain.getSubimage(topleftx, toplefty, newDimX, newDimY);
 				//zoomPlants = canopy.getSubimage(topleftx, toplefty, newDimX, newDimY);
