@@ -181,7 +181,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         if(record){
             record=false;
-            captureTimer.schedule(task3,0,50);
+            captureTimer.schedule(task3,0,100);
             gui.getCloseRender().setText("End Record (closes session)");
             gui.getCloseRender().setBackground(new Color(156, 58, 34));
         } else{
@@ -481,7 +481,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 if (running) {
                     BufferedImage updatedFireImage = fire.getImage();
                     BufferedImage updatedBurnImage = fire.getBurntImage();
-                    if (frames<=400 && (first)){
+                    if (frames<=200 && (first)){
                         storeImage(updatedFireImage,updatedBurnImage);
                     }else{
                         System.out.println("Simulation Render Complete (No more can be recorded)");
