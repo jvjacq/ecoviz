@@ -283,6 +283,14 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }
     };
 
+    public void end(){
+        if (playing){
+            gui.getPlayR().setText("Pause");
+        } else {
+            gui.getPlayR().setText("Play");
+        }
+    }
+
     public void scrubSpeed(){
         iterate.cancel();
         iterator.cancel();
@@ -307,10 +315,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             @Override
             public void run() {
                 if (playing){
-
+                
                 int prev = gui.getScrubber().getValue();
-
-                if (prev!=pathFrames.size()){
+                if (prev==gui.getScrubber().getMaximum()){
+                    playing=false;
+                    end();
+                    
+                } else if (prev!=pathFrames.size()){
                     gui.getScrubber().setValue(prev+1);
                     
                 }
