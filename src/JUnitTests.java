@@ -11,26 +11,32 @@ public class JUnitTests {
 
 	@Test //Incomplete
 	public void testController(){
+		//Class : Controller.java
 	}
 
 	@Test //Incomplete
 	public void testFileController(){
+		//Class : FileController.java
 	}
 
 	@Test //Incomplete
 	public void testFire(){
+		//Class : Fire.java
 	}
 
 	@Test //Incomplete
 	public void testFireBreak(){
+		//Class : FireBreak.java
 	}
 
 	@Test //Incomplete
 	public void testGui(){
+		//Class : Gui.java
 	}
 
 	@Test //Incomplete
 	public void testImagePanel(){
+		//Class : ImagePanel.java
 
 		Point point = new Point(10,15);
 		int XDiff = 1;
