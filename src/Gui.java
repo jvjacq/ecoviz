@@ -86,6 +86,7 @@ public class Gui extends JPanel{
     private JCheckBox chkSelectRadius;
     private JSlider scrubber;
     private JLabel mousex, mousey;
+    private JButton btnCCSpecies;
 
 
     //private JSlider sdrViewRadius; 
@@ -236,8 +237,6 @@ public class Gui extends JPanel{
     public JPanel getFilterPanel() {
         return this.pnlFilters;
     }
-    
-
 
     public JCheckBox[] getFilterList() {
         return this.filterlist;
@@ -291,6 +290,38 @@ public class Gui extends JPanel{
         return this.chkSelectRadius;
     }
 
+    public JButton getCCSpecies(){
+        return this.btnCCSpecies;
+    }
+
+    public ImagePanel getMainPanel(){
+        return mainPanel;
+    }
+
+    public int getWindDir(){
+        return this.wDirSlider.getValue();
+    }
+
+    public ImageIcon getCompassPath(){
+        return this.path3;
+    }
+
+    public int getWindSpd(){
+        return this.wSpdSlider.getValue();
+    }
+    
+    public JSlider getScrubSpeed(){
+        return spdSlider;
+    }
+
+    public JSlider[] getSliderList(){
+        JSlider[] sliderList = new JSlider[3];
+        sliderList[0] = wDirSlider;
+        sliderList[1] = wSpdSlider;
+        sliderList[2] = spdSlider;
+        return sliderList;
+    }
+
     //Mutator methods
     public void setFilterList(JCheckBox[] list){
         this.filterlist = list;
@@ -305,14 +336,7 @@ public class Gui extends JPanel{
     public void setChkPath() {
         this.chkPath.setSelected(true);
     }
-
-    public ImagePanel getMainPanel(){
-        return mainPanel;
-    }
-
-    public int getWindDir(){
-        return this.wDirSlider.getValue();
-    }
+    
     public void setWindDirLbl(String label){
         this.wDirLbl.setText(label);
     }
@@ -320,16 +344,11 @@ public class Gui extends JPanel{
     public void setCompassPath(String path){
         this.path3 = new ImageIcon(path);
     }
-    public ImageIcon getCompassPath(){
-        return this.path3;
-    }
+    
     public void setCompassIcon(){
         this.compass.setIcon(getCompassPath());
     }
 
-    public int getWindSpd(){
-        return this.wSpdSlider.getValue();
-    }
     public void setWindSpdLbl(String label){
         this.wSpdLbl.setText(label);
     }
@@ -340,19 +359,8 @@ public class Gui extends JPanel{
         this.wSpdSlider.setValue(speed);
     }
 
-    public JSlider getScrubSpeed(){
-        return spdSlider;
-    }
     public void setSpeedLbl(String label){
         this.lblSpeed.setText(label);
-    }
-
-    public JSlider[] getSliderList(){
-        JSlider[] sliderList = new JSlider[3];
-        sliderList[0] = wDirSlider;
-        sliderList[1] = wSpdSlider;
-        sliderList[2] = spdSlider;
-        return sliderList;
     }
 
     public void setMousePositions(int x, int y){
@@ -621,6 +629,10 @@ public class Gui extends JPanel{
         speciesToggle = new JCheckBox("Full Details");
         speciesToggle.setEnabled(false);
         speciesToggle.setSelected(false);
+        btnCCSpecies = new JButton("Species colour");
+        JPanel pnlleft = new JPanel();
+        pnlleft.setOpaque(false);
+        pnlleft.setLayout(new GridLayout(0,1));
 
         JPanel pnlImage = new JPanel();
 
@@ -628,7 +640,9 @@ public class Gui extends JPanel{
         btnEnlarge.setVisible(false);
         //plantPath = new ImageIcon("resources/North.png");
         //compass.setIcon(path3);
-        pnlAll.add(speciesToggle);
+        pnlleft.add(btnCCSpecies);
+        pnlleft.add(speciesToggle);
+        pnlAll.add(pnlleft);
         pnlImage.add(btnEnlarge);
         pnlAll.add(pnlImage);
 

@@ -11,6 +11,7 @@ import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
@@ -44,6 +45,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean playing;
     private boolean record;
     private Thread mousecapture;
+    private Color speciesColour;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -69,6 +71,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.playing = false;
         this.runImg = new ImageIcon("resources/Running.gif");
         this.pauseImg = new ImageIcon("resources/stamp.gif");
+        this.speciesColour = Color.BLACK;
     }
 
     public void initController() {
@@ -97,6 +100,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
+        gui.getCCSpecies().addActionListener(e -> chooseSpeciesColour());
         gui.getHiHeight().addPropertyChangeListener(e -> filterHeightCanopy());
         gui.getLoHeight().addPropertyChangeListener(e -> filterHeightCanopy());
         gui.getHiRadius().addPropertyChangeListener(e -> filterHeightCanopy());
@@ -114,21 +118,28 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         initView();
     }
 
+    public void chooseSpeciesColour(){
+        speciesColour = JColorChooser.showDialog(null,"Select a colour",Color.BLACK);
+        image.setSpeciesColor(speciesColour);
+        image.displayPlant(selected, getViewRadius());
+        image.repaint();
+    }
+
     public void enlargedImage(){
-      JFrame enlargedImage = new JFrame();
-      enlargedImage.setLocationRelativeTo(null);
-      enlargedImage.setVisible(true);
-      JLabel imgLabel = new JLabel();
+        JFrame enlargedImage = new JFrame();
+        enlargedImage.setLocationRelativeTo(null);
+        enlargedImage.setVisible(true);
+        JLabel imgLabel = new JLabel();
 
-      try{
-      ImageIcon path = new ImageIcon("resources/enlarged/"+nm+"E.png");
-      imgLabel.setIcon(path);
-      enlargedImage.add(imgLabel);
-      enlargedImage.pack();
-      }
-      catch (Exception e){
+        try{
+        ImageIcon path = new ImageIcon("resources/enlarged/"+nm+"E.png");
+        imgLabel.setIcon(path);
+        enlargedImage.add(imgLabel);
+        enlargedImage.pack();
+        }
+        catch (Exception e){
 
-      }
+        }
 
 
 
@@ -636,7 +647,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void changeSpeciesColour(int id) {
         Species[] specieslist = PlantLayer.getAllSpecies();
         resetSpeciesColours();
-        Color c = new Color(0, 0, 0, 1.0f);
+        Color c = speciesColour;
         //Color prev = specieslist[id].getColour();
         specieslist[id].setColour(c);
         //image.deriveImage();
@@ -660,7 +671,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getLoRadius().setValue(0.00f);
         image.setFilterLimits(0.00f, (float)Math.ceil(FileController.getMaxHeight()), 0.00f, (float)Math.ceil(FileController.getMaxRadius()));
         this.deaf = false;
-        
+        //
+        this.speciesColour = Color.BLACK;
+        image.setSpeciesColor(Color.BLACK);
+        //
         image.setPlantsInView(files.getTotalSpecies());
         image.deriveImg(terrain);
         // image.setZoom(true);
