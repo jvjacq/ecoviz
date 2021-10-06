@@ -112,7 +112,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void removeFirebreak(){
         int latest = Firebreak.getBreakList().size() -1;
-        if(latest < 0) gui.getUndoBtn().setEnabled(false);
+        if(latest < 0) return;
+            
+        
         Firebreak f = Firebreak.getBreakList().get(latest);
         for(int[] i: f.getIDList()){
             fire.restorePlant(i[0], i[1]);
@@ -128,6 +130,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             }
         }
         Firebreak.removeLatest();
+        if(latest < 1) gui.getUndoBtn().setEnabled(false);
         fire.clearGrid();
         fire.genGrid();
         image.deriveImage();
