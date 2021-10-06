@@ -23,7 +23,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean fireMode, metric,timerRunning;
     private int numSpecies;
     private Fire fire;
-    private Timer timer,timerDerive, captureTimer;
+    private Timer timer,timerDerive, captureTimer, iterator;
     private int delay;
     private boolean first;
     private int windMaxKPH, windMaxMPH;
@@ -31,13 +31,15 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private boolean running;
     private Plant selected;
     private boolean deaf;
-    private TimerTask task,task2,task3;
+    private TimerTask task,task2,task3, iterate;
     private ImageIcon pauseImg,runImg;
     private Firebreak fb;
     private ArrayList<BufferedImage> pathFrames,burntFrames;
     private int frames;
     //private boolean fireReset;
     private boolean firebreakMode;
+    private boolean playing;
+    private boolean record;
 
     public Controller(Gui gui, Terrain terrain, PlantLayer undergrowth, PlantLayer canopy) {
         this.gui = gui;
@@ -50,7 +52,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.timerRunning = false;
         this.selected = null;
         this.deaf = false;
-        this.delay = 125;// default - Update Speed
+        this.record = true;
+        this.delay = 25;// default - Update Speed
         this.windMaxKPH = 160;
         this.windMaxMPH = 100;
         this.convertion = (float)1.60934;
@@ -59,9 +62,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         this.burntFrames = new ArrayList<BufferedImage>();
         //this.fireReset = false;
         this.firebreakMode = false;
+        this.playing = false;
         this.runImg = new ImageIcon("resources/Running.gif");
         this.pauseImg = new ImageIcon("resources/stamp.gif");
-
     }
 
     public void initController() {
@@ -84,6 +87,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getCloseRender().addActionListener(e -> ScrubbingUI());
         gui.getScrubber().addChangeListener(e -> iterateImages());
         gui.getEndSession().addActionListener(e -> closeScrub());
+        gui.getPlayR().addActionListener(e -> playRButton());
+
         gui.getChkCanopy().addItemListener(e -> filterLayers());
         gui.getChkUndergrowth().addItemListener(e -> filterLayers());
         gui.getSpeciesToggle().addItemListener(e -> speciesDetails());
@@ -152,20 +157,45 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeScrub(){
+        iterate.cancel();
+        playing=false;
+        iterator.cancel();
+        iterator.purge();
+
+        gui.getPlayR().setVisible(false);
         gui.getScrubber().setEnabled(false);
         gui.getScrubber().setVisible(false);
         gui.getEndSession().setVisible(false);
         gui.getFireBtn().setVisible(true);
+        closeFireSim();
 
         resetFrames();
         first=false;
+        image.repaint();
 
     }
 
+    
+
     public void ScrubbingUI(){
+
+        if(record){
+            record=false;
+            captureTimer.schedule(task3,0,50);
+            gui.getCloseRender().setText("End Record (closes session)");
+            gui.getCloseRender().setBackground(new Color(156, 58, 34));
+        } else{
+            
+            task3.cancel();
+            captureTimer.cancel();
+            captureTimer.purge();
+        playRender();
+
         gui.getEndSession().setVisible(true);
         gui.getStamp().setIcon(pauseImg);
         gui.getCloseRender().setEnabled(false);
+
+        gui.getPlayR().setVisible(true);
         gui.getScrubber().setEnabled(true);
         gui.getScrubber().setVisible(true);
         closeFireSim();
@@ -174,13 +204,55 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getStamp().setIcon(pauseImg);
 
         gui.getScrubber().setMaximum(burntFrames.size()-1);
-        System.out.println("Simulation Ended, Showing the Final Render");
+        gui.getScrubber().setValue(0);
+
+        record=true;
+        gui.getCloseRender().setText("Record");
+        gui.getCloseRender().setBackground(new Color(44, 105, 122));
+
+
+        System.out.println("Render Session Complete");
+        }
+    }
+
+    public void playRButton(){
+        playing=!playing;
+
+        if (playing){
+            gui.getPlayR().setText("Pause");
+        } else {
+            gui.getPlayR().setText("Play");
+        }
+    };
+
+    public void playRender(){
+        iterator = new Timer();
+
+        iterate = new TimerTask() {
+
+            @Override
+            public void run() {
+                if (playing){
+
+                int prev = gui.getScrubber().getValue();
+
+                if (prev!=pathFrames.size()){
+                    gui.getScrubber().setValue(prev+1);
+                }
+            }
+        }
+        };
+
+        iterator.schedule(iterate,0, 25);
+
+
+
     }
 
     public void iterateImages(){
 
         //Pass through the bufferedImage to render
-        System.out.println(gui.getScrubber().getValue());
+        //System.out.println(gui.getScrubber().getValue());
         image.setFire(pathFrames.get(gui.getScrubber().getValue()));
         image.setBurnt(burntFrames.get(gui.getScrubber().getValue()));
         image.repaint();
@@ -266,6 +338,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void openFireSim() {
+        gui.getChkRecord().setVisible(true);
         gui.getCloseRender().setEnabled(false);
         gui.getTabPane().setSelectedIndex(1);
         gui.getTabPane().setEnabled(false);
@@ -292,6 +365,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void closeFireSim() {
         first=false;
+        gui.getChkRecord().setVisible(false);
 
         gui.getCloseRender().setEnabled(false);
 
@@ -369,7 +443,6 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             @Override
             public void run() {
                 if (running) {
-                    // delay = gui.getDelay();
                     fire.simulate(0, (Terrain.getDimX() * Terrain.getDimY())); // Run simulation on all
                     try {
                         Thread.sleep(delay);
@@ -405,29 +478,29 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             @Override
             public void run() {
 
-                /*if (running) {
+                if (running) {
                     BufferedImage updatedFireImage = fire.getImage();
                     BufferedImage updatedBurnImage = fire.getBurntImage();
-
-                    if (frames<=3000 && (first)){
-                        try{
-                            storeImage(updatedFireImage,updatedBurnImage);
-                        }catch(OutOfMemoryError e){
-                            System.out.println("WHy your computer suck?");
-                            task3.cancel();
-                        }
+                    if (frames<=400 && (first)){
+                        storeImage(updatedFireImage,updatedBurnImage);
                     }else{
                         System.out.println("Simulation Render Complete (No more can be recorded)");
+                        captureTimer.cancel();
+                        captureTimer.purge();
+                        task3.cancel();
                     }
                     frames++;
                     
-                }*/
+                }
             }
         };
 
+
         timer.schedule(task, 0, 1);
         timerDerive.schedule(task2,0,1);
-        captureTimer.schedule(task3,0,1);
+
+        if (gui.getChkRecord().isSelected()){ScrubbingUI();}
+        //captureTimer.schedule(task3,0,50);
 
         gui.getRenderBtn().setEnabled(false);
     }
@@ -682,16 +755,16 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         //delay = 75; // default
         switch(Integer.toString(gui.getSimSpeed())){
             case "1":
-                delay = 125;
+                delay = 25;
                 break;
             case "2":
-                delay = 100;
+                delay = 25;
                 break;
             case "3":
-                delay = 75;
+                delay = 25;
                 break;
             case "4":
-                delay = 50;
+                delay = 25;
                 break;
             case "5":
                 delay = 25;

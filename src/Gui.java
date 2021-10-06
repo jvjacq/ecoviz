@@ -58,7 +58,9 @@ public class Gui extends JPanel{
     private JCheckBox[] filterlist;
     private JTabbedPane tabbedPane;
     private JCheckBox speciesToggle;
+    private JCheckBox chkRecord;
 
+    private JButton playR;
     private String common;
     private String latin;
     private String shortest;
@@ -83,6 +85,8 @@ public class Gui extends JPanel{
     private JSlider radSlider;
     private JCheckBox chkSelectRadius;
     private JSlider scrubber;
+
+
     //private JSlider sdrViewRadius; 
     
     private JLabel stamp;
@@ -95,6 +99,10 @@ public class Gui extends JPanel{
 
     public JButton getEndSession(){
         return this.btnEndSession;
+    }
+
+    public JButton getPlayR(){
+        return this.playR;
     }
 
     public JMenuItem getHelp(){
@@ -214,6 +222,10 @@ public class Gui extends JPanel{
 
     public JPanel getEast() {
         return this.pnlEast;
+    }
+
+    public JCheckBox getChkRecord(){
+        return this.chkRecord;
     }
 
     public JPanel getFilterPanel() {
@@ -409,7 +421,7 @@ public class Gui extends JPanel{
         ImageIcon path2 = new ImageIcon("resources/stamp.gif");
         stamp.setIcon(path2);
 
-        btnCloseRender = new JButton("Generate Render (Closes Sim)");
+        btnCloseRender = new JButton("Record");
 
         btnCloseRender.setVisible(false);
         btnCloseRender.setBackground(new Color(44, 105, 122));
@@ -417,8 +429,11 @@ public class Gui extends JPanel{
         btnBack.setVisible(false);
         btnBack.setBackground(Color.RED);
 
+        chkRecord = new JCheckBox("Record at Start?");
+        chkRecord.setVisible(false);
+
         pnlSouth.add(stamp);
-        
+        pnlSouth.add(chkRecord);
         pnlSouth.add(btnFire);
         //
         JPanel pnlFirebreak = new JPanel();
@@ -441,11 +456,16 @@ public class Gui extends JPanel{
         
         btnEndSession = new JButton("End Session");
         btnEndSession.setVisible(false);
+        
+        playR = new JButton("Play");
+        playR.setVisible(false);
 
         scrubber = new JSlider();
         //scrubber.setMaximum(1000);
         scrubber.setEnabled(false);
         scrubber.setVisible(false);
+
+        pnlSouth.add(playR);
         pnlSouth.add(btnEndSession);
         pnlSouth.add(scrubber);
         
@@ -491,7 +511,8 @@ public class Gui extends JPanel{
         // ###
         spdSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
         spdSlider.setMaximum(5);
-        spdSlider.setMinimum(1);
+        //spdSlider.setMinimum(1);\
+        spdSlider.setMinimum(5);
         lblSpeed = new JLabel("Simulation Speed: x1");
 
         search = new JTextField(20);
