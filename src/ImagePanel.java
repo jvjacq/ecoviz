@@ -442,7 +442,7 @@ public class ImagePanel extends JPanel{
 				}
 			}
 		}
-		System.out.println(circles);
+		//System.out.println(circles);
 		return img;
 	}
 
