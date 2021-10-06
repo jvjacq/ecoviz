@@ -25,14 +25,13 @@ public class JUnitTests {
 		PlantLayer canopyLayer = new PlantLayer();
 		PlantLayer plantLayer = new PlantLayer();
 
-
 		String testSFile = "data/test-256.spc.txt";
 		String testCFile = "data/test-256_canopy.pdb";
 		String testUFile = "data/test-256_undergrowth.pdb";
 		String testElvFile = "data/S6000-6000-256.elv";
 
 		FileController fileController = new FileController();
-
+		
 		//readElevation
 		fileController.readElevation(terrain, testElvFile);
 
@@ -48,6 +47,22 @@ public class JUnitTests {
 
 		//readUndergrowth
 		fileController.readLayer(plantLayer, testUFile, false);
+
+		//compareAndSetMaxHeight
+		FileController.compareAndSetMaxHeight(1000.0f);
+		boolean correct =false;
+		if (1000.0f == FileController.getMaxHeight()){
+			correct = true;
+		}
+		assertTrue(correct);
+
+		//compareAndSetMaxRadius
+		FileController.compareAndSetMaxRadius(1000.0f);
+		boolean correct2 =false;
+		if (1000.0f == FileController.getMaxRadius()){
+			correct2 = true;
+		}
+		assertTrue(correct2);
 
 	}
 
