@@ -85,6 +85,7 @@ public class Gui extends JPanel{
     private JSlider radSlider;
     private JCheckBox chkSelectRadius;
     private JSlider scrubber;
+    private JLabel mousex, mousey;
 
 
     //private JSlider sdrViewRadius; 
@@ -354,6 +355,11 @@ public class Gui extends JPanel{
         return sliderList;
     }
 
+    public void setMousePositions(int x, int y){
+        this.mousex.setText(" x: " + x);
+        this.mousey.setText(" y: " + y);
+    }
+
     public Gui() {
         delay = 75; // default
         // canopy=c;
@@ -443,9 +449,9 @@ public class Gui extends JPanel{
         pnlSouth.add(btnFire);
         //
         JPanel pnlFirebreak = new JPanel();
-
+        pnlFirebreak.setOpaque(false);
         pnlFirebreak.setLayout(new GridLayout(0,2));
-        chkFirebreak = new JCheckBox("");
+        chkFirebreak = new JCheckBox("Add Firebreak");
         //chkFirebreak.setEnabled(false);
         chkFirebreak.setVisible(false);
         btnUndo = new JButton("Undo");
@@ -783,6 +789,15 @@ public class Gui extends JPanel{
         mb.add(m1);
         mb.add(m2);
         mb.add(m3);
+
+        mousex = new JLabel(" x:   ");
+        mousey = new JLabel(" y:   ");
+        JPanel pnlPos = new JPanel();
+        pnlPos.setOpaque(false);
+        pnlPos.setLayout(new GridLayout(0,2));
+        pnlPos.add(mousex);
+        pnlPos.add(mousey);
+        mb.add(pnlPos);
 
         // ======================================================================
         // Adding all to the Frame (ECOVIZ):

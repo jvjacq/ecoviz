@@ -61,6 +61,7 @@ public class ImagePanel extends JPanel{
 		this.selectRad = -1;
 	}
 
+	//Accessor methods
 	public int getStartX(){
 		return this.startPoint.x;
 	}
@@ -239,7 +240,7 @@ public class ImagePanel extends JPanel{
 	//========================================================================
     //      Create the colourful circles
     //========================================================================
-    public void derivePlants(){
+    /*public void derivePlants(){
 		setPlantsInView(this.plantsInView.length);
 		//int dimx = Math.round(Terrain.getDimX()*scale);
 		//int dimy = Math.round(Terrain.getDimY()*scale);
@@ -286,7 +287,7 @@ public class ImagePanel extends JPanel{
 		this.zoomPlants = img;
 		//
 		System.out.println(circles);      
-	}
+	}*/
 
 	//========================================================================
     //      Overide Paint Component of the Panel:
@@ -358,7 +359,11 @@ public class ImagePanel extends JPanel{
 	public void deriveImage(){
 		circles = 0;
 		if(zoomMultiplier == 1.0 && prevZoomMultiplier == 1.0){
-			derivePlants();
+			dimX = Math.round(Terrain.getDimX());
+			dimY = Math.round(Terrain.getDimY());
+			canopy = zoomPlants(0,0,dimX,dimY);
+			zoomPlants = canopy;
+			//derivePlants();
 			//graphics2d.drawImage(fire, 0, 0, null);	
 		}else{
 			zoomTerrain = terrain.getSubimage(topleftx, toplefty, newDimX, newDimY);
@@ -420,7 +425,8 @@ public class ImagePanel extends JPanel{
 					int newx = (int)Math.round((x)*zoomMultiplier- tlx*zoomMultiplier) ;
 					int newy = (int)Math.round((y)*zoomMultiplier- tly*zoomMultiplier) ;
 					//imgGraphics.fillOval(newx,newy,(int)Math.round(rad*2*zoomMultiplier),(int)Math.round(rad*2*zoomMultiplier));
-					int iRad = (int)Math.round(rad*zoomMultiplier) + 1;
+					circles++;
+					int iRad = (int)Math.round(rad*zoomMultiplier);
 					for(int j = newy - iRad; j < (newy+iRad+1); ++j){
 						for(int i = newx - iRad; i < (newx+iRad+1); ++i){
 							if (j < dimX && j > 0 && i < dimY && i > 0) {
@@ -436,6 +442,7 @@ public class ImagePanel extends JPanel{
 				}
 			}
 		}
+		//System.out.println(circles);
 		return img;
 	}
 
