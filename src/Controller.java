@@ -663,6 +663,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.deriveImage();
         updateFilterSpeciesCounts();
         image.repaint();
+        //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
 
     }
 
@@ -679,6 +680,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.deriveImage();
         updateFilterSpeciesCounts();
         image.repaint();
+        //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
     }
 
     public void resetLayerFilters() {
@@ -716,6 +718,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.deriveImage();
         updateFilterSpeciesCounts();
         image.repaint();
+        //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
         
     }
 
@@ -737,6 +740,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.deriveImage();
         updateFilterSpeciesCounts();
         image.repaint();
+        //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
     }
 
     public int getViewRadius(){
@@ -757,6 +761,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.displayPlant(selected, getViewRadius());
         image.deriveImage();
         image.repaint();
+        //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
     }
 
     public void updateFireGrid(){
@@ -850,6 +855,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             }
             image.deriveImage();
             image.repaint();
+            //gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
         }
     }
 
@@ -1057,6 +1063,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             image.displayPlant(selected, getViewRadius());
             image.deriveImage();
             image.repaint();
+            gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
         }
     }
 
@@ -1085,6 +1092,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                 
             }
             image.repaint();
+            gui.getMini().setZone(image.getTLX(), image.getTLY(), image.getNewDimX(), image.getNewDimY());
         }		
 	}
 
@@ -1102,7 +1110,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
                     try{
                         Thread.sleep(0);
                     }catch(InterruptedException e){
-                        System.out.println("Mouse exited");
+                        //System.out.println("Mouse exited");
                         gui.setMousePositions(0,0);
                         break;
                     }
