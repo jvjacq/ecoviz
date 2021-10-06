@@ -2,24 +2,11 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+
 
 public class JUnitTests {
 
@@ -41,6 +28,16 @@ public class JUnitTests {
 	@Test //Incomplete
 	public void testFireBreak(){
 		//Class : FireBreak.java
+
+		ArrayList<Firebreak> breaklist;
+		ArrayList<int[]> region;
+		int minX, maxX, minY, maxY;
+		ArrayList<Boolean> layers;
+		ArrayList<int[]> ids;
+
+		Firebreak fireBreak = new Firebreak();
+
+
 	}
 
 	@Test
@@ -64,7 +61,6 @@ public class JUnitTests {
 	
 		// FireSim Controls:
 		JCheckBox[] filterlist = {new JCheckBox("filterList")};
-		JCheckBox[] filterlistUpdated = {new JCheckBox("filterList"), new JCheckBox("filterName")};
 		int mousePosX = 0;
 		int mousePosY = 0;
 
@@ -93,9 +89,9 @@ public class JUnitTests {
 			testGui.setTallest(tallestString);
 			testGui.setAvg(averageString);
 			testGui.setNumber(numberString);
-			testGui.exportView();
+			//testGui.exportView();
 			testGui.changeTheme(themeNumber);
-			testGui.showChooser();
+			//testGui.showChooser();
 
 			//Getter methods
 			if (filterlist == testGui.getFilterList()) assertEquals(1, 1);
@@ -126,8 +122,6 @@ public class JUnitTests {
 			assertNotNull(testGui.getMenu3());
 			assertNotNull(testGui.getMenu4());
 			assertNotNull(testGui.getMenu5());
-			assertNotNull(testGui.getMenu6());
-			assertNotNull(testGui.getMenu7());
 			assertNotNull(testGui.getCloseRender());
 			assertNotNull(testGui.getChkShowPath());
 			assertNotNull(testGui.getChkShowBurnt());
@@ -170,7 +164,15 @@ public class JUnitTests {
 		boolean released = true;
 		boolean zoom = true;
 		double multiplier = 2.0;
+		double prevMultiplier = 4.0;
+		int tlx = 5;
+		int tly = 5;
+		int newX = 10;
+		int newY = 10;
+		int size = 10;
+		Color speciesColour = new Color(10, 20, 30, 1);
 		BufferedImage fire = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage burnt = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
 		BufferedImage terrain = new BufferedImage(6, 6, BufferedImage.TYPE_INT_ARGB);
 		BufferedImage canopy = new BufferedImage(7, 7, BufferedImage.TYPE_INT_ARGB);
 		BufferedImage undergrowth = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB);
@@ -183,10 +185,19 @@ public class JUnitTests {
 			testImagePanel.setReleased(released);
 			testImagePanel.setZoom(zoom);
 			testImagePanel.setZoomMult(multiplier);
+			testImagePanel.setPrevZoomMult(prevMultiplier);
+			testImagePanel.setPlantsInView(size);
+			testImagePanel.setSpeciesColor(speciesColour);
 			testImagePanel.setFire(fire);
-			testImagePanel.setTerrain(terrain);
-			testImagePanel.setCanopy(canopy);
-			testImagePanel.setUndergrowth(undergrowth);
+			testImagePanel.setBurnt(burnt);
+			testImagePanel.setFireRender(fire);
+			testImagePanel.setBurntRender(burnt);
+			testImagePanel.reset();
+			testImagePanel.resetDetails();
+			testImagePanel.deriveImage();
+			testImagePanel.calculateView();
+			//testImagePanel.displayPlant();
+			//testImagePanel.drawFirebreak(fb);
 
 			int testStartX = testImagePanel.getStartX();
 				assertEquals(testStartX, point.x);
@@ -206,14 +217,34 @@ public class JUnitTests {
 			BufferedImage testUndergrowth = testImagePanel.getUndergrowth();
 				assertEquals(testUndergrowth, undergrowth);
 
-			/*
-			public void deriveImg(Terrain terrain){
-			public void derivePlants(){
-			public void paintComponent(Graphics g){
-			public void exportImage(String nm){
-			public void setShowCanopy(boolean b){
-			public void setShowUnderGrowth(boolean b){
-			*/
+
+				testImagePanel.getTerrain();
+			
+				testImagePanel.getCanopy();
+			
+				testImagePanel.getUndergrowth();
+				testImagePanel.getTLX();
+			
+				testImagePanel.getTLY();
+			
+				testImagePanel.getNewDimX();
+			
+				testImagePanel.getNewDimY();
+			
+				testImagePanel.getDragger();
+			
+				testImagePanel.getPlantsInView();
+			
+				testImagePanel.getShowCanopy();
+			
+				testImagePanel.getShowUndergrowth();
+			
+			assertNotNull(testImagePanel.zoomPlants(tlx, tly, newX, newY));
+			// assertEquals(false,testImagePanel.plantInRect(int x, int y, double rad, int tlx, int tly, int w, int h));
+			// testImagePanel.paintComponent(Graphics g);
+			// testImagePanel.exportImage(String nm);
+			// testImagePanel.setShowCanopy(boolean b);
+			// testImagePanel.setShowUnderGrowth(boolean b);
 		
 	}
 
@@ -348,7 +379,6 @@ public class JUnitTests {
 		Species species3 = new Species(2, "common three", "latin three", colour3);
 		Species[] allSpecies = {species1, species2, species3};
 		int numSpecies = 3;
-		boolean filter = true;
 		
 		PlantLayer plantLayerTest = new PlantLayer();
 			plantLayerTest.setNumSpecies(numSpecies);
@@ -377,12 +407,6 @@ public class JUnitTests {
 			plantLayerTest.setPlantAtLocation(150, 150, 1, 1);
 			int[] testPlantAtLocation3 = plantLayerTest.getPlantAtLocation(50, 50);
 				assertArrayEquals(testPlantAtLocation3, plantAtLocation3);
-			boolean testFilter = plantLayerTest.getFilter();
-				assertEquals(testFilter, filter);
-			plantLayerTest.setFilter(!filter);
-			testFilter = plantLayerTest.getFilter();
-				assertEquals(testFilter, !filter);
-			plantLayerTest.setFilter(!filter);
 			ArrayList<Plant> testPlantList = PlantLayer.getPlantList();
 				assertEquals(testPlantList, plantList);
 			Species[] testAllSpecies = PlantLayer.getAllSpecies();
