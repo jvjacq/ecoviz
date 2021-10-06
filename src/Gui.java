@@ -881,6 +881,7 @@ public class Gui extends JPanel{
         //popup.setIconImage(frameIcon);
        // }catch(Exception e){}
         String name = JOptionPane.showInputDialog(popup, "Save As:");
+        if(name.length() == 0) return;
         mainPanel.exportImage(name);
     }
 
