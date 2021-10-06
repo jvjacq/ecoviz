@@ -621,7 +621,7 @@ public class Gui extends JPanel{
         speciesToggle = new JCheckBox("Full Details");
         speciesToggle.setEnabled(false);
         speciesToggle.setSelected(false);
-        btnCCSpecies = new JButton("Species colour");
+        btnCCSpecies = new JButton("Color Fill");
         JPanel pnlleft = new JPanel();
         pnlleft.setOpaque(false);
         pnlleft.setLayout(new GridLayout(0,1));
