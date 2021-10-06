@@ -258,7 +258,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getFireBtn().setVisible(false);
         gui.getStamp().setIcon(pauseImg);
 
-        gui.getScrubber().setMaximum(burntFrames.size()-1);
+        gui.getScrubber().setMaximum(burntFrames.size()-2);
         gui.getScrubber().setValue(0);
 
         record=true;
