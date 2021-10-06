@@ -225,6 +225,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     public void closeScrub(){
         if (playing){playRButton();}
         gui.getScrubSpeed().setEnabled(false);
+        gui.getBackBtn().setEnabled(true);
 
         iterate.cancel();
         playing=false;
@@ -252,7 +253,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             record=false;
             captureTimer.schedule(task3,0,125);
             gui.getCloseRender().setText("End Record (closes session)");
-            gui.getCloseRender().setBackground(new Color(156, 58, 34));
+            gui.getBackBtn().setEnabled(false);
+            gui.getCloseRender().setBackground(new Color(112, 73, 102));
         } else{
             
             task3.cancel();
