@@ -31,7 +31,6 @@ public class Gui extends JPanel{
     private JMenuItem i1,i2,i3,a1,a2,a3,a4,h1;
     private JLabel wDirLbl, wSpdLbl;
     private JSlider wDirSlider, wSpdSlider, spdSlider;
-    private JLabel plantImage;
     private ImagePanel mainPanel;
     private JButton btnFire;
     private JButton btnBack;
@@ -76,6 +75,7 @@ public class Gui extends JPanel{
     private JPanel pnlSouth;
     private JButton btnCloseRender;
     private JPanel pnlWest;
+    private JButton btnEnlarge;
 
     //Filter Section:
     private JLabel shTitle;
@@ -106,12 +106,12 @@ public class Gui extends JPanel{
         return this.playR;
     }
 
-    public JMenuItem getHelp(){
-        return this.h1;
+    public JButton getEnlarge(){
+        return this.btnEnlarge;
     }
 
-    public JLabel getPlantImage(){
-        return this.plantImage;
+    public JMenuItem getHelp(){
+        return this.h1;
     }
 
     public JLabel getStamp(){
@@ -622,12 +622,15 @@ public class Gui extends JPanel{
         speciesToggle.setEnabled(false);
         speciesToggle.setSelected(false);
 
-        plantImage = new JLabel();
-        plantImage.setVisible(false);
+        JPanel pnlImage = new JPanel();
+
+        btnEnlarge = new JButton();
+        btnEnlarge.setVisible(false);
         //plantPath = new ImageIcon("resources/North.png");
         //compass.setIcon(path3);
-        pnlAll.add(plantImage);
         pnlAll.add(speciesToggle);
+        pnlImage.add(btnEnlarge);
+        pnlAll.add(pnlImage);
 
         pnlDetails.add(pnlAll);
 
@@ -638,7 +641,7 @@ public class Gui extends JPanel{
 
         //Configurations:
         compass = new JLabel();
-        path3 = new ImageIcon("resources/North.png");
+        path3 = new ImageIcon("resources/compass/North.png");
         compass.setIcon(path3);
         //
         pnlConfig = new JPanel();

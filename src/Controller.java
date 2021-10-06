@@ -11,6 +11,8 @@ import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JSlider;
 
 public class Controller implements MouseWheelListener, MouseListener, MouseMotionListener{
@@ -36,6 +38,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     private Firebreak fb;
     private ArrayList<BufferedImage> pathFrames,burntFrames;
     private int frames;
+    private String nm;
     //private boolean fireReset;
     private boolean firebreakMode;
     private boolean playing;
@@ -85,6 +88,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         gui.getMenu4().addActionListener(e -> setGUItheme(0));
         gui.getMenu5().addActionListener(e -> setGUItheme(1));
         gui.getHelp().addActionListener(e -> goHelp());
+        gui.getEnlarge().addActionListener(e -> enlargedImage());
         gui.getCloseRender().addActionListener(e -> ScrubbingUI());
         gui.getScrubber().addChangeListener(e -> iterateImages());
         gui.getEndSession().addActionListener(e -> closeScrub());
@@ -109,6 +113,40 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.addMouseWheelListener(this);
         initView();
     }
+
+    public void enlargedImage(){
+      JFrame enlargedImage = new JFrame();
+      enlargedImage.setVisible(true);
+      JLabel imgLabel = new JLabel();
+
+      try{
+      ImageIcon path = new ImageIcon("resources/plants/enlarged"+nm+".png");
+      imgLabel.setIcon(path);
+      enlargedImage.add(imgLabel);
+      enlargedImage.pack();
+      }
+      catch (Exception e){
+
+      }
+
+
+
+    }
+
+    public void setPlantImage(String name){
+        name = name.replace("/","");
+        name = name.replace(" ","");
+        nm = name;
+
+        try{
+            System.out.println("Showing Image");
+        ImageIcon path = new ImageIcon("resources/plants/"+nm+".png");
+       //gui.getPlantImage().setIcon(path);
+        gui.getEnlarge().setIcon(path);
+
+        } catch (Exception e){        }
+    }
+
 
     public void removeFirebreak(){
         int latest = Firebreak.getBreakList().size() -1;
@@ -813,7 +851,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void moveCompass(String direction){
-        String path = "resources/" + direction + ".png";
+        String path = "resources/compass/" + direction + ".png";
         gui.setCompassPath(path);
         gui.setCompassIcon();
     }
@@ -832,39 +870,25 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }
     }
 
-
-
     public void speciesDetails(){
         if(selected != null){
             if(gui.getSpeciesToggle().isSelected()){
                 int id = selected.getSpeciesID();
                 changeSpeciesColour(id);
                 setSpeciesDesc(id);
-                gui.getPlantImage().setVisible(true);
+                //gui.getPlantImage().setVisible(true);
+                gui.getEnlarge().setVisible(true);
 
             }else{
-                gui.getPlantImage().setVisible(false);
+                //gui.getPlantImage().setVisible(false);
+                gui.getEnlarge().setVisible(false);
+
 
                 setPlantDesc();
                 resetSpeciesColours();
             }
             image.deriveImage();
             image.repaint();
-        }
-    }
-
-    public void setPlantImage(String name){
-        name = name.replace("/","");
-        name = name.replace(" ","");
-
-        System.out.println(name);
-
-        try{
-            System.out.println("Showing Image");
-        ImageIcon path = new ImageIcon("resources/plants/"+name+".png");
-        gui.getPlantImage().setIcon(path);
-        } catch (Exception e){
-
         }
     }
 
@@ -963,7 +987,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        gui.getPlantImage().setVisible(false);
+        //gui.getPlantImage().setVisible(false);
+        gui.getEnlarge().setVisible(false);
         gui.getSpeciesToggle().setEnabled(true);
         Point click = e.getPoint();
         int xPos =0;
