@@ -1,10 +1,9 @@
 /*
 * File: Terrain.java
+* MVC: Model
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 2.0
-* Created: +++++++++++ Owen insert date here +++++++
-* Last edited: 09/09/2021
-* Status: In progress
+* Last edited: 06/10/2021
+* Status: Complete
 */
 
 public class Terrain {
