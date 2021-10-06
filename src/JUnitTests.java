@@ -1,5 +1,4 @@
 import static org.junit.Assert.*;
-import org.graalvm.compiler.hotspot.stubs.NewArrayStub;
 import org.junit.Test;
 import java.awt.Color;
 import java.awt.Point;
@@ -87,8 +86,24 @@ public class JUnitTests {
 		
 	}
 
-	@Test //Incomplete
+	@Test
 	public void testMiniMap(){
+		//Class : MiniMap.java
+
+		ImagePanel image = null;
+		int tlx = 10;
+		int tly = 10;
+		int dimX = 10;
+		int dimY = 10;
+
+		try {
+			MiniMap testMap = new MiniMap(image);
+			testMap.setZone(tlx, tly, dimX, dimY);
+				assertEquals(1, 1);
+		} catch (Exception e) {
+				assertEquals(1, 0);
+		}
+
 	}
 
 	@Test
@@ -104,6 +119,9 @@ public class JUnitTests {
 		boolean canopy = true;
 		boolean layer = true;
 		boolean filter = true;
+		boolean fHeight = true;
+		boolean fCanopy = true;
+		int inFirebreak = 0;
 		
 		Plant plantTest = new Plant(speciesID, plantID, posX, posY, (float)height, (float)canopyRadius, canopy);
 			int testSpeciesID = plantTest.getSpeciesID();
@@ -124,22 +142,70 @@ public class JUnitTests {
 				assertEquals(testLayer, layer);
 			boolean testFilter = plantTest.getFilter();
 				assertEquals(testFilter,filter);
-				
-			//Test Filter Boolean:
+			boolean testFHeight = plantTest.getHeightFlag();
+				assertEquals(testFHeight,fHeight);
+			boolean testFCanopy = plantTest.getCanopyFlag();
+				assertEquals(testFCanopy,fCanopy);
+			int testInFireBreak = plantTest.isInFireBreak();
+				assertEquals(testInFireBreak, inFirebreak);
 			boolean testNewCanopy = !testCanopy;
 				assertEquals(testNewCanopy,false);
 			boolean testNewLayer = !testFilter;
 				assertEquals(testNewLayer,false);
-			plantTest.toggleFilter(); //Should be setting to false
+			plantTest.setFilter(false); //Should be setting to false
 			boolean testNewFilter = plantTest.getFilter();
 				assertEquals(testNewFilter,false);
+
+			int newPosX = 20;
+			plantTest.setPosX(newPosX);
+			int newPosY = 30;
+			plantTest.setPosY(newPosY);
+			boolean newFHeight = false;
+			plantTest.setHeightFlag(newFHeight);
+			boolean newFCanopy = false;
+			plantTest.setCanopyFlag(newFCanopy);
+			int newInFirebreak = 0;
+			boolean newFilter = false;
+			plantTest.setFilter(newFilter);
+			boolean newCanopy = false;
+			boolean newLayer = false;
+			plantTest.setLayer(newLayer);
+
+			int testNewX = plantTest.getX();
+				assertEquals(testNewX, newPosX);
+			int testNewY = plantTest.getY();
+				assertEquals(testNewY, newPosY);
+			boolean testNewFHeight = plantTest.getHeightFlag();
+				assertEquals(testNewFHeight,newFHeight);
+			boolean testNewFCanopy = plantTest.getCanopyFlag();
+				assertEquals(testNewFCanopy,newFCanopy);
+			int testNewInFireBreak = plantTest.isInFireBreak();
+				assertEquals(testNewInFireBreak, newInFirebreak);
+
+			testNewCanopy = plantTest.getCanopyFlag();
+				assertEquals(testNewCanopy,newCanopy);
+			testNewLayer = plantTest.getLayer();
+				assertEquals(testNewLayer, newLayer);
+			plantTest.setFilter(newFilter);
+			testNewFilter = plantTest.getFilter();
+				assertEquals(testNewFilter, plantTest.getFilter());
+
+			int testInFireBreakA = plantTest.isInFireBreak();
+			plantTest.incFirebreak();
+			int testInFireBreakB = plantTest.isInFireBreak();
+				assertEquals(testInFireBreakA + 1, testInFireBreakB);
+			testInFireBreakA = plantTest.isInFireBreak();
+			plantTest.decFirebreak();
+			testInFireBreakB = plantTest.isInFireBreak();
+				assertEquals(testInFireBreakA -1, testInFireBreakB);
+
 	}
 
-	@Test //Incomplete
+	@Test
 	public void testPlantLayer() {
 		//Class : PlantLayer.java
 		
-		int[][][] idLocations = {{{5,5,2},{10,10,2},{15,15,2}}};
+		int[][][] idLocations;
 		Plant testPlant1 = new Plant(1, 1, 50, 50, (float)10, (float)10, true);
 		Plant testPlant2 = new Plant(2, 2, 100, 100, (float)10, (float)10, true);
 		Plant testPlant3 = new Plant(3, 3, 150, 150, (float)10, (float)10, false);
@@ -147,37 +213,46 @@ public class JUnitTests {
 		Color colour1 = new Color(10, 20, 30, 1);
 		Color colour2 = new Color(20, 30, 40, 1);
 		Color colour3 = new Color(30, 40, 50, 1);
-		Species species1 = new Species(1, "common one", "latin one", colour1);
-		Species species2 = new Species(2, "common two", "latin two", colour2);
-		Species species3 = new Species(3, "common three", "latin three", colour3);
+		Species species1 = new Species(0, "common one", "latin one", colour1);
+		Species species2 = new Species(1, "common two", "latin two", colour2);
+		Species species3 = new Species(2, "common three", "latin three", colour3);
 		Species[] allSpecies = {species1, species2, species3};
-		int numSpecies = 10;
+		int numSpecies = 3;
 		boolean filter = true;
 		
 		PlantLayer plantLayerTest = new PlantLayer();
 			plantLayerTest.setNumSpecies(numSpecies);
-			plantLayerTest.setFilter(filter);
 			plantLayerTest.setLocations(500, 500);
 			plantLayerTest.removePlant(50, 50);
 			PlantLayer.setPlantList();
 			PlantLayer.setAllSpecies(allSpecies);
-			PlantLayer.addSpecies(new Species(0, "common name four", "latin name four", colour1));
+			PlantLayer.addSpecies(species1);
+			PlantLayer.addSpecies(species2);
+			PlantLayer.addSpecies(species3);
 			PlantLayer.addPlant(testPlant1);
-			plantLayerTest.setLayer(idLocations);
-
-			int[][][] testLocations = plantLayerTest.getLocations();
-				if (testLocations == idLocations)
-					assertEquals(1, 1);
-				else
-					assertEquals(1, 0);
+			PlantLayer.addPlant(testPlant2);
+			PlantLayer.addPlant(testPlant3);
+			
 			int testNumSpecies = plantLayerTest.getNumSpecies();
 				assertEquals(testNumSpecies, numSpecies);
-			int[] plantAtLocation = {5,5,1,1};
-			plantLayerTest.setPlantAtLocation(5, 5, 1, 1);
-			int[] testPlantAtLocation = plantLayerTest.getPlantAtLocation(5, 5);
-				assertArrayEquals(testPlantAtLocation, plantAtLocation);
+			int[] plantAtLocation1 = {1,1};
+			plantLayerTest.setPlantAtLocation(50, 50, 1, 1);
+			int[] testPlantAtLocation1 = plantLayerTest.getPlantAtLocation(50, 50);
+				assertArrayEquals(testPlantAtLocation1, plantAtLocation1);
+			int[] plantAtLocation2 = {1,1};
+			plantLayerTest.setPlantAtLocation(100, 100, 1, 1);
+			int[] testPlantAtLocation2 = plantLayerTest.getPlantAtLocation(50, 50);
+				assertArrayEquals(testPlantAtLocation2, plantAtLocation2);
+			int[] plantAtLocation3 = {1,1};
+			plantLayerTest.setPlantAtLocation(150, 150, 1, 1);
+			int[] testPlantAtLocation3 = plantLayerTest.getPlantAtLocation(50, 50);
+				assertArrayEquals(testPlantAtLocation3, plantAtLocation3);
 			boolean testFilter = plantLayerTest.getFilter();
 				assertEquals(testFilter, filter);
+			plantLayerTest.setFilter(!filter);
+			testFilter = plantLayerTest.getFilter();
+				assertEquals(testFilter, !filter);
+			plantLayerTest.setFilter(!filter);
 			ArrayList<Plant> testPlantList = PlantLayer.getPlantList();
 				assertEquals(testPlantList, plantList);
 			Species[] testAllSpecies = PlantLayer.getAllSpecies();
@@ -185,44 +260,58 @@ public class JUnitTests {
 					assertEquals(1, 1);
 				else
 					assertEquals(1, 0);
-			Species testPlantLayerSpecies = PlantLayer.getSpeciesAtID(1);
-				if (testPlantLayerSpecies == species1)
+			Species testPlantLayerSpecies1 = PlantLayer.getSpeciesAtID(0);
+				if (testPlantLayerSpecies1 == species1)
 					assertEquals(1, 1);
 				else
 					assertEquals(1, 0);
-
+			Species testPlantLayerSpecies2 = PlantLayer.getSpeciesAtID(1);
+			if (testPlantLayerSpecies2 == species2)
+				assertEquals(1, 1);
+			else
+				assertEquals(1, 0);
+			Species testPlantLayerSpecies3 = PlantLayer.getSpeciesAtID(2);
+			if (testPlantLayerSpecies3 == species3)
+				assertEquals(1, 1);
+			else
+				assertEquals(1, 0);
 	}
 
 	@Test
 	public void testSimController() {
 		//Class : SimController.java
 		
-		double[][] elevations = new double[][] {{1.1,1.2},{1.3,1.4}};
-		int dimX = 2;
-		int dimY = 2;
-		double gridSpacing = 2.1;
-		double latitude = 3.2;
+		Gui gui = new Gui();
+		Terrain terrain = new Terrain();
+        PlantLayer undergrowth = new PlantLayer();
+        PlantLayer canopy = new PlantLayer();
+        Controller controller = new Controller(gui, terrain, undergrowth, canopy);
+        
 
-		Terrain terrainTest = new Terrain();
-			terrainTest.setElevations(elevations);
-			Terrain.setDimX(dimX);
-			Terrain.setDimY(dimY);
-			terrainTest.setGridSpacing((float)gridSpacing);
-			terrainTest.setLatitude((float)latitude);
+		Gui testGui = new Gui();
+			if (gui == testGui) assertEquals(1, 1);
+		Terrain testTerrain = new Terrain();
+			if (terrain == testTerrain) assertEquals(1, 1);
+		PlantLayer testUndergrowth = new PlantLayer();
+			if (undergrowth == testUndergrowth) assertEquals(1, 1);
+		PlantLayer testCanopy = new PlantLayer();
+			if (canopy == testCanopy) assertEquals(1, 1);
+		Controller testController = new Controller(gui, terrain, undergrowth, canopy);
+			if (controller == testController) assertEquals(1, 1);
 
-			double[][] testElevations = terrainTest.getElevations(); //assertEquals deprecated for objects
-				if (testElevations == elevations)
-					assertEquals(1, 1);
-				else
-					assertEquals(1, 0);
-			int testDimX = Terrain.getDimX();
-				assertEquals(testDimX,dimX);
-			int testDimY = Terrain.getDimY();
-				assertEquals(testDimY,dimY);
-			double testGridSpacing = terrainTest.getGridSpacing();
-				assertEquals((int)testGridSpacing,(int)gridSpacing); //assertEquals deprecated for double
-			double testLatitude = terrainTest.getLatitude();
-				assertEquals((int)testLatitude,(int)latitude); //assertEquals deprecated for double
+		try {
+			controller.initController();
+			assertEquals(1, 1);
+		} catch (Exception e) {
+			assertEquals(1, 0);
+		}
+		try {
+			testController.initController();
+			assertEquals(1, 1);
+		} catch (Exception e) {
+			assertEquals(1, 0);
+		}
+
 	}
 
 	@Test
@@ -245,6 +334,7 @@ public class JUnitTests {
 		new Plant(5, 5, 250, 250, (float)11.1, (float)2.50, false),
 		new Plant(6, 6, 350, 350, (float)44.4, (float)7.89, false)};
 		Color colour = new Color(10, 20, 30, 1);
+		Color prevColour = new Color(10, 20, 30, 1);
 		boolean filter = true;
 		
 		Species testSpecies = new Species(speciesID, commonName, latinName, colour);
@@ -282,6 +372,8 @@ public class JUnitTests {
 					assertEquals(1, 0);					
 			Color testColour = testSpecies.getColour();
 				assertEquals(testColour, colour);
+			Color testPrevColour = testSpecies.getPrevColour();
+				assertEquals(testPrevColour, prevColour);
 			boolean testFilter = testSpecies.getFilter();
 				assertEquals(testFilter, filter);	
 			
@@ -321,6 +413,8 @@ public class JUnitTests {
 				assertEquals(testNewNumPlants,newNumPlants);		
 			Color testNewColour = testSpecies.getColour();
 				assertEquals(testNewColour, newColour);
+			Color testNewPrevColour = testSpecies.getPrevColour();
+				assertEquals(testNewPrevColour, prevColour);
 			boolean testNewFilter = testSpecies.getFilter();
 				assertEquals(testNewFilter, newFilter);
 
@@ -333,6 +427,8 @@ public class JUnitTests {
 		double[][] elevations = new double[][] {{1.1,1.2},{1.3,1.4}};
 		int dimX = 2;
 		int dimY = 2;
+		int baseX = 1;
+		int baseY = 1;
 		double gridSpacing = 2.1;
 		double latitude = 3.2;
 
@@ -340,6 +436,8 @@ public class JUnitTests {
 			terrainTest.setElevations(elevations);
 			Terrain.setDimX(dimX);
 			Terrain.setDimY(dimY);
+			Terrain.setBaseX(baseX);
+			Terrain.setBaseY(baseY);
 			terrainTest.setGridSpacing((float)gridSpacing);
 			terrainTest.setLatitude((float)latitude);
 
@@ -352,56 +450,13 @@ public class JUnitTests {
 				assertEquals(testDimX,dimX);
 			int testDimY = Terrain.getDimY();
 				assertEquals(testDimY,dimY);
+			int testBaseX = Terrain.getBaseX();
+				assertEquals(testBaseX,baseX);
+			int testBaseY = Terrain.getBaseY();
+				assertEquals(testBaseY,baseY);
 			double testGridSpacing = terrainTest.getGridSpacing();
 				assertEquals((int)testGridSpacing,(int)gridSpacing); //assertEquals deprecated for double
 			double testLatitude = terrainTest.getLatitude();
 				assertEquals((int)testLatitude,(int)latitude); //assertEquals deprecated for double
-	}
-
-	@Test
-	public void testWind() {
-		//Class : Wind.java
-		
-		final double CONVERT = 0.621371;
-		double direction = 1.1;
-		double speed = 2.2;
-		double speedKPH = 2.2;
-		double speedMPH = 1.36702;
-
-		Wind windTest = new Wind();
-			windTest.setDirection(direction);
-			windTest.setSpeed(speed);
-
-			double testDirection = windTest.getDirection();
-				assertEquals((int)testDirection,(int)direction); //assertEquals deprecated for double
-			double testSpeedKPH = windTest.getSpeedKPH();
-				assertEquals((int)testSpeedKPH,(int)(speedKPH/2)); //assertEquals deprecated for double
-			double testSpeedMPH = windTest.getSpeedMPH();
-				assertEquals((int)testSpeedMPH,(int)(speedMPH/2*CONVERT)); //assertEquals deprecated for double
-
-			//Test Metric Boolean and Speed:
-			boolean testMetric1 = windTest.getMetric();
-			if (testMetric1 == true){
-				testSpeedKPH = windTest.getSpeedKPH();
-				double testSpeed = windTest.getSpeed();
-				assertEquals((int)testSpeedKPH,(int)(testSpeed));
-			}else{
-				testSpeedMPH = windTest.getSpeedMPH();
-				double testSpeed = windTest.getSpeed();
-				assertEquals((int)testSpeedMPH,(int)(testSpeed));				
-			}
-
-			windTest.toggleMetric(); //Should be alternating the boolean value
-			boolean testMetric2 = windTest.getMetric();
-				assertEquals(testMetric1,!testMetric2);
-			if (testMetric2 == true){
-				testSpeedKPH = windTest.getSpeedKPH();
-				double testSpeed = windTest.getSpeed();
-				assertEquals((int)testSpeedKPH,(int)(testSpeed));
-			}else{
-				testSpeedMPH = windTest.getSpeedMPH();
-				double testSpeed = windTest.getSpeed();
-				assertEquals((int)testSpeedMPH,(int)(testSpeed));				
-			}
 	}
 }
