@@ -7,6 +7,20 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 public class JUnitTests {
 
 	@Test //Incomplete
@@ -29,9 +43,120 @@ public class JUnitTests {
 		//Class : FireBreak.java
 	}
 
-	@Test //Incomplete
+	@Test
 	public void testGui(){
 		//Class : Gui.java
+
+		String windDirLabel = "windDirLabel";
+		String windSpdLabel = "windSpdLabel";
+		int windMax = 100;
+		int windSpeed = 50;
+		String speedLabel = "speedLabel";
+		String filterName = "filerName";
+		String speciesDetails = "speciesDetails";
+		String commonString = "commonString";
+		String latinString = "latinString";
+		String shortestString = "shortestString";
+		String tallestString = "tallestString";
+		String averageString = "averageString";
+		String numberString = "numberString";
+		int themeNumber = 1;
+	
+		// FireSim Controls:
+		JCheckBox[] filterlist = {new JCheckBox("filterList")};
+		JCheckBox[] filterlistUpdated = {new JCheckBox("filterList"), new JCheckBox("filterName")};
+		int mousePosX = 0;
+		int mousePosY = 0;
+
+	
+		Gui testGui = new Gui();
+
+			//Mutator methods
+			testGui.setFilterList(filterlist);
+			testGui.setChkMetric(); // True
+			testGui.setChkBurnt(); // True
+			testGui.setChkPath(); // True
+			testGui.setWindDirLbl(windDirLabel);
+			testGui.setCompassPath(windSpdLabel);
+			testGui.setCompassIcon();
+			testGui.setWindSpdLbl(windSpdLabel);
+			testGui.setWindSpdMax(windMax);
+			testGui.setWindSpd(windSpeed);
+			testGui.setSpeedLbl(speedLabel);
+			testGui.setMousePositions(mousePosX, mousePosY);
+			testGui.addFilter(filterName);
+			testGui.clearFilters();
+			testGui.setSpeciesDetails(speciesDetails);
+			testGui.setCommon(commonString);
+			testGui.setLatin(latinString);
+			testGui.setShortest(shortestString);
+			testGui.setTallest(tallestString);
+			testGui.setAvg(averageString);
+			testGui.setNumber(numberString);
+			testGui.exportView();
+			testGui.changeTheme(themeNumber);
+			testGui.showChooser();
+
+			//Getter methods
+			if (filterlist == testGui.getFilterList()) assertEquals(1, 1);
+			assertEquals(true, testGui.getChkMetric().isSelected());
+			assertEquals(true, testGui.getChkShowBurnt().isSelected());
+			assertEquals(true, testGui.getChkShowPath().isSelected());
+			assertEquals(windSpeed, testGui.getWindSpd());
+			assertNotNull(testGui.getEndSession());
+			assertNotNull(testGui.getEndSession());
+			assertNotNull(testGui.getPlayR());
+			assertNotNull(testGui.getEnlarge());
+			assertNotNull(testGui.getHelp());
+			assertNotNull(testGui.getStamp());
+			assertNotNull(testGui.getMain());
+			assertNotNull(testGui.getLoadFrame());
+			assertNotNull(testGui.getDelay());
+			assertNotNull(testGui.getFireBtn());
+			assertNotNull(testGui.getBackBtn());
+			assertNotNull(testGui.getRenderBtn());
+			assertNotNull(testGui.getResetBtn());
+			assertNotNull(testGui.getPauseBtn());
+			assertNotNull(testGui.getLoadBtn());
+			assertNotNull(testGui.getUndoBtn());
+			assertNotNull(testGui.getChkFirebreak());
+			assertNotNull(testGui.getChooser());
+			assertNotNull(testGui.getMenu1());
+			assertNotNull(testGui.getMenu2());
+			assertNotNull(testGui.getMenu3());
+			assertNotNull(testGui.getMenu4());
+			assertNotNull(testGui.getMenu5());
+			assertNotNull(testGui.getMenu6());
+			assertNotNull(testGui.getMenu7());
+			assertNotNull(testGui.getCloseRender());
+			assertNotNull(testGui.getChkShowPath());
+			assertNotNull(testGui.getChkShowBurnt());
+			assertNotNull(testGui.getChkUndergrowth());		
+			assertNotNull(testGui.getChkCanopy());
+			assertNotNull(testGui.getImage());
+			assertNotNull(testGui.getMini());
+			assertNotNull(testGui.getEast());
+			assertNotNull(testGui.getChkRecord());
+			assertNotNull(testGui.getFilterPanel());
+			assertNotNull(testGui.getTabPane());
+			assertNotNull(testGui.getRadSlider());
+			assertNotNull(testGui.getSpeciesToggle());
+			assertNotNull(testGui.getShortTitle());
+			assertNotNull(testGui.getTallTitle());
+			assertNotNull(testGui.getScrubber());
+			assertNotNull(testGui.getAvTitle());
+			assertNotNull(testGui.getHiHeight());
+			assertNotNull(testGui.getLoHeight());
+			assertNotNull(testGui.getHiRadius());
+			assertNotNull(testGui.getLoRadius());
+			assertNotNull(testGui.getChkSelectRadius());
+			assertNotNull(testGui.getCCSpecies());
+			assertNotNull(testGui.getMainPanel());
+			assertNotNull(testGui.getWindDir());
+			assertNotNull(testGui.getCompassPath());
+			assertNotNull(testGui.getWindSpd());
+			assertNotNull(testGui.getScrubSpeed());
+			assertNotNull(testGui.getSliderList());
 	}
 
 	@Test //Incomplete
