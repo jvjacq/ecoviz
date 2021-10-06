@@ -200,6 +200,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeScrub(){
+        if (playing){playRButton();}
         gui.getScrubSpeed().setEnabled(false);
 
         iterate.cancel();
@@ -313,9 +314,11 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         //Pass through the bufferedImage to render
         //System.out.println(gui.getScrubber().getValue());
+
+        try{
         image.setFire(pathFrames.get(gui.getScrubber().getValue()));
         image.setBurnt(burntFrames.get(gui.getScrubber().getValue()));
-        image.repaint();
+        image.repaint();}catch(Exception e){}
 
     }
 
@@ -426,7 +429,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void closeFireSim() {
-
+        gui.getChkRecord().setSelected(false);
         first=false;
         gui.getChkRecord().setVisible(false);
 
