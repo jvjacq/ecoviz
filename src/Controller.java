@@ -105,7 +105,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void closeScrub(){
         iterate.cancel();
-
+        playing=false;
         iterator.cancel();
         iterator.purge();
 
@@ -121,6 +121,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         image.repaint();
 
     }
+
+    
 
     public void ScrubbingUI(){
 
@@ -282,6 +284,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
     }
 
     public void openFireSim() {
+        gui.getChkRecord().setVisible(true);
         gui.getCloseRender().setEnabled(false);
 
         gui.getTabPane().setSelectedIndex(1);
@@ -306,6 +309,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
     public void closeFireSim() {
         first=false;
+        gui.getChkRecord().setVisible(false);
 
         gui.getCloseRender().setEnabled(false);
 
@@ -437,6 +441,8 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
         timer.schedule(task, 0, 1);
         timerDerive.schedule(task2,0,1);
+
+        if (gui.getChkRecord().isSelected()){ScrubbingUI();}
         //captureTimer.schedule(task3,0,50);
 
         gui.getRenderBtn().setEnabled(false);

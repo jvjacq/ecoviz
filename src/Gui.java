@@ -58,6 +58,7 @@ public class Gui extends JPanel{
     private JCheckBox[] filterlist;
     private JTabbedPane tabbedPane;
     private JCheckBox speciesToggle;
+    private JCheckBox chkRecord;
 
     private JButton playR;
     private String common;
@@ -212,6 +213,10 @@ public class Gui extends JPanel{
 
     public JPanel getEast() {
         return this.pnlEast;
+    }
+
+    public JCheckBox getChkRecord(){
+        return this.chkRecord;
     }
 
     public JPanel getFilterPanel() {
@@ -415,8 +420,11 @@ public class Gui extends JPanel{
         btnBack.setVisible(false);
         btnBack.setBackground(Color.RED);
 
-        pnlSouth.add(stamp);
+        chkRecord = new JCheckBox("Record at Start?");
+        chkRecord.setVisible(false);
 
+        pnlSouth.add(stamp);
+        pnlSouth.add(chkRecord);
         pnlSouth.add(btnFire);
         pnlSouth.add(btnRender);
         pnlSouth.add(btnPause);
