@@ -355,7 +355,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         try{
         System.out.println("Opening Remote Manual");
             Desktop.getDesktop().browse(new URL(
-                "https://drive.google.com/file/d/1aTCMCyFpTKK3JMoRFI-DgpvK4iwiChlE/view?usp=sharing"
+                "https://drive.google.com/file/d/1DyzfVwKW3HFA8k4Cycb2po5Bd8ccfikE/view?usp=sharing"
                 ).toURI());
         } catch (Exception e){
         System.out.println("Unable to open...");
