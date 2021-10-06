@@ -33,9 +33,9 @@ public class PlantLayer{
       this.specieslist = list;
     }*/
 
-    public void setLayer(int[][][] newLocations) {
+    /*public void setLayer(int[][][] newLocations) {
       idLocations = newLocations;
-    }
+    }*/
 
     public void setFilter(boolean filter) {
       this.filter = filter;
