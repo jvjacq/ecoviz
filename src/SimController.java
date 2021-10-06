@@ -1,10 +1,9 @@
 /*
-* File: Simulation.java
+* File: SimController.java
+* MVC: Main runner/driver
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 1.2
-* Created: +++++++++++ Owen insert date here +++++++
-* Last edited: 26/08/2021
-* Status: In progress
+* Last edited: 06/10/2021
+* Status: Complete
 */
 
 import javax.swing.UIManager;

@@ -1,12 +1,11 @@
 /*
 * File: Plant.java
+* MVC: Model
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 2.0
-* Created: 25/08/2021
-* Last edited: 09/09/2021
-* Status: In progress
-* MVC - Model
+* Last edited: 06/10/2021
+* Status: Complete
 */
+
 public class Plant implements Comparable<Plant>{
     
     private int speciesid;
@@ -15,19 +14,22 @@ public class Plant implements Comparable<Plant>{
     private int posy;
     private double height;
     private double canopyRadius;
-    private boolean filter;
-    private boolean layer;
-    private boolean fHeight, fCanopy;
-    private int inFirebreak;
+    
+    //Filter variables to show/hide plant
+    private boolean filter; //Set if inside filter radius
+    private boolean layer;  //Set if in hidden PlantLayer
+    private boolean fHeight, fCanopy; //Set if in correct height/radius ranges respectively
+    private int inFirebreak; //Set +1 for each firebreak plant is in
 
     public Plant(int sid, int pid, int x, int y, float height, float rad, boolean canopy){
+        //Default values
         this.speciesid = sid;
         this.plantid = pid;
         this.posx = x;
         this.posy = y;
         this.height = height;
         this.canopyRadius = rad;
-        this.layer = canopy; //True for canopy false for under
+        this.layer = canopy; //True if Plant in canopy, else false if in undergrowth (consistent throughout code)
         this.filter = true;
         this.fHeight = true;
         this.fCanopy = true;
@@ -112,6 +114,7 @@ public class Plant implements Comparable<Plant>{
         this.inFirebreak--;
     }
 
+    //Compare method for sorting array of Plants according to Height
     @Override
     public int compareTo(Plant other) {
         if(this.height > other.getHeight()) return 1;

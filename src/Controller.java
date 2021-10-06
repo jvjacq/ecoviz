@@ -1,3 +1,11 @@
+/*
+* File: Controller.java
+* MVC: Controller
+* Author(s): BRNJAM019, FRNOWE001, VJRJAC003
+* Last edited: 06/10/2021
+* Status: Complete
+*/
+
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.*;
@@ -184,6 +192,9 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         if(latest < 1) gui.getUndoBtn().setEnabled(false);
         fire.clearGrid();
         fire.genGrid();
+        fire.deriveFireImage();
+        image.setFire(fire.getImage());
+        image.setBurnt(fire.getBurntImage());
         image.deriveImage();
         image.repaint();
     }
@@ -283,6 +294,14 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }
     };
 
+    public void end(){
+        if (playing){
+            gui.getPlayR().setText("Pause");
+        } else {
+            gui.getPlayR().setText("Play");
+        }
+    }
+
     public void scrubSpeed(){
         iterate.cancel();
         iterator.cancel();
@@ -307,10 +326,13 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             @Override
             public void run() {
                 if (playing){
-
+                
                 int prev = gui.getScrubber().getValue();
-
-                if (prev!=pathFrames.size()){
+                if (prev==gui.getScrubber().getMaximum()){
+                    playing=false;
+                    end();
+                    
+                } else if (prev!=pathFrames.size()){
                     gui.getScrubber().setValue(prev+1);
                     
                 }

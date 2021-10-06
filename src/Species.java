@@ -1,13 +1,11 @@
 /*
-* Previously: PlantType.java
 * File: Species.java
+* MVC: Model
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 2.0
-* Created: ++++++++Owen insert date++++++++
-* Last edited: 09/09/2021
-* Status: In progress
-* MVC - Model
+* Last edited: 06/10/2021
+* Status: Complete
 */
+
 import java.awt.Color;
 
 public class Species {

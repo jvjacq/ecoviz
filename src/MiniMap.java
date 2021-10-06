@@ -1,10 +1,10 @@
 /*
-* File: imgPanel.java
+* File: MiniMap.java
+* MVC: View
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Status: In progress
+* Last edited: 06/10/2021
+* Status: Complete
 */
-//References:
-//Zoom functionality : credit to @Thanasis - StackOverflow for the algorithm
 
 import javax.swing.JPanel;
 import java.awt.Graphics2D;

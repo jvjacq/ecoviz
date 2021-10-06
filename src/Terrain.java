@@ -1,21 +1,22 @@
 /*
 * File: Terrain.java
+* MVC: Model
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Version 2.0
-* Created: +++++++++++ Owen insert date here +++++++
-* Last edited: 09/09/2021
-* Status: In progress
+* Last edited: 06/10/2021
+* Status: Complete
 */
 
 public class Terrain {
     private double[][] elevations;
+    //dim values are 1024x1024 (scaled up image)
     private static int dimX;
     private static int dimY;
+
+    //base values are original image size
     private static int baseX;
     private static int baseY;
     private double gridSpacing = 0.0;
     private double latitude = 0.0;
-    //private BufferedImage img;
 
     public Terrain(){
         //Do something

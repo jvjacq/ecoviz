@@ -1,7 +1,9 @@
 /*
 * File: Fire.java
+* MVC: Model
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Status: In progress
+* Last edited: 06/10/2021
+* Status: Complete
 */
 
 import java.awt.image.BufferedImage;

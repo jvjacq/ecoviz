@@ -1,8 +1,9 @@
 /*
-* Previously: PlantLayer.java
 * File: Gui.java
+* MVC: View
 * Author(s): BRNJAM019, FRNOWE001, VJRJAC003
-* Status: In progress
+* Last edited: 06/10/2021
+* Status: Complete
 */
 
 import javax.swing.*;
@@ -54,7 +55,7 @@ public class Gui extends JPanel{
     private JTabbedPane tabbedPane;
     private JCheckBox speciesToggle;
     private JCheckBox chkRecord;
-
+    private JPanel pnlHeight,pnlStats;
     private JButton playR;
     private String common;
     private String latin;
@@ -72,7 +73,7 @@ public class Gui extends JPanel{
     private JButton btnCloseRender;
     private JPanel pnlWest;
     private JButton btnEnlarge;
-
+    private JPanel pnlName;
     //Filter Section:
     private JLabel shTitle;
     private JLabel taTitle;
@@ -579,7 +580,7 @@ public class Gui extends JPanel{
         lblTall = new JLabel("\n");
         lblNum = new JLabel("\n");
 
-        JPanel pnlName = new JPanel();
+        pnlName = new JPanel();
         pnlName.setBackground(new Color(31, 36, 43));
         pnlName.setLayout(new BoxLayout(pnlName, BoxLayout.PAGE_AXIS));
         Border b1 = BorderFactory.createTitledBorder("Species");
@@ -589,7 +590,7 @@ public class Gui extends JPanel{
         pnlName.add(lblLatin);
         pnlName.setBorder(b1);
 
-        JPanel pnlHeight = new JPanel();
+        pnlHeight = new JPanel();
         pnlHeight.setBackground(new Color(31, 36, 43));
         pnlHeight.setLayout(new BoxLayout(pnlHeight, BoxLayout.PAGE_AXIS));
         Border b2 = BorderFactory.createTitledBorder("Measurements"); // private
@@ -599,7 +600,7 @@ public class Gui extends JPanel{
         pnlHeight.add(lblTall);
         pnlHeight.setBorder(b2);
 
-        JPanel pnlStats = new JPanel();
+        pnlStats = new JPanel();
         pnlStats.setBackground(new Color(31, 36, 43));
         pnlStats.setLayout(new BoxLayout(pnlStats, BoxLayout.PAGE_AXIS));
         Border b3 = BorderFactory.createTitledBorder("Stats"); // private
@@ -887,7 +888,11 @@ public class Gui extends JPanel{
 
     public void changeTheme(int theme) {
         LookAndFeel obj = new FlatDarculaLaf();
-        pnlSouth.setOpaque(false);
+        
+        pnlName.setOpaque(true);
+        pnlHeight.setOpaque(true);
+        pnlStats.setOpaque(true);  
+        pnlSouth.setBackground(new Color(31, 36, 43));
 
 
         String message = "";
@@ -900,8 +905,9 @@ public class Gui extends JPanel{
                 obj = new FlatLightLaf();
                 message = "Light Mode Enabled";
                 pnlSouth.setBackground(new Color(175, 186, 204));
-                pnlSouth.setOpaque(true);
-                pnlDetails.setOpaque(true);
+                pnlName.setOpaque(false);  
+                pnlHeight.setOpaque(false);
+                pnlStats.setOpaque(false);              
                 break;
             case 2:
                 // obj = new FlatDarculaLaf();
