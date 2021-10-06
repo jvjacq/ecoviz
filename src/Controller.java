@@ -203,6 +203,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         if(gui.getChkFirebreak().isSelected()){
             firebreakMode = true;
             //gui.getUndoBtn().setEnabled(true);
+            gui.getEndSession().setEnabled(false);
             gui.getPauseBtn().setEnabled(false);
             gui.getRenderBtn().setEnabled(false);
             gui.getResetBtn().setEnabled(false);
@@ -214,6 +215,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
         }else{
             firebreakMode = false;
             //gui.getUndoBtn().setEnabled(false);
+            gui.getEndSession().setEnabled(true);
             gui.getPauseBtn().setEnabled(true);
             gui.getRenderBtn().setEnabled(true);
             gui.getResetBtn().setEnabled(true);

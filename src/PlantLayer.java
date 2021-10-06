@@ -10,19 +10,16 @@ import java.util.ArrayList;
 
 public class PlantLayer{
 
-    //ID 0 = no PlantType
-    //ID -1 = burnt?
+    //Array stores ids (speciesID, plantID) at the plants x,y coordinates
     private int[][][] idLocations;
-    //private int[][] burnt;
-    //private Species[] specieslist;
+    //Static list. Contains all plants in both undergrowth & canopy combined and sorted
     private static ArrayList<Plant> plantlist;
+    //Static list. Contains all species in both undergrowth & canopy combined and sorted
     private static Species[] allSpecies;
     private int numSpecies; //per layer
-    private boolean filter;
-
     
     public PlantLayer(){
-      this.filter = true;
+      //
     }
 
     //Mutator Methods:
@@ -33,31 +30,20 @@ public class PlantLayer{
     public void setPlantAtLocation(int x, int y, int speciesid, int plantid){
         this.idLocations[x][y][0] = speciesid;
         this.idLocations[x][y][1] = plantid;
-        //For FireSim:
-        //Create a simple hit box for each plant (Currently a square) : fiddle with this for better accuracy
     }
 
-    /*public void setSpeciesList(Species[] list){
-      this.specieslist = list;
-    }*/
-
-    /*public void setLayer(int[][][] newLocations) {
-      idLocations = newLocations;
-    }*/
-
-    public void setFilter(boolean filter) {
-      this.filter = filter;
-    }
-
+    //Initialise idLocations
     public void setLocations(int dimx, int dimy){
       idLocations = new int[dimx][dimy][2];
     }
 
+    //And id of -1 specifies a removed plant
     public void removePlant(int dimx, int dimy) {
       idLocations[dimx][dimy][0] = 0;
-      idLocations[dimx][dimy][1] = -1;  //Burnt would be double -1?
+      idLocations[dimx][dimy][1] = -1;
     }
 
+    //Initialisation methods
     public static void setPlantList() {
       PlantLayer.plantlist = new ArrayList<Plant>();
     }
@@ -66,16 +52,17 @@ public class PlantLayer{
       PlantLayer.allSpecies = list;
     }
 
+    //Add species to static list
     public static void addSpecies(Species s){
       PlantLayer.allSpecies[s.getSpeciesID()] = s;
     }
 
+    //Add plant to static list (thread safe)
     synchronized public static void addPlant(Plant plant){
       PlantLayer.plantlist.add(plant);
     }
 
     // Accessor Methods
-
     public int[][][] getLocations(){
         return this.idLocations;
     }
@@ -86,19 +73,6 @@ public class PlantLayer{
 
     public int[] getPlantAtLocation(int x, int y){
       return this.idLocations[x][y];
-    }
-    
-    /*public Species[] getSpeciesList(){
-      return this.specieslist;
-    }*/
-
-    public Species getPlant(int dimx, int dimy) {
-       // return idLocations[dimx][dimy];
-       return null;
-    }
-
-    public boolean getFilter() {
-      return this.filter;
     }
 
     public static ArrayList<Plant> getPlantList() {

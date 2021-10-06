@@ -17,11 +17,15 @@ public class SimController {
         }catch (Exception e){
             e.printStackTrace();
         }
+        //Initialise view
         Gui gui = new Gui();
+        //Initialise model
         Terrain terrain = new Terrain();
         PlantLayer undergrowth = new PlantLayer();
         PlantLayer canopy = new PlantLayer();
+        //Intitialise controller
         Controller controller = new Controller(gui, terrain, undergrowth, canopy);
+        //Begin sim
         controller.initController();
     }
 }
