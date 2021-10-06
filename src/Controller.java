@@ -1076,7 +1076,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             //fire.addFire(click.x, click.y);
 
             //Species[] list = PlantLayer.getAllSpecies();
-
+            if (!scrubUI){
             for (int p = PlantLayer.getPlantList().size()-1; p >= 0; --p) {
                 Plant plant = PlantLayer.getPlantList().get(p);
                 // Check if species is not currently filtered
@@ -1093,7 +1093,7 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
 
             }
 
-            if (clicked){
+            if (clicked & !scrubUI){
                 first=true;
                 fire.addFire(xPos, yPos,rad);
 
@@ -1106,8 +1106,10 @@ public class Controller implements MouseWheelListener, MouseListener, MouseMotio
             image.setBurnt(burntImage);
 
             // image.deriveImage();
+            
             image.repaint();
             System.out.println("Fire Added");
+        }
 
         } else {
             gui.getSpeciesToggle().setSelected(false);
