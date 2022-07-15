@@ -1,2 +1,2 @@
 # EcoViz
-This is the readMe XD
+See "EcoViz.pdf"
